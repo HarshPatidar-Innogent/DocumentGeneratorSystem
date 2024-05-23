@@ -1,5 +1,4 @@
 package com.dgs.entity;
 
-
-public class Documents {
+public class Signature {
 }
