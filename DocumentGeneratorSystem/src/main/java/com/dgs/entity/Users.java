@@ -1,4 +1,4 @@
 package com.dgs.entity;
 
-public class document {
+public class Users {
 }
