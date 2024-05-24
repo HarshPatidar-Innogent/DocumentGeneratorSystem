@@ -1,5 +1,6 @@
 package com.dgs.entity;
 
+import com.dgs.enums.ActionPerformed;
 import com.dgs.enums.SignatureType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,7 +22,7 @@ public class AuditTrail {
     private Long auditTrailId;
 
     @Enumerated(EnumType.STRING)
-    private SignatureType signatureType;
+    private ActionPerformed actionPerformed;
 
     private String details;
 
