@@ -1,6 +1,6 @@
 package com.dgs.entity;
 
-import com.dgs.entity.enums.TemplateFormat;
+import com.dgs.enums.TemplateFormat;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
