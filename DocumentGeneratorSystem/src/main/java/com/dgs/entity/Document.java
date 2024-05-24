@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @ToString
 @Table(name = "document")
 public class Document {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long documentId;
