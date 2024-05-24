@@ -1,6 +1,6 @@
 package com.dgs.entity;
 
-import com.dgs.entity.enums.DocumentStatus;
+import com.dgs.enums.DocumentStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

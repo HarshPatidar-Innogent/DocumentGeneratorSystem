@@ -1,4 +1,4 @@
-package com.dgs.entity.enums;
+package com.dgs.enums;
 
 public enum DesignationPermission {
     EDIT,

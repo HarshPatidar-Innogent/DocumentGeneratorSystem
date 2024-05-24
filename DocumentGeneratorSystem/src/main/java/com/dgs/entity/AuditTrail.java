@@ -1,6 +1,6 @@
 package com.dgs.entity;
 
-import com.dgs.entity.enums.SignatureType;
+import com.dgs.enums.SignatureType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

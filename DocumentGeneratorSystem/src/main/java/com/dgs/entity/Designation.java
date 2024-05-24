@@ -1,6 +1,6 @@
 package com.dgs.entity;
 
-import com.dgs.entity.enums.DesignationPermission;
+import com.dgs.enums.DesignationPermission;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
