@@ -26,8 +26,11 @@ public class Template {
     @Enumerated(EnumType.STRING)
     private TemplateFormat templateFormat;
 
+    @Column(length = 4000, nullable = false)
+    private String templateBody;
+
     @CreationTimestamp
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;

@@ -13,8 +13,8 @@ public class SignatureDTO {
     private Blob signatureData;
     private LocalDateTime signedAt;
     private String recipientEmail;
-    private DocumentDTO document;
-    private UserDTO user;
+    private Long document;
+    private Long user;
 
 
 

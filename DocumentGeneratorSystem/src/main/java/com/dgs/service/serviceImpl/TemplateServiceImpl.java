@@ -2,8 +2,10 @@ package com.dgs.service.serviceImpl;
 
 import com.dgs.DTO.TemplateDTO;
 import com.dgs.entity.Template;
+import com.dgs.entity.User;
 import com.dgs.mapper.MapperConfig;
 import com.dgs.repository.TemplateRepo;
+import com.dgs.repository.UserRepo;
 import com.dgs.service.iService.ITemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,11 @@ public class TemplateServiceImpl implements ITemplateService {
     private TemplateRepo templateRepo;
 
     @Autowired
+    private UserRepo userRepo;
+
+    @Autowired
     private MapperConfig mapperConfig;
+
 
     @Override
     public List<TemplateDTO> getAllTemplate() {
@@ -39,8 +45,14 @@ public class TemplateServiceImpl implements ITemplateService {
 
     @Override
     public TemplateDTO createTemplate(TemplateDTO templateDTO) {
-        Template teample = templateRepo.save(mapperConfig.toTemplate(templateDTO));
-        return mapperConfig.toTemplateDto(teample);
+        Long userId = templateDTO.getUser();
+        User existingUser = userRepo.findById(userId).get();
+        Template template = mapperConfig.toTemplate(templateDTO);
+        template.setUser(existingUser);
+        return mapperConfig.toTemplateDto(templateRepo.save(template));
+
+//        Template template = templateRepo.save(mapperConfig.toTemplate(templateDTO));
+//        return mapperConfig.toTemplateDto(template);
     }
 
     @Override

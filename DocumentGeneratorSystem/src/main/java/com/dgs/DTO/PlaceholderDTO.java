@@ -10,5 +10,5 @@ public class PlaceholderDTO {
 
     private String placeholderType;
 
-    private TemplateDTO template;
+    private Long template;
 }

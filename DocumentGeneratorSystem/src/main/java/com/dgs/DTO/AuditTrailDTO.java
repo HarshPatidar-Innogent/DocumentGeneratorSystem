@@ -14,6 +14,6 @@ public class AuditTrailDTO {
     private String details;
     private LocalDateTime timestamp;
     private String ipAddress;
-    private DocumentDTO document;
-    private UserDTO user;
+    private Long document;
+    private Long user;
 }

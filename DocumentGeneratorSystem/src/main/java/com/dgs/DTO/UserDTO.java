@@ -12,7 +12,9 @@ public class UserDTO {
 
     private String email;
 
-    private DesignationDTO designationId;
+    private String password;
 
-    private DepartmentDTO departmentId;
+    private Long designationId;
+
+    private Long departmentId;
 }
