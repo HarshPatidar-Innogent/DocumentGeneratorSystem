@@ -16,7 +16,7 @@ public class DocumentDTO {
 
     private LocalDate createdAt;
 
-    private TemplateDTO template;
+    private Long template;
 
-    private UserDTO user;
+    private Long user;
 }
