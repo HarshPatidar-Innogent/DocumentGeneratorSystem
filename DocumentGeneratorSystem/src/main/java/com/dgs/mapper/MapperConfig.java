@@ -1,13 +1,7 @@
 package com.dgs.mapper;
 
-import com.dgs.DTO.DocumentDTO;
-import com.dgs.DTO.PlaceholderDTO;
-import com.dgs.DTO.SignatureDTO;
-import com.dgs.DTO.TemplateDTO;
-import com.dgs.entity.Document;
-import com.dgs.entity.Placeholder;
-import com.dgs.entity.Signature;
-import com.dgs.entity.Template;
+import com.dgs.DTO.*;
+import com.dgs.entity.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
@@ -52,6 +46,29 @@ public class MapperConfig {
     public Signature toSignature(SignatureDTO signatureDTO){
         return mapper.map(signatureDTO, Signature.class);
     }
+
+    public AccessControlDTO toAccessControlDTO(AccessControl accessControl){
+        return mapper.map(accessControl, AccessControlDTO.class);
+    }
+
+    public AccessControl toAccessControl(AccessControlDTO accessControlDTO){
+        return mapper.map(accessControlDTO, AccessControl.class);
+    }
+
+    public AuditTrailDTO toAuditTrailDTO(AuditTrail auditTrail){
+        return mapper.map(auditTrail, AuditTrailDTO.class);
+    }
+
+    public AuditTrail toAuditTrail(AuditTrailDTO auditTrailDTO){
+        return mapper.map(auditTrailDTO, AuditTrail.class);
+    }
+
+
+
+
+
+
+
 
 
 
