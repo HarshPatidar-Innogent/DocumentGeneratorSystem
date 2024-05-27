@@ -17,9 +17,6 @@ public class SignatureDTO {
     private byte[] signatureData;
     private LocalDateTime signedAt;
     private String recipientEmail;
-    private Long document;
-    private Long user;
-
-
-
+    private Long documentId;
+    private Long userId;
 }
