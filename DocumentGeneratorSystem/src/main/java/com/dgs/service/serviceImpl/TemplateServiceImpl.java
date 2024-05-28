@@ -1,15 +1,19 @@
 package com.dgs.service.serviceImpl;
 
 import com.dgs.DTO.TemplateDTO;
+import com.dgs.entity.Department;
 import com.dgs.entity.Template;
 import com.dgs.entity.User;
 import com.dgs.mapper.MapperConfig;
+import com.dgs.repository.AccessControlRepo;
 import com.dgs.repository.TemplateRepo;
 import com.dgs.repository.UserRepo;
 import com.dgs.service.iService.ITemplateService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +28,9 @@ public class TemplateServiceImpl implements ITemplateService {
 
     @Autowired
     private MapperConfig mapperConfig;
+
+    @Autowired
+    private AccessControlRepo accessControlRepo;
 
 
     @Override
@@ -69,4 +76,23 @@ public class TemplateServiceImpl implements ITemplateService {
         }
         return "Template not found";
     }
+
+    @Override
+    public TemplateDTO getTemplateDTOById(Long templateId, Long userId) throws AccessDeniedException {
+        User user = userRepo.findById(userId).orElseThrow(()->new EntityNotFoundException("User Not Found"));
+        Long departmentId = user.getDepartment().getDepartmentId();
+        Long designationId = user.getDesignation().getDesignationId();
+
+        boolean hasAccess = accessControlRepo.existsByTemplate_TemplateIdAndDepartment_DepartmentIdAndDesignation_DesignationId(templateId,departmentId,designationId);
+
+        if(hasAccess){
+            Template template = templateRepo.findById(templateId).orElseThrow(()->new EntityNotFoundException("Template Not Found"));
+            return mapperConfig.toTemplateDto(template);
+        }
+        else{
+            throw new AccessDeniedException("User does not have Access to this Document");
+        }
+    }
+
+
 }

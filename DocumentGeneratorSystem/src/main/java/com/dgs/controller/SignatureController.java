@@ -1,6 +1,7 @@
 package com.dgs.controller;
 
 import com.dgs.DTO.SignatureDTO;
+import com.dgs.DTO.UserDTO;
 import com.dgs.entity.Signature;
 import com.dgs.enums.SignatureType;
 import com.dgs.repository.SignatureRepo;
@@ -22,10 +23,12 @@ public class SignatureController {
     ISignatureService signatureService;
 
     @PostMapping("/addSignature")
-    public ResponseEntity<?> addSignature(@RequestParam("signatureData")MultipartFile file, @RequestParam("recipientEmail") String recipientEmail, @RequestParam("signatureType")SignatureType signatureType) throws IOException {
+    public ResponseEntity<?> addSignature(@RequestParam("signatureData")MultipartFile file, @RequestParam("recipientEmail") String recipientEmail, @RequestParam("signatureType")SignatureType signatureType, @RequestParam Long userId , @RequestParam Long documentId) throws IOException {
         SignatureDTO signatureDTO = new SignatureDTO();
         signatureDTO.setSignatureType(signatureType);
         signatureDTO.setRecipientEmail(recipientEmail);
+        signatureDTO.setDocumentId(documentId);
+        signatureDTO.setUserId(userId);
 
         SignatureDTO sign = this.signatureService.addSignature(file,signatureDTO);
         return ResponseEntity.status(HttpStatus.OK).body(sign);
@@ -72,7 +75,4 @@ public class SignatureController {
         SignatureDTO signatureDTO1 = signatureService.updateSignature(id,file,signatureDTO);
         return ResponseEntity.status(HttpStatus.OK).body(signatureDTO1);
     }
-
-
-
 }

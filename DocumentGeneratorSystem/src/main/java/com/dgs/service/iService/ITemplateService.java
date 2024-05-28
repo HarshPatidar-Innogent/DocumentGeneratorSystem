@@ -3,6 +3,7 @@ package com.dgs.service.iService;
 import com.dgs.DTO.TemplateDTO;
 import com.dgs.entity.Template;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 public interface ITemplateService {
@@ -15,4 +16,6 @@ public interface ITemplateService {
     public TemplateDTO updateTemplate(Long id);
 
     public String deleteTemplate(Long id);
+
+    public TemplateDTO getTemplateDTOById(Long templateId,Long userId) throws AccessDeniedException;
 }

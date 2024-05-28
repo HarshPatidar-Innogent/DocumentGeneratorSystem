@@ -1,10 +1,14 @@
 package com.dgs.service.serviceImpl;
 
 import com.dgs.DTO.SignatureDTO;
+import com.dgs.entity.Document;
 import com.dgs.entity.Signature;
+import com.dgs.entity.User;
 import com.dgs.enums.SignatureType;
 import com.dgs.mapper.MapperConfig;
+import com.dgs.repository.DocumentRepo;
 import com.dgs.repository.SignatureRepo;
+import com.dgs.repository.UserRepo;
 import com.dgs.service.iService.ISignatureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,16 +26,32 @@ public class SignatureServiceImpl implements ISignatureService {
     @Autowired
     private MapperConfig mapperConfig;
 
+    @Autowired
+    private DocumentRepo documentRepo;
+
+    @Autowired
+    private UserRepo userRepo;
 
     @Override
     public SignatureDTO addSignature(MultipartFile file , SignatureDTO signatureDTO) throws IOException {
-        Signature sign = new Signature();
-        sign.setSignatureData(file.getBytes());
-        sign.setRecipientEmail(signatureDTO.getRecipientEmail());
-        sign.setSignatureType(signatureDTO.getSignatureType());
+        Document document = documentRepo.findById(signatureDTO.getDocumentId()).get();
+        User user = userRepo.findById(signatureDTO.getUserId()).get();
+        if(document !=null){
+            Signature sign = new Signature();
+            sign.setSignatureData(file.getBytes());
+            sign.setRecipientEmail(signatureDTO.getRecipientEmail());
+            sign.setSignatureType(signatureDTO.getSignatureType());
+            sign.setDocument(document);
+            sign.setUser(user);
 
-        Signature signature = signatureRepo.save(sign);
-        return mapperConfig.toSignatureDTO(signature);
+            Signature signature = signatureRepo.save(sign);
+            return mapperConfig.toSignatureDTO(signature);
+        }
+        else{
+            return null;
+        }
+
+
     }
 
   @Override
