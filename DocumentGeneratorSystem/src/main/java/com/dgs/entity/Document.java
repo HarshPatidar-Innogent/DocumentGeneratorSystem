@@ -42,7 +42,8 @@ public class Document {
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User user;
 
-    @OneToMany(mappedBy = "document", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "document")
     private Set<Signature> signatures;
+
 
 }

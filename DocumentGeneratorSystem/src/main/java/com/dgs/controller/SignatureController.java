@@ -1,10 +1,7 @@
 package com.dgs.controller;
 
 import com.dgs.DTO.SignatureDTO;
-import com.dgs.DTO.UserDTO;
-import com.dgs.entity.Signature;
 import com.dgs.enums.SignatureType;
-import com.dgs.repository.SignatureRepo;
 import com.dgs.service.iService.ISignatureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,24 +11,32 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/signature")
+@CrossOrigin
 public class SignatureController {
 
     @Autowired
     ISignatureService signatureService;
 
     @PostMapping("/addSignature")
-    public ResponseEntity<?> addSignature(@RequestParam("signatureData")MultipartFile file, @RequestParam("recipientEmail") String recipientEmail, @RequestParam("signatureType")SignatureType signatureType, @RequestParam Long userId , @RequestParam Long documentId) throws IOException {
-        SignatureDTO signatureDTO = new SignatureDTO();
-        signatureDTO.setSignatureType(signatureType);
-        signatureDTO.setRecipientEmail(recipientEmail);
-        signatureDTO.setDocumentId(documentId);
-        signatureDTO.setUserId(userId);
+    public ResponseEntity<?> addSignature(@RequestParam("signatureData") MultipartFile[] files, @RequestParam("recipientEmail") String recipientEmail, @RequestParam("signatureType") SignatureType signatureType, @RequestParam Long userId, @RequestParam Long documentId) throws IOException {
+        List<SignatureDTO> signatureDTOS = new ArrayList<>();
 
-        SignatureDTO sign = this.signatureService.addSignature(file,signatureDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(sign);
+        for (MultipartFile file : files) {
+            SignatureDTO signatureDTO = new SignatureDTO();
+            signatureDTO.setSignatureType(signatureType);
+            signatureDTO.setRecipientEmail(recipientEmail);
+            signatureDTO.setDocumentId(documentId);
+            signatureDTO.setUserId(userId);
+
+            SignatureDTO sign = this.signatureService.addSignature(file, signatureDTO);
+            signatureDTOS.add(sign);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(signatureDTOS);
     }
 
     @GetMapping(value = "/images/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
@@ -45,34 +50,32 @@ public class SignatureController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteSignature(@PathVariable Long id){
+    public ResponseEntity<String> deleteSignature(@PathVariable Long id) {
         String signature = signatureService.deleteSignature(id);
-        if (signature !=null){
+        if (signature != null) {
             return ResponseEntity.ok().body(signature);
-        }
-        else{
+        } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
     }
 
     @GetMapping("/getSignatureById/{id}")
-    public ResponseEntity<?> getSignatureById(@PathVariable Long id){
+    public ResponseEntity<?> getSignatureById(@PathVariable Long id) {
         SignatureDTO signatureDTO = signatureService.getSignatureById(id);
-        if(signatureDTO!=null){
+        if (signatureDTO != null) {
             return ResponseEntity.ok().body(signatureDTO);
-        }
-        else{
+        } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Signature not found");
         }
     }
 
     @PutMapping("/updateSignature/{id}")
-    public ResponseEntity<?> updateSign(@PathVariable Long id, @RequestParam("signatureData")MultipartFile file, @RequestParam("recipientEmail") String recipientEmail, @RequestParam("signatureType")SignatureType signatureType) throws IOException{
+    public ResponseEntity<?> updateSign(@PathVariable Long id, @RequestParam("signatureData") MultipartFile file, @RequestParam("recipientEmail") String recipientEmail, @RequestParam("signatureType") SignatureType signatureType) throws IOException {
         SignatureDTO signatureDTO = new SignatureDTO();
         signatureDTO.setSignatureType(signatureType);
         signatureDTO.setRecipientEmail(recipientEmail);
-        SignatureDTO signatureDTO1 = signatureService.updateSignature(id,file,signatureDTO);
+        SignatureDTO signatureDTO1 = signatureService.updateSignature(id, file, signatureDTO);
         return ResponseEntity.status(HttpStatus.OK).body(signatureDTO1);
     }
 }
