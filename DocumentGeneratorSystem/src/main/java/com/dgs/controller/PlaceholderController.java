@@ -1,7 +1,23 @@
 package com.dgs.controller;
 
-import org.springframework.web.bind.annotation.RestController;
+import com.dgs.DTO.PlaceholderDTO;
+import com.dgs.service.iService.IPlaceholderService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
+@RequestMapping("/placeholder")
+@CrossOrigin
 public class PlaceholderController {
+    @Autowired
+    private IPlaceholderService placeholderService;
+
+
+    @GetMapping("/template/{id}")
+    public List<PlaceholderDTO> getAllPlaceholderOfTemplate(@PathVariable Long id){
+        return placeholderService.getAllPlaceholderOfTemplate(id);
+    }
+
 }

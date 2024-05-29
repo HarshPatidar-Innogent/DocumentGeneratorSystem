@@ -29,7 +29,7 @@ public class TemplateServiceImpl implements ITemplateService {
     @Override
     public List<TemplateDTO> getAllTemplate() {
         List<Template> templateList = templateRepo.findAll();
-        List<TemplateDTO>  templateDTOS = templateList.stream().map(mapperConfig::toTemplateDto).toList();
+        List<TemplateDTO>  templateDTOS = templateList.stream().map(MapperConfig::toTemplateDto).toList();
         return templateDTOS;
     }
 
@@ -37,22 +37,20 @@ public class TemplateServiceImpl implements ITemplateService {
     public TemplateDTO getTemplateById(Long id) {
         Optional<Template> template = templateRepo.findById(id);
         if(template.isPresent()){
-            TemplateDTO templateDTO = mapperConfig.toTemplateDto(template.get());
-            return templateDTO;
+//            TemplateDTO templateDTO = mapperConfig.toTemplateDto(template.get());
+            TemplateDTO dto = MapperConfig.toTemplateDto(template.get());
+            return dto;
         }
         throw new NullPointerException("Template do not exist");
     }
 
     @Override
     public TemplateDTO createTemplate(TemplateDTO templateDTO) {
-        Long userId = templateDTO.getUser();
-        User existingUser = userRepo.findById(userId).get();
-        Template template = mapperConfig.toTemplate(templateDTO);
-        template.setUser(existingUser);
-        return mapperConfig.toTemplateDto(templateRepo.save(template));
-
-//        Template template = templateRepo.save(mapperConfig.toTemplate(templateDTO));
-//        return mapperConfig.toTemplateDto(template);
+        User existingUser = userRepo.findById(templateDTO.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Template template = MapperConfig.toTemplate(templateDTO, existingUser);
+        Template savedTemplate = templateRepo.save(template);
+        return MapperConfig.toTemplateDto(savedTemplate);
     }
 
     @Override

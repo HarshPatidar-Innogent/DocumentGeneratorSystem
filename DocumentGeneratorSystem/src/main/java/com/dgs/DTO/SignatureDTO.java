@@ -1,5 +1,6 @@
 package com.dgs.DTO;
 
+import com.dgs.entity.Document;
 import com.dgs.enums.SignatureType;
 import lombok.Data;
 import lombok.Getter;
@@ -17,9 +18,6 @@ public class SignatureDTO {
     private byte[] signatureData;
     private LocalDateTime signedAt;
     private String recipientEmail;
-    private Long document;
-    private Long user;
-
-
-
+    private DocumentDTO documentId;
+    private UserDTO userId;
 }

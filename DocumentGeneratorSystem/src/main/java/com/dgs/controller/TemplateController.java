@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/template")
+@CrossOrigin
 public class TemplateController {
     @Autowired
     private ITemplateService templateService;
