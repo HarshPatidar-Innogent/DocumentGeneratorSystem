@@ -9,6 +9,4 @@ public class PlaceholderDTO {
     private String placeholderName;
 
     private String placeholderType;
-
-    private Long template;
 }

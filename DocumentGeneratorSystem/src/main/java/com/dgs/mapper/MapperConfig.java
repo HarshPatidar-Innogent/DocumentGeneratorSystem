@@ -5,6 +5,9 @@ import com.dgs.entity.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Component
 public class MapperConfig {
     private ModelMapper mapper;
@@ -23,21 +26,60 @@ public class MapperConfig {
     }
 
     //convert placeholder entity into dto
-    public PlaceholderDTO toPlaceholderDto(Placeholder placeholder){
-        return mapper.map(placeholder, PlaceholderDTO.class);
+    public static PlaceholderDTO toPlaceholderDto(Placeholder placeholder){
+//        return mapper.map(placeholder, PlaceholderDTO.class);
+        PlaceholderDTO dto = new PlaceholderDTO();
+        dto.setPlaceholderId(placeholder.getPlaceholderId());
+        dto.setPlaceholderName(placeholder.getPlaceholderName());
+        dto.setPlaceholderType(placeholder.getPlaceholderType());
+        return dto;
     }
     //convert placeholderDto into entity
-    public Placeholder toPlaceholder(PlaceholderDTO placeholderDTO){
-        return mapper.map(placeholderDTO, Placeholder.class);
+    public static Placeholder toPlaceholder(PlaceholderDTO dto, Template template){
+//        return mapper.map(placeholderDTO, Placeholder.class);
+
+        Placeholder placeholder = new Placeholder();
+        placeholder.setPlaceholderId(dto.getPlaceholderId());
+        placeholder.setPlaceholderName(dto.getPlaceholderName());
+        placeholder.setPlaceholderType(dto.getPlaceholderType());
+        placeholder.setTemplate(template); // Set the template reference
+        // We need to fetch the template entity separately if needed
+        return placeholder;
     }
 
     //convert template entity into dto
-    public TemplateDTO toTemplateDto(Template template){
-        return mapper.map(template, TemplateDTO.class);
+    public static TemplateDTO toTemplateDto(Template template){
+//        return mapper.map(template, TemplateDTO.class);
+
+        TemplateDTO dto = new TemplateDTO();
+        dto.setTemplateId(template.getTemplateId());
+        dto.setTemplateName(template.getTemplateName());
+        dto.setTemplateFormat(template.getTemplateFormat());
+        dto.setTemplateBody(template.getTemplateBody());
+        dto.setCreatedAt(template.getCreatedAt());
+        dto.setUpdatedAt(template.getUpdatedAt());
+        dto.setUserId(template.getUser().getUserId());
+        dto.setPlaceholderDTOS(template.getPlaceholderList().stream()
+                                       .map(MapperConfig::toPlaceholderDto)
+                                       .collect(Collectors.toList()));
+        return dto;
     }
     //convert templateDto into entity
-    public Template toTemplate(TemplateDTO templateDTO){
-        return mapper.map(templateDTO, Template.class);
+    public static Template toTemplate(TemplateDTO dto, User user){
+//        return mapper.map(templateDTO, Template.class);
+
+        Template template = new Template();
+        template.setTemplateId(dto.getTemplateId());
+        template.setTemplateName(dto.getTemplateName());
+        template.setTemplateFormat(dto.getTemplateFormat());
+        template.setTemplateBody(dto.getTemplateBody());
+        template.setCreatedAt(dto.getCreatedAt());
+        template.setUpdatedAt(dto.getUpdatedAt());
+        template.setUser(user);
+        template.setPlaceholderList(dto.getPlaceholderDTOS().stream()
+                                            .map(placeholderDTO -> toPlaceholder(placeholderDTO, template))
+                                            .collect(Collectors.toList()));
+        return template;
     }
 
     public SignatureDTO toSignatureDTO(Signature signature){

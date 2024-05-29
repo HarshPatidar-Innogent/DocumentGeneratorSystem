@@ -4,13 +4,14 @@ import com.dgs.DTO.DocumentDTO;
 import com.dgs.entity.Document;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IDocumentService {
-    public List<DocumentDTO> getAllDocument();
+    public List<DocumentDTO> getAllDocumentOfUser(Long userId);
 
     public DocumentDTO getDocumentById(Long id);
 
-    public DocumentDTO createDocument(DocumentDTO documentDTO);
+    public String createDocument(Map<String, String> dynamicData, Long templateId);
 
     public DocumentDTO updateDocument(Long id);
 

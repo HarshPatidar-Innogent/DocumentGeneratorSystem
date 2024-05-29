@@ -12,6 +12,8 @@ public class DocumentDTO {
 
     private String documentName;
 
+    private String documentBody;
+
     private DocumentStatus status;
 
     private LocalDate createdAt;
@@ -19,4 +21,5 @@ public class DocumentDTO {
     private Long template;
 
     private Long user;
+
 }

@@ -23,6 +23,6 @@ public class Placeholder {
 
     @ManyToOne
     @JoinColumn(name = "templateId", referencedColumnName = "templateId")
-    private Template template   ;
+    private Template template;
 
 }

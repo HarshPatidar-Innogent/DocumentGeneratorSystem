@@ -11,6 +11,7 @@ import java.nio.file.AccessDeniedException;
 
 @RestController
 @RequestMapping("/template")
+@CrossOrigin
 public class TemplateController {
     @Autowired
     private ITemplateService templateService;
