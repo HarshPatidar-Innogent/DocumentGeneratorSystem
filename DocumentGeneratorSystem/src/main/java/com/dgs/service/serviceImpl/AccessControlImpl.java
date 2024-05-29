@@ -9,8 +9,12 @@ import com.dgs.repository.*;
 import com.dgs.service.iService.IAccessControlService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -45,12 +49,20 @@ public class AccessControlImpl implements IAccessControlService {
         return mapperConfig.toAccessControlDTO(accessControl1);
     }
 
+    @Override
     public boolean hasAccess(Long templateId, Long departmentId, Long designationId, DesignationPermission requiredPermission) {
         Designation designation = designationRepo.findById(designationId).get();
         if(designation!=null && designation.getPermission()==requiredPermission){
-            return  accessControlRepo.existsByTemplate_TemplateIdAndDepartment_DepartmentIdAndDesignation_DesignationId(templateId,departmentId,designationId);
+           return  accessControlRepo.existsByTemplate_TemplateIdAndDepartment_DepartmentIdAndDesignation_DesignationId(templateId,departmentId,designationId);
         }
         return false;
+    }
+
+    @Override
+    public List<AccessControlDTO> findAllByTemplateId(Long templateId) {
+         List<AccessControl> accessControlList = accessControlRepo.findAllByTemplateId(templateId);
+         List<AccessControlDTO> accessControlDTOS = accessControlList.stream().map(mapperConfig::toAccessControlDTO).toList();
+         return accessControlDTOS;
     }
 
 

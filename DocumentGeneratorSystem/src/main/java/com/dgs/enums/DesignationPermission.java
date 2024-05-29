@@ -4,5 +4,5 @@ public enum DesignationPermission {
     EDIT,
     VIEW,
     SHARE,
-    All;
+    All
 }
