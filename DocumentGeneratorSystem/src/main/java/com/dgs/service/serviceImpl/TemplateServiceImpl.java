@@ -55,6 +55,7 @@ public class TemplateServiceImpl implements ITemplateService {
     public TemplateDTO createTemplate(TemplateDTO templateDTO) {
         User existingUser = userRepo.findById(templateDTO.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
         Template template = MapperConfig.toTemplate(templateDTO, existingUser);
         Template savedTemplate = templateRepo.save(template);
         return MapperConfig.toTemplateDto(savedTemplate);
