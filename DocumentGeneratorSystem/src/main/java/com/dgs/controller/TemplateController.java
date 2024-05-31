@@ -1,8 +1,7 @@
 package com.dgs.controller;
 
 import com.dgs.DTO.TemplateDTO;
-import com.dgs.entity.User;
-import com.dgs.exception.TemplateNotFoundException;
+import com.dgs.exception.CustomException.TemplateNotFoundException;
 import com.dgs.service.iService.ITemplateService;
 import com.dgs.service.iService.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,6 @@ public class TemplateController {
 
     @PostMapping("/create")
     public TemplateDTO createTemplate(@RequestBody TemplateDTO templateDTO){
-        System.out.println(templateDTO.getUserId());
         return templateService.createTemplate(templateDTO);
     }
 
@@ -42,7 +40,7 @@ public class TemplateController {
         if(dto != null){
             return ResponseEntity.ok(dto);
         }else{
-            throw new TemplateNotFoundException("Resource not Found with id "+ id);
+            throw new TemplateNotFoundException("Template not found");
         }
     }
 
