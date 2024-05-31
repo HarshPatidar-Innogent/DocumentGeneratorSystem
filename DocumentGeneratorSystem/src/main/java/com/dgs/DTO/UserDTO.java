@@ -17,4 +17,6 @@ public class UserDTO {
     private Long designationId;
 
     private Long departmentId;
+
+    private String role;
 }

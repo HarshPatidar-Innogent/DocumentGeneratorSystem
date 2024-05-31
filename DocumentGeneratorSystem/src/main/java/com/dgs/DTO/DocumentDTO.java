@@ -18,8 +18,8 @@ public class DocumentDTO {
 
     private LocalDate createdAt;
 
-    private Long template;
+    private Long templateId;
 
-    private Long user;
+    private Long userId;
 
 }
