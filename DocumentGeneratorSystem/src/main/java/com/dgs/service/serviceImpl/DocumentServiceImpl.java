@@ -45,19 +45,19 @@ public class DocumentServiceImpl implements IDocumentService {
         throw new NullPointerException("Document with id not present");
     }
 
-    public String createDocument(Map<String, String> dynamicData, Long templateId) {
+    public String populateDocument(Map<String, String> dynamicData, Long templateId) {
         Template template = templateRepo.findById(templateId).get();
         String templateBody = template.getTemplateBody();
         for (Map.Entry<String, String> entry : dynamicData.entrySet()) {
             templateBody = templateBody.replace("{{" + entry.getKey() + "}}", entry.getValue());
         }
-        Document document = new Document();
-        document.setDocumentName("Order Confirmation");
-        document.setDocumentBody(templateBody);
-        document.setTemplate(template);
-        document.setStatus(DocumentStatus.PENDING);
-        documentRepo.save(document);
         return templateBody;
+    }
+
+    @Override
+    public DocumentDTO createDocument(DocumentDTO documentDTO) {
+        Document document = mapperConfig.toDocument(documentDTO);
+        return mapperConfig.toDocumentDTO(documentRepo.save(document));
     }
 
     @Override

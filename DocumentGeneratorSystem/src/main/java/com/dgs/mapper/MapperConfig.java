@@ -105,7 +105,13 @@ public class MapperConfig {
         return mapper.map(auditTrailDTO, AuditTrail.class);
     }
 
+    public UserDTO toUserDTO(User user){
+        return mapper.map(user, UserDTO.class);
+    }
 
+    public User toUser(UserDTO userDTO){
+        return mapper.map(userDTO, User.class);
+    }
 
 
 

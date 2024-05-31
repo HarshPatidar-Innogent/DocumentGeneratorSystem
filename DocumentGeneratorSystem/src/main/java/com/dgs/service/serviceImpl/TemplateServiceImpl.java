@@ -1,7 +1,6 @@
 package com.dgs.service.serviceImpl;
 
 import com.dgs.DTO.TemplateDTO;
-import com.dgs.entity.Department;
 import com.dgs.entity.Template;
 import com.dgs.entity.User;
 import com.dgs.mapper.MapperConfig;
@@ -32,18 +31,17 @@ public class TemplateServiceImpl implements ITemplateService {
     @Autowired
     private AccessControlRepo accessControlRepo;
 
-
     @Override
     public List<TemplateDTO> getAllTemplate() {
         List<Template> templateList = templateRepo.findAll();
-        List<TemplateDTO>  templateDTOS = templateList.stream().map(MapperConfig::toTemplateDto).toList();
+        List<TemplateDTO> templateDTOS = templateList.stream().map(MapperConfig::toTemplateDto).toList();
         return templateDTOS;
     }
 
     @Override
     public TemplateDTO getTemplateById(Long id) {
         Optional<Template> template = templateRepo.findById(id);
-        if(template.isPresent()){
+        if (template.isPresent()) {
 //            TemplateDTO templateDTO = mapperConfig.toTemplateDto(template.get());
             TemplateDTO dto = MapperConfig.toTemplateDto(template.get());
             return dto;
@@ -68,7 +66,7 @@ public class TemplateServiceImpl implements ITemplateService {
     @Override
     public String deleteTemplate(Long id) {
         Optional<Template> template = templateRepo.findById(id);
-        if(template.isPresent()){
+        if (template.isPresent()) {
             templateRepo.deleteById(id);
             return "Template Deleted";
         }
@@ -77,20 +75,18 @@ public class TemplateServiceImpl implements ITemplateService {
 
     @Override
     public TemplateDTO getTemplateDTOById(Long templateId, Long userId) throws AccessDeniedException {
-        User user = userRepo.findById(userId).orElseThrow(()->new EntityNotFoundException("User Not Found"));
+        User user = userRepo.findById(userId).orElseThrow(() -> new EntityNotFoundException("User Not Found"));
         Long departmentId = user.getDepartment().getDepartmentId();
         Long designationId = user.getDesignation().getDesignationId();
 
-        boolean hasAccess = accessControlRepo.existsByTemplate_TemplateIdAndDepartment_DepartmentIdAndDesignation_DesignationId(templateId,departmentId,designationId);
+        boolean hasAccess = accessControlRepo.existsByTemplate_TemplateIdAndDepartment_DepartmentIdAndDesignation_DesignationId(templateId, departmentId, designationId);
 
-        if(hasAccess){
-            Template template = templateRepo.findById(templateId).orElseThrow(()->new EntityNotFoundException("Template Not Found"));
+        if (hasAccess) {
+            Template template = templateRepo.findById(templateId).orElseThrow(() -> new EntityNotFoundException("Template Not Found"));
             return mapperConfig.toTemplateDto(template);
-        }
-        else{
+        } else {
             throw new AccessDeniedException("User does not have Access to this Document");
         }
     }
-
 
 }

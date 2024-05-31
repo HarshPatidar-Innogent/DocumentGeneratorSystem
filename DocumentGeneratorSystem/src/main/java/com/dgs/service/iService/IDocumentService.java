@@ -11,7 +11,9 @@ public interface IDocumentService {
 
     public DocumentDTO getDocumentById(Long id);
 
-    public String createDocument(Map<String, String> dynamicData, Long templateId);
+    public String populateDocument(Map<String, String> dynamicData, Long templateId);
+
+    public DocumentDTO createDocument(DocumentDTO documentDTO);
 
     public DocumentDTO updateDocument(Long id);
 
