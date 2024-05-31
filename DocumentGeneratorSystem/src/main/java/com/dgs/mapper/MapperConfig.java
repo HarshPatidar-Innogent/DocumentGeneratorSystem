@@ -2,31 +2,31 @@ package com.dgs.mapper;
 
 import com.dgs.DTO.*;
 import com.dgs.entity.*;
+import com.dgs.enums.Role;
+import com.dgs.repository.DepartmentRepo;
+import com.dgs.repository.DesignationRepo;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
 public class MapperConfig {
     private ModelMapper mapper;
 
+    @Autowired
+    private DepartmentRepo departmentRepo;
+
+    @Autowired
+    private DesignationRepo designationRepo;
+
     public MapperConfig() {
         mapper = new ModelMapper();
     }
 
-    //convert document entity into dto
-    public DocumentDTO toDocumentDTO(Document document){
-        return mapper.map(document, DocumentDTO.class);
-    }
-    //convert documentDto into entity
-    public Document toDocument(DocumentDTO documentDTO){
-        return mapper.map(documentDTO, Document.class);
-    }
-
     //convert placeholder entity into dto
-    public static PlaceholderDTO toPlaceholderDto(Placeholder placeholder){
+    public static PlaceholderDTO toPlaceholderDto(Placeholder placeholder) {
 //        return mapper.map(placeholder, PlaceholderDTO.class);
         PlaceholderDTO dto = new PlaceholderDTO();
         dto.setPlaceholderId(placeholder.getPlaceholderId());
@@ -34,8 +34,9 @@ public class MapperConfig {
         dto.setPlaceholderType(placeholder.getPlaceholderType());
         return dto;
     }
+
     //convert placeholderDto into entity
-    public static Placeholder toPlaceholder(PlaceholderDTO dto, Template template){
+    public static Placeholder toPlaceholder(PlaceholderDTO dto, Template template) {
 //        return mapper.map(placeholderDTO, Placeholder.class);
 
         Placeholder placeholder = new Placeholder();
@@ -48,7 +49,7 @@ public class MapperConfig {
     }
 
     //convert template entity into dto
-    public static TemplateDTO toTemplateDto(Template template){
+    public static TemplateDTO toTemplateDto(Template template) {
 //        return mapper.map(template, TemplateDTO.class);
 
         TemplateDTO dto = new TemplateDTO();
@@ -64,8 +65,9 @@ public class MapperConfig {
                                        .collect(Collectors.toList()));
         return dto;
     }
+
     //convert templateDto into entity
-    public static Template toTemplate(TemplateDTO dto, User user){
+    public static Template toTemplate(TemplateDTO dto, User user) {
 //        return mapper.map(templateDTO, Template.class);
 
         Template template = new Template();
@@ -82,45 +84,55 @@ public class MapperConfig {
         return template;
     }
 
-    public SignatureDTO toSignatureDTO(Signature signature){
+    //convert document entity into dto
+    public DocumentDTO toDocumentDTO(Document document) {
+        return mapper.map(document, DocumentDTO.class);
+    }
+
+    //convert documentDto into entity
+    public Document toDocument(DocumentDTO documentDTO) {
+        return mapper.map(documentDTO, Document.class);
+    }
+
+    public SignatureDTO toSignatureDTO(Signature signature) {
         return mapper.map(signature, SignatureDTO.class);
     }
-    public Signature toSignature(SignatureDTO signatureDTO){
+
+    public Signature toSignature(SignatureDTO signatureDTO) {
         return mapper.map(signatureDTO, Signature.class);
     }
 
-    public AccessControlDTO toAccessControlDTO(AccessControl accessControl){
+    public AccessControlDTO toAccessControlDTO(AccessControl accessControl) {
         return mapper.map(accessControl, AccessControlDTO.class);
     }
 
-    public AccessControl toAccessControl(AccessControlDTO accessControlDTO){
+    public AccessControl toAccessControl(AccessControlDTO accessControlDTO) {
         return mapper.map(accessControlDTO, AccessControl.class);
     }
 
-    public AuditTrailDTO toAuditTrailDTO(AuditTrail auditTrail){
+    public AuditTrailDTO toAuditTrailDTO(AuditTrail auditTrail) {
         return mapper.map(auditTrail, AuditTrailDTO.class);
     }
 
-    public AuditTrail toAuditTrail(AuditTrailDTO auditTrailDTO){
+    public AuditTrail toAuditTrail(AuditTrailDTO auditTrailDTO) {
         return mapper.map(auditTrailDTO, AuditTrail.class);
     }
 
-    public UserDTO toUserDTO(User user){
+    public UserDTO toUserDTO(User user) {
         return mapper.map(user, UserDTO.class);
     }
 
-    public User toUser(UserDTO userDTO){
-        return mapper.map(userDTO, User.class);
+    public User toUser(UserDTO userDTO) {
+//        return mapper.map(userDTO, User.class);
+        User user = new User();
+        user.setFirstName(userDTO.getFirstName());
+        user.setLastName(userDTO.getLastName());
+        user.setEmail(userDTO.getEmail());
+        user.setPassword(userDTO.getPassword());
+        user.setDepartment(departmentRepo.findById(userDTO.getDepartmentId()).get());
+        user.setDesignation(designationRepo.findById(userDTO.getDesignationId()).get());
+        user.setRole(Role.USER);
+        return user;
     }
-
-
-
-
-
-
-
-
-
-
 
 }

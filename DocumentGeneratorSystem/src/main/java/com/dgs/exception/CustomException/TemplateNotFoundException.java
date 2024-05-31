@@ -1,4 +1,4 @@
-package com.dgs.exception;
+package com.dgs.exception.CustomException;
 
 
 public class TemplateNotFoundException extends RuntimeException{

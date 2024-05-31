@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 @RequestMapping("/api/v1/user-controller")
 public class UserController {
-    @GetMapping
+    @GetMapping("/user")
     public ResponseEntity<String> sayHello(){
         return ResponseEntity.ok("Hello");
     }
