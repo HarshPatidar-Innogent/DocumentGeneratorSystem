@@ -1,5 +1,5 @@
 package com.dgs.service.serviceImpl;
-
+import java.util.Base64;
 import com.dgs.DTO.SignatureDTO;
 import com.dgs.entity.Document;
 import com.dgs.entity.Signature;
@@ -10,11 +10,16 @@ import com.dgs.repository.DocumentRepo;
 import com.dgs.repository.SignatureRepo;
 import com.dgs.repository.UserRepo;
 import com.dgs.service.iService.ISignatureService;
+import com.dgs.signatureGenerator.SignatureGenerator;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.Optional;
 
 @Service
@@ -37,10 +42,13 @@ public class SignatureServiceImpl implements ISignatureService {
         Document document = documentRepo.findById(signatureDTO.getDocumentId()).get();
         User user = userRepo.findById(signatureDTO.getUserId()).get();
         if(document !=null){
+            boolean emailExists = signatureRepo.existsByRecipientEmail(signatureDTO.getRecipientEmail());
+
             Signature sign = new Signature();
             sign.setSignatureData(file.getBytes());
             sign.setRecipientEmail(signatureDTO.getRecipientEmail());
             sign.setSignatureType(signatureDTO.getSignatureType());
+
             sign.setDocument(document);
             sign.setUser(user);
 
@@ -53,6 +61,12 @@ public class SignatureServiceImpl implements ISignatureService {
 
 
     }
+    private String generateElectronicSignature(String email, LocalDateTime dateTime) {
+        // Implement your logic to generate an electronic signature
+        // For example, creating a hash or any digital representation
+        String data = email + dateTime.toString();
+        return Base64.getEncoder().encodeToString(data.getBytes());
+    }
 
   @Override
     public byte[] getImageDataById(Long id) {
@@ -62,6 +76,7 @@ public class SignatureServiceImpl implements ISignatureService {
         }
         return null; // Handle image not found
     }
+
 //  public byte[] getImageDataById(Long id) {
 //      Optional<Signature> optionalImage = signatureRepo.findById(id);
 //      return optionalImage.get().getSignatureData();
@@ -106,6 +121,44 @@ public class SignatureServiceImpl implements ISignatureService {
             return null;
         }
     }
+
+    @Override
+    public SignatureDTO addSignatureDrawn(MultipartFile file , SignatureDTO signatureDTO) throws IOException {
+
+           byte[] signatureData = file.getBytes();
+           Document document = documentRepo.findById(signatureDTO.getDocumentId()).get();
+           User user = userRepo.findById(signatureDTO.getUserId()).get();
+           Signature signature1 = new Signature();
+           signature1.setSignatureData(signatureData);
+           signature1.setSignatureType(signatureDTO.getSignatureType());
+           signature1.setRecipientEmail(signatureDTO.getRecipientEmail());
+           signature1.setUser(user);
+           signature1.setDocument(document);
+           System.out.println(signature1);
+           Signature signature = signatureRepo.save(signature1);
+           return mapperConfig.toSignatureDTO(signature);
+
+
+    }
+
+    @Override
+    public SignatureDTO addSignatureElectronic(SignatureDTO signatureDTO) throws IOException {
+        Document document = documentRepo.findById(signatureDTO.getDocumentId()).get();
+        User user = userRepo.findById(signatureDTO.getUserId()).get();
+
+        Signature sign = new Signature();
+        sign.setRecipientEmail(signatureDTO.getRecipientEmail());
+        sign.setSignatureType(signatureDTO.getSignatureType());
+
+        byte[] signatureImage = SignatureGenerator.generateSignatureImage(signatureDTO.getRecipientEmail());
+        sign.setSignatureData(signatureImage);
+        sign.setDocument(document);
+        sign.setUser(user);
+        Signature signature = signatureRepo.save(sign);
+        return mapperConfig.toSignatureDTO(signature);
+
+    }
+
 
 //    @Override
 //    public SignatureDTO updateSignature(Long id, MultipartFile file ,String recipientEmail, SignatureType signatureType) throws IOException {

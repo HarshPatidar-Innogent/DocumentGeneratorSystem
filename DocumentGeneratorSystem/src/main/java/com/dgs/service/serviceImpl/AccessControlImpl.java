@@ -65,5 +65,17 @@ public class AccessControlImpl implements IAccessControlService {
          return accessControlDTOS;
     }
 
+    @Override
+    public String deleteAccessControl(Long accessControlId) {
+        Optional<AccessControl> accessControl = accessControlRepo.findById(accessControlId);
+        if(accessControl.isPresent()){
+              accessControlRepo.deleteById(accessControlId);
+              return "Access Control is Successfully deleted";
+        }
+        else{
+            return "Access Control Not Found";
+        }
+    }
+
 
 }
