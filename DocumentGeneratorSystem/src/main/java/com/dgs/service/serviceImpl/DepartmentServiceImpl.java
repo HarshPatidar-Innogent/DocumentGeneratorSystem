@@ -25,6 +25,7 @@ public class DepartmentServiceImpl implements IDepartmentService {
     public DepartmentDTO createDepartment(DepartmentDTO departmentDTO) {
         departmentDTO.setDepartmentId(null);
 
+
         Department department = mapperConfig.toDepartment(departmentDTO);
         Department savedDepartment = departmentRepo.save(department);
         return mapperConfig.toDepartmentDTO(savedDepartment);
