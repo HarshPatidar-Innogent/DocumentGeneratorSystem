@@ -145,4 +145,26 @@ public class MapperConfig {
         return user;
     }
 
+
+    //convert department entity into dto
+    public DepartmentDTO toDepartmentDTO(Department department) {
+        return mapper.map(department, DepartmentDTO.class);
+    }
+
+    //convert departmentDto into entity
+    public Department toDepartment(DepartmentDTO departmentDTO) {
+        return mapper.map(departmentDTO, Department.class);
+    }
+
+    //convert designation entity into dto
+    public DesignationDTO toDesignationDTO(Designation designation) {
+        return mapper.map(designation, DesignationDTO.class);
+    }
+
+    //convert designationdto into entity
+    public Designation toDesignation(DesignationDTO designationDTO) {
+        return mapper.map(designationDTO, Designation.class);
+    }
+
+
 }

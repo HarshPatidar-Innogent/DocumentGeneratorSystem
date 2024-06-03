@@ -1,7 +1,7 @@
 package com.dgs.service.iService;
 
 import com.dgs.DTO.DocumentDTO;
-import com.dgs.entity.Document;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -11,7 +11,9 @@ public interface IDocumentService {
 
     public DocumentDTO getDocumentById(Long id);
 
-    public String populateDocument(Map<String, String> dynamicData, Long templateId);
+//    public String populateDocument(Map<String, String> dynamicData, Long templateId);
+public String populateDocument(Map<String, MultipartFile> fileData, Map<String, String> dynamicData, Long templateId);
+
 
     public DocumentDTO createDocument(DocumentDTO documentDTO);
 
