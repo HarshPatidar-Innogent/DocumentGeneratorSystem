@@ -1,7 +1,6 @@
 package com.dgs.config;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -25,7 +24,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http.csrf().disable()
                 .authorizeHttpRequests()
-//                .requestMatchers("/api/v1/**", "/template/**", "/placeholder/**", "/document/**")
+//               .requestMatchers("/api/v1/**", "/template/**", "/placeholder/**", "/document/**")
                 .requestMatchers("/api/v1/auth/**", "/template/**", "/document/**", "/placeholder/**")
                 .permitAll()
                 .anyRequest()
