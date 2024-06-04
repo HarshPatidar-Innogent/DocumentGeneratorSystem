@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class DocumentDTO {
@@ -22,4 +23,5 @@ public class DocumentDTO {
 
     private Long userId;
 
+    private List<String> signatureEmails;
 }
