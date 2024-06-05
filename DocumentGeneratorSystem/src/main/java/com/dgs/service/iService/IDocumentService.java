@@ -21,5 +21,5 @@ public interface IDocumentService {
 
     public String deleteDocument(Long id);
 
-    public String submitSignature(String documentBody, Long documentId);
+    public String submitSignature(String templateBody, Long documentId);
 }
