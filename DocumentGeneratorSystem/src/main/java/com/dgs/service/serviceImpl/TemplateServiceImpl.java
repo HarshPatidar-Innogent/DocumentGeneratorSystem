@@ -32,7 +32,7 @@ public class TemplateServiceImpl implements ITemplateService {
     private AccessControlRepo accessControlRepo;
 
     @Override
-    public List<TemplateDTO> getAllTemplate() {
+    public List<TemplateDTO> getAllTemplate(Long userId) {
         List<Template> templateList = templateRepo.findAll();
         List<TemplateDTO> templateDTOS = templateList.stream().map(MapperConfig::toTemplateDto).toList();
         return templateDTOS;
@@ -87,6 +87,11 @@ public class TemplateServiceImpl implements ITemplateService {
         } else {
             throw new AccessDeniedException("User does not have Access to this Document");
         }
+    }
+
+    @Override
+    public void deleteTemplateById(Long id) {
+        templateRepo.deleteById(id);
     }
 
 }
