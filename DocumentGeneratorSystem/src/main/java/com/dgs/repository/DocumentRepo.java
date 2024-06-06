@@ -10,6 +10,6 @@ import java.util.List;
 
 public interface DocumentRepo extends JpaRepository<Document, Long> {
 
-    @Query(nativeQuery = true, value = "SELECT d FROM DOCUMENT d WHERE d.user.userId = :userId")
+    @Query(nativeQuery = true, value = "SELECT * FROM DOCUMENT WHERE user_id = :userId")
     public List<Document> findAllByUserId(@PathParam("userId") Long userId);
 }
