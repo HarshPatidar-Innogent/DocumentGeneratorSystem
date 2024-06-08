@@ -20,4 +20,10 @@ public class SignatureDTO {
     private String recipientEmail;
     private Long documentId;
     private Long userId;
+
+//    public void setSignatureType(String signatureType) {
+//        if (signatureType != null) {
+//            this.signatureType = SignatureType.valueOf(signatureType);
+//        }
+//    }
 }

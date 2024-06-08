@@ -104,10 +104,20 @@ public class MapperConfig {
 
     public AccessControlDTO toAccessControlDTO(AccessControl accessControl) {
         return mapper.map(accessControl, AccessControlDTO.class);
+//        AccessControlDTO accessControlDTO = new AccessControlDTO();
+//        accessControlDTO.setDepartment(departmentDTO);
+//        accessControlDTO.setDesignation(designationDTO);
+//        accessControlDTO.setTemplate(templateDTO);
+//        return accessControlDTO;
     }
 
     public AccessControl toAccessControl(AccessControlDTO accessControlDTO) {
         return mapper.map(accessControlDTO, AccessControl.class);
+//          AccessControl accessControl = new AccessControl();
+//          accessControl.setTemplate(accessControl.getTemplate());
+//          accessControl.setDepartment(accessControl.getDepartment());
+//          accessControl.setDesignation(accessControl.getDesignation());
+//          return accessControl;
     }
 
     public AuditTrailDTO toAuditTrailDTO(AuditTrail auditTrail) {

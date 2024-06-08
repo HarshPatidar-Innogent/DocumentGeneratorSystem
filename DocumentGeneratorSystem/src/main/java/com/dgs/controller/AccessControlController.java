@@ -11,12 +11,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/accessControl")
 public class AccessControlController {
 
     @Autowired
     IAccessControlService accessControlService;
 
-    @PostMapping("/addAccessControl")
+    @PostMapping("/add")
     public ResponseEntity<?> addAccessControl(@RequestParam Long templateId , @RequestParam Long departmentId , @RequestParam Long designationId){
         AccessControlDTO accessControlDTO = accessControlService.addAccessControl(templateId, departmentId, designationId);
         return ResponseEntity.status(HttpStatus.OK).body(accessControlDTO);
@@ -42,4 +43,17 @@ public class AccessControlController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Templates Not Found");
         }
     }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<String> deleteAccessControl(@PathVariable Long id){
+        String accessControl = accessControlService.deleteAccessControl(id);
+        if(accessControl!=null){
+            return ResponseEntity.status(HttpStatus.OK).body(accessControl);
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+
 }

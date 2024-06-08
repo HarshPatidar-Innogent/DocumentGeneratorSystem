@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -78,4 +79,23 @@ public class SignatureController {
         SignatureDTO signatureDTO1 = signatureService.updateSignature(id, file, signatureDTO);
         return ResponseEntity.status(HttpStatus.OK).body(signatureDTO1);
     }
+
+    @PostMapping("/addSignatureDrawn")
+    public ResponseEntity<?> addSignatureDrawn(@RequestParam("signatureData") MultipartFile file, @RequestParam("recipientEmail") String recipientEmail, @RequestParam("signatureType") SignatureType signatureType, @RequestParam Long userId, @RequestParam Long documentId) throws IOException {
+        SignatureDTO signatureDTO2 = new SignatureDTO();
+        signatureDTO2.setSignatureType(signatureType);
+        signatureDTO2.setRecipientEmail(recipientEmail);
+        signatureDTO2.setDocumentId(documentId);
+        signatureDTO2.setUserId(userId);
+
+        SignatureDTO signatureDTO = signatureService.addSignatureDrawn(file , signatureDTO2);
+        return ResponseEntity.status(HttpStatus.OK).body(signatureDTO);
+    }
+
+    @PostMapping("/addSignatureElectronic")
+    public ResponseEntity<?> addSignatureElectronic(@RequestBody SignatureDTO signatureDTO) throws IOException {
+        SignatureDTO signatureDTO1 = signatureService.addSignatureElectronic((signatureDTO));
+        return ResponseEntity.status(HttpStatus.OK).body(signatureDTO1);
+    }
+
 }

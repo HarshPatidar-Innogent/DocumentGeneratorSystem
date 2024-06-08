@@ -42,8 +42,10 @@ public class Document {
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User user;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "document")
     private Set<Signature> signatures;
+
 
 
 }
