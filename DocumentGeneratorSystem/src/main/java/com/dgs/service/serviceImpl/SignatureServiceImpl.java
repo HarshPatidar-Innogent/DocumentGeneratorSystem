@@ -40,18 +40,12 @@ public class SignatureServiceImpl implements ISignatureService {
     @Override
     public SignatureDTO addSignature(MultipartFile file , SignatureDTO signatureDTO) throws IOException {
         Document document = documentRepo.findById(signatureDTO.getDocumentId()).get();
-        User user = userRepo.findById(signatureDTO.getUserId()).get();
         if(document !=null){
-            boolean emailExists = signatureRepo.existsByRecipientEmail(signatureDTO.getRecipientEmail());
-
             Signature sign = new Signature();
             sign.setSignatureData(file.getBytes());
-            sign.setRecipientEmail(signatureDTO.getRecipientEmail());
             sign.setSignatureType(signatureDTO.getSignatureType());
-
+            sign.setPlaceholder(signatureDTO.getPlaceholder());
             sign.setDocument(document);
-            sign.setUser(user);
-
             Signature signature = signatureRepo.save(sign);
             return mapperConfig.toSignatureDTO(signature);
         }
@@ -60,12 +54,6 @@ public class SignatureServiceImpl implements ISignatureService {
         }
 
 
-    }
-    private String generateElectronicSignature(String email, LocalDateTime dateTime) {
-        // Implement your logic to generate an electronic signature
-        // For example, creating a hash or any digital representation
-        String data = email + dateTime.toString();
-        return Base64.getEncoder().encodeToString(data.getBytes());
     }
 
   @Override
@@ -112,7 +100,6 @@ public class SignatureServiceImpl implements ISignatureService {
         Signature sign = signatureRepo.findById(id).get();
         if(sign!=null){
             sign.setSignatureType(signatureDTO.getSignatureType());
-               sign.setRecipientEmail(signatureDTO.getRecipientEmail());
                sign.setSignatureData(file.getBytes());
                Signature updateSignature = signatureRepo.save(sign);
                return mapperConfig.toSignatureDTO(updateSignature);
@@ -127,39 +114,33 @@ public class SignatureServiceImpl implements ISignatureService {
 
            byte[] signatureData = file.getBytes();
            Document document = documentRepo.findById(signatureDTO.getDocumentId()).get();
-           User user = userRepo.findById(signatureDTO.getUserId()).get();
+
            Signature signature1 = new Signature();
            signature1.setSignatureData(signatureData);
            signature1.setSignatureType(signatureDTO.getSignatureType());
-           signature1.setRecipientEmail(signatureDTO.getRecipientEmail());
-           signature1.setUser(user);
            signature1.setDocument(document);
+           signature1.setPlaceholder(signatureDTO.getPlaceholder());
            System.out.println(signature1);
            Signature signature = signatureRepo.save(signature1);
            return mapperConfig.toSignatureDTO(signature);
 
-
     }
 
     @Override
-    public SignatureDTO addSignatureElectronic(SignatureDTO signatureDTO) throws IOException {
+    public SignatureDTO addSignatureElectronic(SignatureDTO signatureDTO, String Name) throws IOException {
         Document document = documentRepo.findById(signatureDTO.getDocumentId()).get();
-        User user = userRepo.findById(signatureDTO.getUserId()).get();
 
         Signature sign = new Signature();
-        sign.setRecipientEmail(signatureDTO.getRecipientEmail());
         sign.setSignatureType(signatureDTO.getSignatureType());
 
-        byte[] signatureImage = SignatureGenerator.generateSignatureImage(signatureDTO.getRecipientEmail());
+        byte[] signatureImage = SignatureGenerator.generateSignatureImage(Name);
         sign.setSignatureData(signatureImage);
         sign.setDocument(document);
-        sign.setUser(user);
+        sign.setPlaceholder(signatureDTO.getPlaceholder());
         Signature signature = signatureRepo.save(sign);
         return mapperConfig.toSignatureDTO(signature);
 
     }
-
-
 //    @Override
 //    public SignatureDTO updateSignature(Long id, MultipartFile file ,String recipientEmail, SignatureType signatureType) throws IOException {
 //        Signature sign = signatureRepo.findById(id).get();

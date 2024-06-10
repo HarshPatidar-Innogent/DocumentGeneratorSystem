@@ -32,7 +32,7 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(length = 50,nullable = false)
+    @Column(length = 500,nullable = false)
     private String password;
 
     @JoinColumn(name = "designationId",referencedColumnName ="designationId")

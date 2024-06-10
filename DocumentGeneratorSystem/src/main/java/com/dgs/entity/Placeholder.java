@@ -8,7 +8,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+
 @Table(name = "placeholder")
 public class Placeholder {
     @Id
