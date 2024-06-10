@@ -95,7 +95,7 @@ public class DocumentServiceImpl implements IDocumentService {
 
         if (!documentDTO.getSignatureEmails().isEmpty()) {
             documentDTO.getSignatureEmails().forEach(email -> {
-                emailService.sendEmail(email, "Document Signature Request", "http://192.168.5.228:3000/sign/" + document.getDocumentId() + "/{{" + emails.get(email)+"}}");
+                emailService.sendEmail(email, "Document Signature Request", "http://192.168.5.146:3000/sign/" + document.getDocumentId() + "/{{" + emails.get(email)+"}}");
             });
         }
         emails.clear();
@@ -108,13 +108,13 @@ public class DocumentServiceImpl implements IDocumentService {
     }
 
     @Override
-    public String deleteDocument(Long id) {
+    public void deleteDocument(Long id) {
         Optional<Document> documentOptional = documentRepo.findById(id);
         if (documentOptional.isPresent()) {
             documentRepo.deleteById(id);
-            return "Document Deleted";
+//            return "Document Deleted";
         }
-        return "Document Not Found";
+//        return "Document Not Found";
     }
 
     @Override

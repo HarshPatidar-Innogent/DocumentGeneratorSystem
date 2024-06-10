@@ -10,13 +10,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("designation")
+@RequestMapping("/designation")
+@CrossOrigin
 public class DesignationController {
 
         @Autowired
         private IDesignationService designationService;
 
-        @PostMapping("add")
+        @PostMapping("/add")
         public ResponseEntity<DesignationDTO> createDesignation(@RequestBody DesignationDTO designationDTO){
             designationDTO.setDesignationId(null);
 
@@ -24,7 +25,7 @@ public class DesignationController {
             return ResponseEntity.ok(createdDesignation);
         }
 
-        @GetMapping("getAll")
+        @GetMapping("/getAll")
         public ResponseEntity<List<DesignationDTO>>getall(){
             List<DesignationDTO> designation = designationService.getAll();
             return ResponseEntity.status(HttpStatus.OK).body(designation);
@@ -40,4 +41,10 @@ public class DesignationController {
             designationService.delete(id);
             return ResponseEntity.noContent().build();
         }
+
+    @GetMapping("/getByName/{name}")
+    public ResponseEntity<DesignationDTO> getByName(@PathVariable String name) {
+        DesignationDTO designationDTO = designationService.getDesignationByName(name);
+        return ResponseEntity.ok(designationDTO);
+    }
 }

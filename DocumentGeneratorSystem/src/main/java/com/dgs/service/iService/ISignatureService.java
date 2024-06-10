@@ -15,5 +15,5 @@ public interface ISignatureService {
    public SignatureDTO getSignatureById(Long id);
    public  SignatureDTO updateSignature (Long id, MultipartFile file , SignatureDTO signatureDTO) throws IOException;
    public SignatureDTO addSignatureDrawn(MultipartFile file, SignatureDTO signatureDTO) throws IOException;
-   public SignatureDTO addSignatureElectronic(SignatureDTO signatureDTO) throws IOException;
+   public SignatureDTO addSignatureElectronic(SignatureDTO signatureDTO,String Name) throws IOException;
 }

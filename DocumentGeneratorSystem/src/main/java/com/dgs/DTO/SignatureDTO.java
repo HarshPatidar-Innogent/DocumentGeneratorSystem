@@ -17,13 +17,7 @@ public class SignatureDTO {
     private SignatureType signatureType;
     private byte[] signatureData;
     private LocalDateTime signedAt;
-    private String recipientEmail;
     private Long documentId;
     private Long userId;
-
-//    public void setSignatureType(String signatureType) {
-//        if (signatureType != null) {
-//            this.signatureType = SignatureType.valueOf(signatureType);
-//        }
-//    }
+    private String placeholder;
 }

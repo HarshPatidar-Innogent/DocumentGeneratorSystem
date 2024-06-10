@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/department")
+@CrossOrigin
 public class DepartmentController {
 
     @Autowired
@@ -44,6 +45,12 @@ public class DepartmentController {
     public ResponseEntity<DesignationDTO>delete(@PathVariable long id) {
         departmentService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/getByName/{name}")
+    public ResponseEntity<DepartmentDTO> getByName(@PathVariable String name) {
+        DepartmentDTO departmentDTO = departmentService.getDepartmentByName(name);
+        return ResponseEntity.ok(departmentDTO);
     }
 
 }
