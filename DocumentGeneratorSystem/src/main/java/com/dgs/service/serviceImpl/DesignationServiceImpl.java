@@ -57,4 +57,11 @@ public class DesignationServiceImpl implements IDesignationService {
         designationRepo.deleteById(designationId);
     }
 
+
+    @Override
+    public DesignationDTO getDesignationByName(String name) {
+        Designation designation = (Designation) designationRepo.findByDesignationName(name).orElseThrow(() -> new IllegalArgumentException("Designation not found"));
+        return mapperConfig.toDesignationDTO(designation);
+    }
+
 }

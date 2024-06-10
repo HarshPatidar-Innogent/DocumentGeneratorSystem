@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/department")
+@CrossOrigin
 public class DepartmentController {
 
     @Autowired
@@ -34,7 +35,6 @@ public class DepartmentController {
         return ResponseEntity.ok(departments);
     }
     @PutMapping("/update/{id}")
-
     public ResponseEntity<DepartmentDTO> update(@PathVariable Long id, @RequestBody DepartmentDTO departmentDTO) {
         DepartmentDTO updatedDepartment = departmentService.update(id, departmentDTO);
         return ResponseEntity.ok(updatedDepartment);
@@ -44,6 +44,12 @@ public class DepartmentController {
     public ResponseEntity<DesignationDTO>delete(@PathVariable long id) {
         departmentService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/getByName/{name}")
+    public ResponseEntity<DepartmentDTO> getByName(@PathVariable String name) {
+        DepartmentDTO departmentDTO = departmentService.getDepartmentByName(name);
+        return ResponseEntity.ok(departmentDTO);
     }
 
 }
