@@ -91,7 +91,7 @@ public class SignatureController {
 
     @PostMapping("/addSignatureElectronic")
     public ResponseEntity<?> addSignatureElectronic(@RequestBody SignatureDTO signatureDTO, @RequestParam("name") String Name) throws IOException {
-        SignatureDTO signatureDTO1 = signatureService.addSignatureElectronic(signatureDTO,Name);
+        SignatureDTO signatureDTO1 = signatureService.addSignatureElectronic(signatureDTO, Name);
         return ResponseEntity.status(HttpStatus.OK).body(signatureDTO1);
     }
 

@@ -36,10 +36,10 @@ public class Template {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User user;
 
-    @OneToMany(mappedBy = "template", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "template",cascade = CascadeType.ALL)
     private List<Placeholder> placeholderList;
 }
