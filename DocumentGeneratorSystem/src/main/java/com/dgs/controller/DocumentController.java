@@ -48,6 +48,12 @@ public class DocumentController {
         return ResponseEntity.ok(document);
     }
 
+    @GetMapping("/getDocument/{id}")
+    public ResponseEntity<DocumentDTO> getDocumentById(@PathVariable Long id){
+        DocumentDTO documentDTO = documentService.getDocumentById(id);
+        return ResponseEntity.ok(documentDTO);
+    }
+
     @PutMapping("/sign-submit/{id}")
     public ResponseEntity<?> submitSignedDocument(@RequestBody String documentBody, @PathVariable Long id) {
         try {
