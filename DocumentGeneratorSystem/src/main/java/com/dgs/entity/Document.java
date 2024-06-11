@@ -24,7 +24,7 @@ public class Document {
     @Column(length = 100, nullable = false)
     private String documentName;
 
-    @Column(length = 4000)
+    @Lob
     private String documentBody;
 
     @Enumerated(EnumType.STRING)
@@ -43,7 +43,7 @@ public class Document {
     private User user;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "document")
+    @OneToMany(mappedBy = "document", cascade = CascadeType.ALL)
     private Set<Signature> signatures;
 
 

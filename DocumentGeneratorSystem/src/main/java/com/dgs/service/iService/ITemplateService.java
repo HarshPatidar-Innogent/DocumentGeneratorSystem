@@ -8,7 +8,7 @@ import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 public interface ITemplateService {
-    public List<TemplateDTO> getAllTemplate();
+    public List<TemplateDTO> getAllTemplate(Long userId);
 
     public TemplateDTO getTemplateById(Long id);
 
@@ -19,4 +19,6 @@ public interface ITemplateService {
     public String deleteTemplate(Long id);
 
     public TemplateDTO getTemplateDTOById(Long templateId,Long userId) throws AccessDeniedException;
+
+    public void deleteTemplateById(Long id);
 }

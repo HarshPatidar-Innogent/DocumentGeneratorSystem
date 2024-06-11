@@ -22,7 +22,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
 
-    private final UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService; // Add this line
+
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,

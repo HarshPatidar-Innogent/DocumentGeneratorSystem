@@ -24,15 +24,14 @@ public class SignatureController {
     ISignatureService signatureService;
 
     @PostMapping("/addSignature")
-    public ResponseEntity<?> addSignature(@RequestParam("signatureData") MultipartFile[] files, @RequestParam("recipientEmail") String recipientEmail, @RequestParam("signatureType") SignatureType signatureType, @RequestParam Long userId, @RequestParam Long documentId) throws IOException {
+    public ResponseEntity<?> addSignature(@RequestParam("signatureData") MultipartFile[] files, @RequestParam("signatureType") SignatureType signatureType, @RequestParam Long documentId, @RequestParam("placeholder") String placeholder) throws IOException {
         List<SignatureDTO> signatureDTOS = new ArrayList<>();
 
         for (MultipartFile file : files) {
             SignatureDTO signatureDTO = new SignatureDTO();
             signatureDTO.setSignatureType(signatureType);
-            signatureDTO.setRecipientEmail(recipientEmail);
             signatureDTO.setDocumentId(documentId);
-            signatureDTO.setUserId(userId);
+            signatureDTO.setPlaceholder(placeholder);
 
             SignatureDTO sign = this.signatureService.addSignature(file, signatureDTO);
             signatureDTOS.add(sign);
@@ -75,26 +74,24 @@ public class SignatureController {
     public ResponseEntity<?> updateSign(@PathVariable Long id, @RequestParam("signatureData") MultipartFile file, @RequestParam("recipientEmail") String recipientEmail, @RequestParam("signatureType") SignatureType signatureType) throws IOException {
         SignatureDTO signatureDTO = new SignatureDTO();
         signatureDTO.setSignatureType(signatureType);
-        signatureDTO.setRecipientEmail(recipientEmail);
         SignatureDTO signatureDTO1 = signatureService.updateSignature(id, file, signatureDTO);
         return ResponseEntity.status(HttpStatus.OK).body(signatureDTO1);
     }
 
     @PostMapping("/addSignatureDrawn")
-    public ResponseEntity<?> addSignatureDrawn(@RequestParam("signatureData") MultipartFile file, @RequestParam("recipientEmail") String recipientEmail, @RequestParam("signatureType") SignatureType signatureType, @RequestParam Long userId, @RequestParam Long documentId) throws IOException {
+    public ResponseEntity<?> addSignatureDrawn(@RequestParam("signatureData") MultipartFile file, @RequestParam("signatureType") SignatureType signatureType, @RequestParam Long documentId, @RequestParam("placeholder") String placeholder) throws IOException {
         SignatureDTO signatureDTO2 = new SignatureDTO();
         signatureDTO2.setSignatureType(signatureType);
-        signatureDTO2.setRecipientEmail(recipientEmail);
         signatureDTO2.setDocumentId(documentId);
-        signatureDTO2.setUserId(userId);
-
+        signatureDTO2.setPlaceholder(placeholder);
+        System.out.println(documentId);
         SignatureDTO signatureDTO = signatureService.addSignatureDrawn(file , signatureDTO2);
         return ResponseEntity.status(HttpStatus.OK).body(signatureDTO);
     }
 
     @PostMapping("/addSignatureElectronic")
-    public ResponseEntity<?> addSignatureElectronic(@RequestBody SignatureDTO signatureDTO) throws IOException {
-        SignatureDTO signatureDTO1 = signatureService.addSignatureElectronic((signatureDTO));
+    public ResponseEntity<?> addSignatureElectronic(@RequestBody SignatureDTO signatureDTO, @RequestParam("name") String Name) throws IOException {
+        SignatureDTO signatureDTO1 = signatureService.addSignatureElectronic(signatureDTO, Name);
         return ResponseEntity.status(HttpStatus.OK).body(signatureDTO1);
     }
 

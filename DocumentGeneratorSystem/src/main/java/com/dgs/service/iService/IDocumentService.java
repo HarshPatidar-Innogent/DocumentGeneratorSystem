@@ -11,13 +11,14 @@ public interface IDocumentService {
 
     public DocumentDTO getDocumentById(Long id);
 
-//    public String populateDocument(Map<String, String> dynamicData, Long templateId);
-public String populateDocument(Map<String, MultipartFile> fileData, Map<String, String> dynamicData, Long templateId);
-
+    public String populateDocument(Map<String, String> dynamicData, Long templateId);
 
     public DocumentDTO createDocument(DocumentDTO documentDTO);
 
     public DocumentDTO updateDocument(Long id);
 
-    public String deleteDocument(Long id);
+    public void deleteDocument(Long id);
+
+    public String submitSignature(String templateBody, Long documentId);
+
 }

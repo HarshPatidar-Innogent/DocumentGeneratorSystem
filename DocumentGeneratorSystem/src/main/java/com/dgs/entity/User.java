@@ -32,7 +32,7 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(length = 50,nullable = false)
+    @Column(length = 500,nullable = false)
     private String password;
 
     @JoinColumn(name = "designationId",referencedColumnName ="designationId")
@@ -45,6 +45,12 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Template> template;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Document> Document;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -22,9 +22,9 @@ public class TemplateController {
     @Autowired
     private IUserService iUserService;
 
-    @GetMapping("/all")
-    public ResponseEntity<?> getAllTemplate(){
-        List<TemplateDTO> templateDTOS = templateService.getAllTemplate();
+    @GetMapping("/all/{id}")
+    public ResponseEntity<?> getAllTemplate(@PathVariable Long id){
+        List<TemplateDTO> templateDTOS = templateService.getAllTemplate(id  );
         return ResponseEntity.status(HttpStatus.OK).body(templateDTOS);
     }
 
@@ -51,6 +51,16 @@ public class TemplateController {
             return ResponseEntity.ok(templateDTO);
         }
         else{
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/deleteTemplate/{id}")
+    public ResponseEntity<?> deleteTemplateById(@PathVariable Long id){
+        if(templateService.getTemplateById(id)!=null){
+            templateService.deleteTemplateById(id);
+            return ResponseEntity.ok("Templated Deleted");
+        }else{
             return ResponseEntity.notFound().build();
         }
     }

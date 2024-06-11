@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class  DepartmentServiceImpl implements IDepartmentService {
+public class DepartmentServiceImpl implements IDepartmentService {
 
     @Autowired
     private MapperConfig mapperConfig;
@@ -59,10 +59,5 @@ public class  DepartmentServiceImpl implements IDepartmentService {
         }
         departmentRepo.deleteById(departmentId);
 
-    }
-    @Override
-    public DepartmentDTO getDepartmentByName(String name) {
-        Department department = (Department) departmentRepo.findByDepartmentName(name).orElseThrow(() -> new IllegalArgumentException("Department not found"));
-        return mapperConfig.toDepartmentDTO(department);
     }
 }

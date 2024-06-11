@@ -9,10 +9,8 @@ import com.dgs.repository.TemplateRepo;
 import com.dgs.service.iService.IDocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,7 +25,13 @@ public class DocumentServiceImpl implements IDocumentService {
     private TemplateRepo templateRepo;
 
     @Autowired
+    private EmailService emailService;
+
+    @Autowired
     private MapperConfig mapperConfig;
+
+    private Map<String, String> emails = new HashMap<>();
+    ;
 
     @Override
     public List<DocumentDTO> getAllDocumentOfUser(Long userId) {
@@ -56,7 +60,7 @@ public class DocumentServiceImpl implements IDocumentService {
 //        return templateBody;
 //    }
 
-    public String populateDocument(Map<String, MultipartFile> fileData, Map<String, String> textData, Long templateId) {
+    public String populateDocument(Map<String, String> textData, Long templateId) {
         Optional<Template> templateOptional = templateRepo.findById(templateId);
         if (templateOptional.isEmpty()) {
             throw new IllegalArgumentException("Template not found with id: " + templateId);
@@ -65,48 +69,37 @@ public class DocumentServiceImpl implements IDocumentService {
         Template template = templateOptional.get();
         String templateBody = template.getTemplateBody();
 
-        for (Map.Entry<String, MultipartFile> entry : fileData.entrySet()) {
-            MultipartFile file = entry.getValue();
-            if (!file.isEmpty()) {
-                try {
-                    // Read the bytes of the image file
-                    byte[] fileBytes = file.getBytes();
-
-                    // Encode the bytes to base64
-                    String base64Image = Base64.getEncoder().encodeToString(fileBytes);
-
-                    // Embed the base64-encoded image into the template body
-                    String imageDataUri = "data:" + file.getContentType() + ";base64," + base64Image;
-                    templateBody = templateBody.replace("{{" + entry.getKey() + "}}", "<img src='" + imageDataUri + "' alt='signature'/>");
-                } catch (IOException e) {
-                    // Handle IOException
-                    e.printStackTrace();
-                    throw new RuntimeException("Failed to process signature image", e);
-                }
-            }
-        }
-
         for (Map.Entry<String, String> entry : textData.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
-            // Check if value is base64 image data or plain text (initials)
-            if (value.startsWith("data:image")) {
-                // Handle the image replacement logic
-                templateBody = templateBody.replace("{{" + key + "}}", "<img src='" + value + "' alt='signature'/>");
+
+            if (isSignaturePlaceholder(key, template)) {
+                emails.put(value, key);
             } else {
-                // Handle initials replacement
-                templateBody = templateBody.replace("{{" + key + "}}", value);
+                templateBody = templateBody.replace("{{" + entry.getKey() + "}}", entry.getValue());
             }
         }
-
         return templateBody;
     }
 
+    private boolean isSignaturePlaceholder(String placeholderName, Template template) {
+        return template.getPlaceholderList().stream()
+                .anyMatch(placeholder -> placeholder.getPlaceholderName().equals(placeholderName) && placeholder.getPlaceholderType().equals("signature"));
+    }
 
     @Override
     public DocumentDTO createDocument(DocumentDTO documentDTO) {
         Document document = mapperConfig.toDocument(documentDTO);
-        return mapperConfig.toDocumentDTO(documentRepo.save(document));
+        Document savedDocument = documentRepo.save(document);
+        DocumentDTO saveDocumentDTO = mapperConfig.toDocumentDTO(savedDocument);
+
+        if (!documentDTO.getSignatureEmails().isEmpty()) {
+            documentDTO.getSignatureEmails().forEach(email -> {
+                emailService.sendEmail(email, "Document Signature Request", "http://192.168.5.146:3000/sign/" + document.getDocumentId() + "/{{" + emails.get(email)+"}}");
+            });
+        }
+        emails.clear();
+        return saveDocumentDTO;
     }
 
     @Override
@@ -115,12 +108,21 @@ public class DocumentServiceImpl implements IDocumentService {
     }
 
     @Override
-    public String deleteDocument(Long id) {
+    public void deleteDocument(Long id) {
         Optional<Document> documentOptional = documentRepo.findById(id);
         if (documentOptional.isPresent()) {
             documentRepo.deleteById(id);
-            return "Document Deleted";
+//            return "Document Deleted";
         }
-        return "Document Not Found";
+//        return "Document Not Found";
+    }
+
+    @Override
+    public String submitSignature(String documentBody, Long documentId) {
+        Optional<Document> document = documentRepo.findById(documentId);
+        Document document1 = document.get();
+        document1.setDocumentBody(documentBody);
+        Document save = documentRepo.save(document1);
+        return "Document Signed";
     }
 }
