@@ -10,6 +10,7 @@ import com.dgs.repository.DesignationRepo;
 import com.dgs.repository.UserRepo;
 import com.dgs.service.iService.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -118,6 +119,12 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserDTO findUserByEmail(String email) {
         User user = userRepo.findByEmail(email).get();
+        return mapperConfig.toUserDTO(user);
+    }
+
+    @Override
+    public UserDTO findUserById(Long id) {
+        User user = userRepo.findById(id).orElseThrow(()->new UsernameNotFoundException("User Not Found"));
         return mapperConfig.toUserDTO(user);
     }
 

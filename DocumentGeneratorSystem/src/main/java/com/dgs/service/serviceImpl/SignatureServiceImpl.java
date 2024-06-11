@@ -1,25 +1,20 @@
 package com.dgs.service.serviceImpl;
-import java.util.Base64;
+
 import com.dgs.DTO.SignatureDTO;
 import com.dgs.entity.Document;
 import com.dgs.entity.Signature;
-import com.dgs.entity.User;
-import com.dgs.enums.SignatureType;
 import com.dgs.mapper.MapperConfig;
 import com.dgs.repository.DocumentRepo;
 import com.dgs.repository.SignatureRepo;
 import com.dgs.repository.UserRepo;
 import com.dgs.service.iService.ISignatureService;
 import com.dgs.signatureGenerator.SignatureGenerator;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -141,20 +136,12 @@ public class SignatureServiceImpl implements ISignatureService {
         return mapperConfig.toSignatureDTO(signature);
 
     }
-//    @Override
-//    public SignatureDTO updateSignature(Long id, MultipartFile file ,String recipientEmail, SignatureType signatureType) throws IOException {
-//        Signature sign = signatureRepo.findById(id).get();
-//        if(sign != null){
-//               sign.setSignatureType(signatureType);
-//               sign.setRecipientEmail(recipientEmail);
-//               sign.setSignatureData(file.getBytes());
-//               Signature updateSignature = signatureRepo.save(sign);
-//               return mapperConfig.toSignatureDTO(updateSignature);
-//        }
-//        else{
-//            return null;
-//        }
-//    }
 
+    @Override
+    public List<SignatureDTO> getAllSignatureOfDocument(Long id) {
+        List<Signature> signatures = signatureRepo.getAllSignaturesOfDocument(id);
+        List<SignatureDTO> signatureDTOS = signatures.stream().map(signature -> mapperConfig.toSignatureDTO(signature)).toList();
+        return signatureDTOS;
+    }
 
 }

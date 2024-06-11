@@ -95,7 +95,7 @@ public class DocumentServiceImpl implements IDocumentService {
 
         if (!documentDTO.getSignatureEmails().isEmpty()) {
             documentDTO.getSignatureEmails().forEach(email -> {
-                emailService.sendEmail(email, "Document Signature Request", "http://192.168.5.146:3000/sign/" + document.getDocumentId() + "/{{" + emails.get(email)+"}}");
+                emailService.sendEmail(email, "Document Signature Request", "http://192.168.5.214:3000/sign/" + document.getDocumentId() + "/{{" + emails.get(email)+"}}");
             });
         }
         emails.clear();

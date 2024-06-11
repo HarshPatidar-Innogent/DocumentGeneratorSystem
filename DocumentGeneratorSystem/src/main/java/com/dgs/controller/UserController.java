@@ -32,6 +32,8 @@ public class UserController {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private IUserService iUserService;
     @GetMapping("/user")
     public ResponseEntity<String> sayHello() {
         return ResponseEntity.ok("Hello");
@@ -77,4 +79,10 @@ public class UserController {
         UserDTO userDTO = userService.getUserById(id);
         return ResponseEntity.ok(userDTO);
     }
+
+//    @GetMapping("/getUser/{id}")
+//    public UserDTO getUserById(@PathVariable Long id){
+//        return iUserService.findUserById(id);
+//    }
+
 }

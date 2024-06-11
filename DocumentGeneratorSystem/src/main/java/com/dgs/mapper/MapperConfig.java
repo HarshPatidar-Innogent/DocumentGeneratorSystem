@@ -129,6 +129,7 @@ public class MapperConfig {
     }
 
     public UserDTO toUserDTO(User user) {
+
         return mapper.map(user, UserDTO.class);
     }
 

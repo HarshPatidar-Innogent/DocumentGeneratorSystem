@@ -70,13 +70,13 @@ public class SignatureController {
         }
     }
 
-    @PutMapping("/updateSignature/{id}")
-    public ResponseEntity<?> updateSign(@PathVariable Long id, @RequestParam("signatureData") MultipartFile file, @RequestParam("recipientEmail") String recipientEmail, @RequestParam("signatureType") SignatureType signatureType) throws IOException {
-        SignatureDTO signatureDTO = new SignatureDTO();
-        signatureDTO.setSignatureType(signatureType);
-        SignatureDTO signatureDTO1 = signatureService.updateSignature(id, file, signatureDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(signatureDTO1);
-    }
+//    @PutMapping("/updateSignature/{id}")
+//    public ResponseEntity<?> updateSign(@PathVariable Long id, @RequestParam("signatureData") MultipartFile file, @RequestParam("recipientEmail") String recipientEmail, @RequestParam("signatureType") SignatureType signatureType) throws IOException {
+//        SignatureDTO signatureDTO = new SignatureDTO();
+//        signatureDTO.setSignatureType(signatureType);
+//        SignatureDTO signatureDTO1 = signatureService.updateSignature(id, file, signatureDTO);
+//        return ResponseEntity.status(HttpStatus.OK).body(signatureDTO1);
+//    }
 
     @PostMapping("/addSignatureDrawn")
     public ResponseEntity<?> addSignatureDrawn(@RequestParam("signatureData") MultipartFile file, @RequestParam("signatureType") SignatureType signatureType, @RequestParam Long documentId, @RequestParam("placeholder") String placeholder) throws IOException {
@@ -93,6 +93,13 @@ public class SignatureController {
     public ResponseEntity<?> addSignatureElectronic(@RequestBody SignatureDTO signatureDTO, @RequestParam("name") String Name) throws IOException {
         SignatureDTO signatureDTO1 = signatureService.addSignatureElectronic(signatureDTO, Name);
         return ResponseEntity.status(HttpStatus.OK).body(signatureDTO1);
+    }
+
+
+    @GetMapping("/getSignatures/{id}")
+    public ResponseEntity<List<SignatureDTO>> getAllSignaturesOfDocument(@PathVariable Long id){
+        List<SignatureDTO> signatureDTOS = signatureService.getAllSignatureOfDocument(id);
+        return ResponseEntity.ok(signatureDTOS);
     }
 
 }
