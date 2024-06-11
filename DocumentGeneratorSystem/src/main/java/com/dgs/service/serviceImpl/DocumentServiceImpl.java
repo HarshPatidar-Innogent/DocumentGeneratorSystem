@@ -10,10 +10,8 @@ import com.dgs.service.iService.IDocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 @Service
 public class DocumentServiceImpl implements IDocumentService {
@@ -87,6 +85,10 @@ public class DocumentServiceImpl implements IDocumentService {
                 .anyMatch(placeholder -> placeholder.getPlaceholderName().equals(placeholderName) && placeholder.getPlaceholderType().equals("signature"));
     }
 
+    private String encode(String value){
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(value.getBytes(StandardCharsets.UTF_8));
+    }
+
     @Override
     public DocumentDTO createDocument(DocumentDTO documentDTO) {
         Document document = mapperConfig.toDocument(documentDTO);
@@ -95,7 +97,11 @@ public class DocumentServiceImpl implements IDocumentService {
 
         if (!documentDTO.getSignatureEmails().isEmpty()) {
             documentDTO.getSignatureEmails().forEach(email -> {
-                emailService.sendEmail(email, "Document Signature Request", "http://192.168.5.214:3000/sign/" + document.getDocumentId() + "/{{" + emails.get(email)+"}}");
+                String encodedDocumentId = encode(String.valueOf(document.getDocumentId()));
+                String encodedPlaceholder = encode("{{"+emails.get(email)+"}}");
+                String url = "http://192.168.5.215:3000/sign/" + encodedDocumentId + "/" + encodedPlaceholder ;
+                emailService.sendEmail(email, "Document Signature Request", url);
+//                emailService.sendEmail(email, "Document Signature Request", "http://192.168.5.214:3000/sign/" + document.getDocumentId() + "/{{" + emails.get(email)+"}}");
             });
         }
         emails.clear();

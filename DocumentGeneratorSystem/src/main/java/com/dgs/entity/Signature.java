@@ -24,8 +24,12 @@ public class Signature {
   @Enumerated(EnumType.STRING)
   private SignatureType signatureType;
 
+//  private String receipientEmail;
+//
+//  private Boolean signed;
+
   @Lob
-  @Column(nullable = false,columnDefinition = "LONGBLOB")
+  @Column(columnDefinition = "LONGBLOB")
   private byte[] signatureData;
 
   private String placeholder;
