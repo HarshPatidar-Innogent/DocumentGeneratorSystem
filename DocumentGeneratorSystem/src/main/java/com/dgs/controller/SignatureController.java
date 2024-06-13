@@ -102,4 +102,10 @@ public class SignatureController {
         return ResponseEntity.ok(signatureDTOS);
     }
 
+    @GetMapping("/status/{documentId}/{placeholder}")
+    public ResponseEntity<Boolean> checkSignatureStatus(@PathVariable Long documentId, @PathVariable String placeholder){
+        Boolean isSigned = signatureService.isSigned(documentId, placeholder);
+        return ResponseEntity.ok(isSigned);
+    }
+
 }
