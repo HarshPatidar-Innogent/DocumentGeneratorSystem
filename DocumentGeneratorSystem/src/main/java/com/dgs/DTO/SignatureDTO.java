@@ -20,4 +20,6 @@ public class SignatureDTO {
     private Long documentId;
     private Long userId;
     private String placeholder;
+    private Boolean signed;
+    private String recipientEmail;
 }

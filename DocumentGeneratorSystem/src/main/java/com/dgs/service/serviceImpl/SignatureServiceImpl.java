@@ -144,4 +144,10 @@ public class SignatureServiceImpl implements ISignatureService {
         return signatureDTOS;
     }
 
+    @Override
+    public Boolean isSigned(Long documentId, String placeholder) {
+        Optional<Signature> signature = signatureRepo.findByDocumentIdAndPlaceholder(documentId, placeholder);
+        return signature.map(Signature::getSigned).orElse(false);
+    }
+
 }

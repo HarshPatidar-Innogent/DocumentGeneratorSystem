@@ -23,4 +23,6 @@ public interface ISignatureService {
     public SignatureDTO addSignatureElectronic(SignatureDTO signatureDTO, String Name) throws IOException;
 
     public List<SignatureDTO> getAllSignatureOfDocument(Long id);
+
+    public Boolean isSigned(Long documentId, String placeholder);
 }
