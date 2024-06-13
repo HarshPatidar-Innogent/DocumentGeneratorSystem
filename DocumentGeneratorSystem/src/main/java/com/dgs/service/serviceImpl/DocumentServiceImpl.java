@@ -103,12 +103,14 @@ public class DocumentServiceImpl implements IDocumentService {
         DocumentDTO saveDocumentDTO = mapperConfig.toDocumentDTO(savedDocument);
 
         if (!documentDTO.getSignatureEmails().isEmpty()) {
+            System.out.println(emails);
             documentDTO.getSignatureEmails().forEach(email -> {
                 String encodedDocumentId = encode(String.valueOf(document.getDocumentId()));
                 String encodedPlaceholder = encode("{{"+emails.get(email)+"}}");
                 String encodedEmail = encode(email);
+                System.out.println(encodedPlaceholder);
 //                String url = "http://192.168.5.215:3000/sign/" + encodedDocumentId + "/" + encodedPlaceholder ;
-                String url = "http://192.168.5.215:3000/sign/" + encodedDocumentId + "/" + encodedPlaceholder +"/"+encodedEmail;
+                String url = "http://192.168.5.136:3000/sign/" + encodedDocumentId + "/" + encodedPlaceholder +"/"+encodedEmail;
                 emailService.sendEmail(email, "Document Signature Request", url);
 
 
@@ -122,7 +124,7 @@ public class DocumentServiceImpl implements IDocumentService {
         }
 
 
-        emails.clear();
+//        emails.clear();
         return saveDocumentDTO;
     }
 

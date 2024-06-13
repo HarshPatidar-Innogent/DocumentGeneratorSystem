@@ -13,6 +13,9 @@ public interface SignatureRepo extends JpaRepository<Signature,Long> {
     @Query(value = "select * from signature where document_id=:id", nativeQuery = true)
     List<Signature> getAllSignaturesOfDocument(@PathParam("id") Long id);
 
+   @Query(value = "select * from signature where recipient_email=:recipientEmail and document_id=:documentId",nativeQuery = true)
+    Signature findByRecipientEmail(@PathParam("recipientEmail") String recipientEmail , @PathParam("documentId") Long documentId);
+
     @Query(value = "select * from signature where document_id=:documentId and placeholder=:placeholder", nativeQuery = true)
     Optional<Signature> findByDocumentIdAndPlaceholder(@PathParam("documentId") Long documentId,@PathParam("placeholder") String placeholder);
 
