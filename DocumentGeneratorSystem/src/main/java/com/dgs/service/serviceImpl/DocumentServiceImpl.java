@@ -56,14 +56,6 @@ public class DocumentServiceImpl implements IDocumentService {
         throw new NullPointerException("Document with id not present");
     }
 
-//    public String populateDocument(Map<String, String> dynamicData, Long templateId) {
-//        Template template = templateRepo.findById(templateId).get();
-//        String templateBody = template.getTemplateBody();
-//        for (Map.Entry<String, String> entry : dynamicData.entrySet()) {
-//            templateBody = templateBody.replace("{{" + entry.getKey() + "}}", entry.getValue());
-//        }
-//        return templateBody;
-//    }
 
     public String populateDocument(Map<String, String> textData, Long templateId) {
         Optional<Template> templateOptional = templateRepo.findById(templateId);
@@ -110,8 +102,6 @@ public class DocumentServiceImpl implements IDocumentService {
 //                String url = "http://192.168.5.215:3000/sign/" + encodedDocumentId + "/" + encodedPlaceholder ;
                 String url = "http://192.168.5.215:3000/sign/" + encodedDocumentId + "/" + encodedPlaceholder +"/"+encodedEmail;
                 emailService.sendEmail(email, "Document Signature Request", url);
-
-
                 Signature signature = new Signature();
 //                signature.setPlaceholder("{{"+emails.get(email)+"}}");
                 signature.setDocument(documentRepo.findById(document.getDocumentId()).orElseThrow(() -> new IllegalArgumentException("Invalid document ID")));
