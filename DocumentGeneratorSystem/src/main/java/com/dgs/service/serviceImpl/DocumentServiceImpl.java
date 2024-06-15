@@ -71,9 +71,9 @@ public class DocumentServiceImpl implements IDocumentService {
             String key = entry.getKey();
             String value = entry.getValue();
 
-            if (!isSignaturePlaceholder(key, template)) {
-//                emails.put(value, key);
-//            } else {
+            if (isSignaturePlaceholder(key, template)) {
+                emails.put(value, key);
+            } else {
                 templateBody = templateBody.replace("{{" + entry.getKey() + "}}", entry.getValue());
             }
         }

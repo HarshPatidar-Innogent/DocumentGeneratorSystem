@@ -16,13 +16,13 @@ public interface ISignatureService {
 
     public SignatureDTO getSignatureById(Long id);
 
-    public SignatureDTO updateSignature(Long id, MultipartFile file, SignatureDTO signatureDTO) throws IOException;
-
     public SignatureDTO addSignatureDrawn(MultipartFile file, SignatureDTO signatureDTO) throws IOException;
 
-    public SignatureDTO addSignatureElectronic(SignatureDTO signatureDTO, String Name) throws IOException;
+    public SignatureDTO addSignatureElectronic(SignatureDTO signatureDTO, String Name,String recipientEmail,Long documentId) throws IOException;
 
     public List<SignatureDTO> getAllSignatureOfDocument(Long id);
 
     public Boolean isSigned(Long documentId, String placeholder);
+
+    public SignatureDTO updateSign(String recipientEmail,Long documentId , MultipartFile file,SignatureDTO signatureDTO) throws IOException;
 }
