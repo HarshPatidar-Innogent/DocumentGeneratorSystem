@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class DocumentDTO {
@@ -24,5 +25,5 @@ public class DocumentDTO {
 
     private Long userId;
 
-    private List<String> signatureEmails;
+    private Map<String, String> signatureEmails;
 }

@@ -34,7 +34,7 @@ public class DocumentServiceImpl implements IDocumentService {
     private SignatureRepo signatureRepo;
 
 
-    private final Map<String, String> emails = new HashMap<>();
+    private Map<String, String> emails;
 
 
 
@@ -58,6 +58,7 @@ public class DocumentServiceImpl implements IDocumentService {
 
 
     public String populateDocument(Map<String, String> textData, Long templateId) {
+        emails = new HashMap<>();
         Optional<Template> templateOptional = templateRepo.findById(templateId);
         if (templateOptional.isEmpty()) {
             throw new IllegalArgumentException("Template not found with id: " + templateId);
@@ -70,9 +71,9 @@ public class DocumentServiceImpl implements IDocumentService {
             String key = entry.getKey();
             String value = entry.getValue();
 
-            if (isSignaturePlaceholder(key, template)) {
-                emails.put(value, key);
-            } else {
+            if (!isSignaturePlaceholder(key, template)) {
+//                emails.put(value, key);
+//            } else {
                 templateBody = templateBody.replace("{{" + entry.getKey() + "}}", entry.getValue());
             }
         }
@@ -91,13 +92,23 @@ public class DocumentServiceImpl implements IDocumentService {
     @Override
     public DocumentDTO createDocument(DocumentDTO documentDTO) {
         Document document = mapperConfig.toDocument(documentDTO);
+        System.out.println(documentDTO);
         Document savedDocument = documentRepo.save(document);
         DocumentDTO saveDocumentDTO = mapperConfig.toDocumentDTO(savedDocument);
 
+        Map<String, String> documentEmails = documentDTO.getSignatureEmails();
+        for (Map.Entry<String, String> entry : documentEmails.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+
+            emails.put(key, value);
+        }
+
+
         if (!documentDTO.getSignatureEmails().isEmpty()) {
-            documentDTO.getSignatureEmails().forEach(email -> {
+            documentDTO.getSignatureEmails().forEach((placeholder, email) -> {
                 String encodedDocumentId = encode(String.valueOf(document.getDocumentId()));
-                String encodedPlaceholder = encode("{{"+emails.get(email)+"}}");
+                String encodedPlaceholder = encode("{{"+placeholder+"}}");
                 String encodedEmail = encode(email);
 //                String url = "http://192.168.5.215:3000/sign/" + encodedDocumentId + "/" + encodedPlaceholder ;
                 String url = "http://192.168.5.215:3000/sign/" + encodedDocumentId + "/" + encodedPlaceholder +"/"+encodedEmail;
