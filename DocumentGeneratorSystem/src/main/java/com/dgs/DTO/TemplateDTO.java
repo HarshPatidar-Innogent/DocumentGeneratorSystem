@@ -2,11 +2,13 @@ package com.dgs.DTO;
 
 import com.dgs.entity.User;
 import com.dgs.enums.TemplateFormat;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Getter
@@ -24,5 +26,7 @@ public class TemplateDTO {
 
     private LocalDateTime updatedAt;
 
-    private Long user;
+    private Long userId;
+
+    private List<PlaceholderDTO> placeholderDTOS;
 }

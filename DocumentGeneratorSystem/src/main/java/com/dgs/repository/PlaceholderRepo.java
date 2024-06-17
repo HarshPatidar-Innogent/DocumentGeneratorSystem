@@ -10,6 +10,6 @@ import java.util.List;
 public interface PlaceholderRepo extends JpaRepository<Placeholder, Long> {
 
     //    @Query("SELECT p FROM placeholder p WHERE p.templateId = :templateId")
-    @Query(value = "select * from placeholder where templateId = :templateId", nativeQuery = true)
+    @Query(value = "select * from placeholder where template_Id = :templateId", nativeQuery = true)
     public List<Placeholder> getAllPlaceholderByTemplateId(@Param("templateId") Long templateId);
 }

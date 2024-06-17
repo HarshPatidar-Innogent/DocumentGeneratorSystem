@@ -9,5 +9,4 @@ public class DesignationDTO {
     private String designationName;
     private String description;
     private DesignationPermission designationPermission;
-
 }

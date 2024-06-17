@@ -3,6 +3,7 @@ import com.dgs.enums.SignatureType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.boot.jaxb.hbm.spi.JaxbHbmOnDeleteEnum;
 
 import java.sql.Blob;
 import java.time.LocalDateTime;
@@ -23,21 +24,24 @@ public class Signature {
   @Enumerated(EnumType.STRING)
   private SignatureType signatureType;
 
-  @Column(nullable = false)
-  private Blob signatureData;
-
-  @Column(length = 50,nullable = false,unique = true)
   private String recipientEmail;
+
+  @Column(columnDefinition = "boolean default false")
+  private Boolean signed;
+
+  @Lob
+  @Column(columnDefinition = "LONGBLOB")
+  private byte[] signatureData;
+
+  private String placeholder;
 
   @CreationTimestamp
   private LocalDateTime signedAt;
 
   @ManyToOne
-  @JoinColumn(name ="userId",referencedColumnName = "userId")
-  private User user;
-
-  @ManyToOne
   @JoinColumn(name ="documentId",referencedColumnName = "documentId")
   private Document document;
+
+
   
 }

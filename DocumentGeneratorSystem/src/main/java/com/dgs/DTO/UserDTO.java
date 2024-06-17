@@ -1,8 +1,14 @@
 package com.dgs.DTO;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDTO {
     private Long userId;
 
@@ -17,4 +23,7 @@ public class UserDTO {
     private Long designationId;
 
     private Long departmentId;
+
+    private String role;
+
 }

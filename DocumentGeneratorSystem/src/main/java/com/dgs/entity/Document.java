@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -23,6 +24,9 @@ public class Document {
     @Column(length = 100, nullable = false)
     private String documentName;
 
+    @Lob
+    private String documentBody;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private DocumentStatus status;
@@ -37,4 +41,11 @@ public class Document {
     @ManyToOne
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User user;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "document", cascade = CascadeType.ALL)
+    private Set<Signature> signatures;
+
+
+
 }

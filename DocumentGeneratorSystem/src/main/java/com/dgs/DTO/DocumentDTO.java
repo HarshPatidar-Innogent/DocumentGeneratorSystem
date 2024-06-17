@@ -5,6 +5,9 @@ import lombok.*;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 @Data
 public class DocumentDTO {
@@ -12,11 +15,15 @@ public class DocumentDTO {
 
     private String documentName;
 
+    private String documentBody;
+
     private DocumentStatus status;
 
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
-    private Long template;
+    private Long templateId;
 
-    private Long user;
+    private Long userId;
+
+    private Map<String, String> signatureEmails;
 }

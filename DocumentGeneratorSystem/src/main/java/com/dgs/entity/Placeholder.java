@@ -8,7 +8,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+
 @Table(name = "placeholder")
 public class Placeholder {
     @Id
@@ -23,6 +23,6 @@ public class Placeholder {
 
     @ManyToOne
     @JoinColumn(name = "templateId", referencedColumnName = "templateId")
-    private Template template   ;
+    private Template template;
 
 }
