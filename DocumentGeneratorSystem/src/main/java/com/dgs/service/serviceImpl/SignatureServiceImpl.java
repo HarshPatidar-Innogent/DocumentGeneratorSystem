@@ -3,6 +3,7 @@ package com.dgs.service.serviceImpl;
 import com.dgs.DTO.SignatureDTO;
 import com.dgs.entity.Document;
 import com.dgs.entity.Signature;
+import com.dgs.enums.DocumentStatus;
 import com.dgs.mapper.MapperConfig;
 import com.dgs.repository.DocumentRepo;
 import com.dgs.repository.SignatureRepo;
@@ -14,8 +15,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class SignatureServiceImpl implements ISignatureService {
@@ -31,6 +35,9 @@ public class SignatureServiceImpl implements ISignatureService {
 
     @Autowired
     private UserRepo userRepo;
+
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public SignatureDTO addSignature(MultipartFile file , SignatureDTO signatureDTO) throws IOException {
@@ -117,6 +124,7 @@ public class SignatureServiceImpl implements ISignatureService {
         esign.setPlaceholder(signatureDTO.getPlaceholder());
         esign.setSigned(signatureDTO.getSigned());
         Signature signature = signatureRepo.save(esign);
+        sendCompleteSignedDocument(documentId);
         return mapperConfig.toSignatureDTO(signature);
 
     }
@@ -144,6 +152,10 @@ public class SignatureServiceImpl implements ISignatureService {
             sign1.setPlaceholder(signatureDTO.getPlaceholder());
             sign1.setSigned(signatureDTO.getSigned());
             Signature updateSign = signatureRepo.save(sign1);
+
+            sendCompleteSignedDocument(documentId);
+
+
             return mapperConfig.toSignatureDTO(updateSign);
 
         }
@@ -152,5 +164,33 @@ public class SignatureServiceImpl implements ISignatureService {
         }
     }
 
+
+    @Override
+    public void sendCompleteSignedDocument(Long documentId) {
+        Set<Boolean> signedStatuses = signatureRepo.checkAllSignature(documentId);
+        if (signedStatuses.size() == 1 && signedStatuses.contains(true)) {
+
+            Optional<Document> document = documentRepo.findById(documentId);
+            if (document.isPresent()){
+                Document document1 = document.get();
+                document1.setStatus(DocumentStatus.SIGNED);
+                documentRepo.save(document1);
+            }
+
+            String encodedDocumentId = encode(String.valueOf(documentId));
+
+            Set<String> emails = signatureRepo.getRecipientEmailsOfDocument(documentId);
+            emails.stream().forEach(email->{
+                String url = "http://192.168.5.219:3000/final-document/" + encodedDocumentId;
+                emailService.sendEmail(email, "Completed Document", url);
+            });
+
+        }
+    }
+
+
+    private String encode(String value){
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(value.getBytes(StandardCharsets.UTF_8));
+    }
 
 }

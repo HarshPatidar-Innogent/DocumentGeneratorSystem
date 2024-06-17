@@ -25,4 +25,6 @@ public interface ISignatureService {
     public Boolean isSigned(Long documentId, String placeholder);
 
     public SignatureDTO updateSign(String recipientEmail,Long documentId , MultipartFile file,SignatureDTO signatureDTO) throws IOException;
+
+    public void sendCompleteSignedDocument(Long documentId);
 }
