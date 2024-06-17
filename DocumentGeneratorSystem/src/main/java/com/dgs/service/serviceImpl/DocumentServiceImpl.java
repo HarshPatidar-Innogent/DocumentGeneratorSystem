@@ -111,7 +111,7 @@ public class DocumentServiceImpl implements IDocumentService {
                 String encodedPlaceholder = encode("{{"+placeholder+"}}");
                 String encodedEmail = encode(email);
 //                String url = "http://192.168.5.215:3000/sign/" + encodedDocumentId + "/" + encodedPlaceholder ;
-                String url = "http://192.168.5.215:3000/sign/" + encodedDocumentId + "/" + encodedPlaceholder +"/"+encodedEmail;
+                String url = "http://192.168.5.219:3000/sign/" + encodedDocumentId + "/" + encodedPlaceholder +"/"+encodedEmail;
                 emailService.sendEmail(email, "Document Signature Request", url);
                 Signature signature = new Signature();
 //                signature.setPlaceholder("{{"+emails.get(email)+"}}");
