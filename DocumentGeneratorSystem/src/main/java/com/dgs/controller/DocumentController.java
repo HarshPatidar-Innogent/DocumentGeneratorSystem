@@ -1,7 +1,9 @@
 package com.dgs.controller;
 
 import com.dgs.DTO.DocumentDTO;
+import com.dgs.exception.CustomException.DocumentCreationException;
 import com.dgs.exception.CustomException.DocumentNotFoundException;
+import com.dgs.exception.CustomException.DocumentPopulationException;
 import com.dgs.service.iService.IDocumentService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,22 +28,35 @@ public class DocumentController {
     @GetMapping("/get-documents/{userId}")
     public ResponseEntity<List<DocumentDTO>> getDocumentByUserId(@PathVariable Long userId) {
         log.info("Get All Documents of users");
-        List<DocumentDTO> documentDTOList = documentService.getAllDocumentOfUser(userId);
-       return ResponseEntity.ok(documentDTOList);
+        try{
+            List<DocumentDTO> documentDTOList = documentService.getAllDocumentOfUser(userId);
+            return ResponseEntity.ok(documentDTOList);
+        }catch (Exception e){
+            throw new DocumentNotFoundException("Error Occurred in Fetching the documents");
+        }
     }
     //@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @PostMapping(value = "/populate/{id}")
     public String populateDoc(@RequestParam Map<String, String> dynamicData, @PathVariable("id") Long templateId) {
         log.info("Document Populated");
-        String document = documentService.populateDocument(dynamicData, templateId);
-        System.out.println(document);
-        return document;
+        try{
+            String document = documentService.populateDocument(dynamicData, templateId);
+            System.out.println(document);
+            return document;
+        }catch (Exception e){
+            throw new DocumentPopulationException("Exception Occurred in Populating the Document");
+        }
     }
     //@PreAuthorize("hasRole('ADMIN','USER')")
     @PostMapping(value = "/save")
     public ResponseEntity<?> createDocument(@RequestBody DocumentDTO documentDTO) {
-        DocumentDTO documentDTO1 = documentService.createDocument(documentDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(documentDTO1);
+        log.info("Document Creation");
+        try{
+            DocumentDTO documentDTO1 = documentService.createDocument(documentDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(documentDTO1);
+        }catch (Exception e){
+            throw new DocumentCreationException("Document Not Crated");
+        }
     }
    // @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping("/get-document/{id}")
