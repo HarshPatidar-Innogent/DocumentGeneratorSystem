@@ -2,18 +2,18 @@ package com.dgs.service.serviceImpl;
 
 import com.dgs.DTO.DocumentDTO;
 import com.dgs.entity.Document;
+import com.dgs.entity.Signature;
 import com.dgs.entity.Template;
 import com.dgs.mapper.MapperConfig;
 import com.dgs.repository.DocumentRepo;
+import com.dgs.repository.SignatureRepo;
 import com.dgs.repository.TemplateRepo;
 import com.dgs.service.iService.IDocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 @Service
 public class DocumentServiceImpl implements IDocumentService {
@@ -30,8 +30,13 @@ public class DocumentServiceImpl implements IDocumentService {
     @Autowired
     private MapperConfig mapperConfig;
 
-    private Map<String, String> emails = new HashMap<>();
-    ;
+    @Autowired
+    private SignatureRepo signatureRepo;
+
+
+    private final Map<String, String> emails = new HashMap<>();
+
+
 
     @Override
     public List<DocumentDTO> getAllDocumentOfUser(Long userId) {
@@ -87,6 +92,10 @@ public class DocumentServiceImpl implements IDocumentService {
                 .anyMatch(placeholder -> placeholder.getPlaceholderName().equals(placeholderName) && placeholder.getPlaceholderType().equals("signature"));
     }
 
+    private String encode(String value){
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(value.getBytes(StandardCharsets.UTF_8));
+    }
+
     @Override
     public DocumentDTO createDocument(DocumentDTO documentDTO) {
         Document document = mapperConfig.toDocument(documentDTO);
@@ -94,11 +103,28 @@ public class DocumentServiceImpl implements IDocumentService {
         DocumentDTO saveDocumentDTO = mapperConfig.toDocumentDTO(savedDocument);
 
         if (!documentDTO.getSignatureEmails().isEmpty()) {
+            System.out.println(emails);
             documentDTO.getSignatureEmails().forEach(email -> {
-                emailService.sendEmail(email, "Document Signature Request", "http://192.168.5.214:3000/sign/" + document.getDocumentId() + "/{{" + emails.get(email)+"}}");
+                String encodedDocumentId = encode(String.valueOf(document.getDocumentId()));
+                String encodedPlaceholder = encode("{{"+emails.get(email)+"}}");
+                String encodedEmail = encode(email);
+                System.out.println(encodedPlaceholder);
+//                String url = "http://192.168.5.215:3000/sign/" + encodedDocumentId + "/" + encodedPlaceholder ;
+                String url = "http://192.168.5.136:3000/sign/" + encodedDocumentId + "/" + encodedPlaceholder +"/"+encodedEmail;
+                emailService.sendEmail(email, "Document Signature Request", url);
+
+
+                Signature signature = new Signature();
+//                signature.setPlaceholder("{{"+emails.get(email)+"}}");
+                signature.setDocument(documentRepo.findById(document.getDocumentId()).orElseThrow(() -> new IllegalArgumentException("Invalid document ID")));
+                signature.setSigned(false);
+                signature.setRecipientEmail(email);
+                signatureRepo.save(signature);
             });
         }
-        emails.clear();
+
+
+//        emails.clear();
         return saveDocumentDTO;
     }
 
