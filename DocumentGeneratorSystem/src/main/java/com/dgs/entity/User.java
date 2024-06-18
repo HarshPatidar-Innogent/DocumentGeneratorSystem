@@ -44,6 +44,7 @@ public class User implements UserDetails {
     private Department department;
 
     @Enumerated(EnumType.STRING)
+  //  @Column(nullable = false)
     private Role role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

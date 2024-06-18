@@ -7,6 +7,7 @@ import com.dgs.service.iService.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.file.AccessDeniedException;
@@ -27,7 +28,7 @@ public class TemplateController {
         List<TemplateDTO> templateDTOS = templateService.getAllTemplate(id  );
         return ResponseEntity.status(HttpStatus.OK).body(templateDTOS);
     }
-
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @PostMapping("/create")
     public TemplateDTO createTemplate(@RequestBody TemplateDTO templateDTO){
         return templateService.createTemplate(templateDTO);

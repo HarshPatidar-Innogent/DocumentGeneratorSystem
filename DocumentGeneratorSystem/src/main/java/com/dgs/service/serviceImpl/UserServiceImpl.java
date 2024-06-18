@@ -73,7 +73,7 @@ public class UserServiceImpl implements IUserService {
             user.setFirstName(userDTO.getFirstName());
             user.setLastName(userDTO.getLastName());
             user.setEmail(userDTO.getEmail());
-//            user.setPassword(userDTO.getPassword());
+            user.setPassword(userDTO.getPassword());
 
             if (userDTO.getDesignationId() != null) {
                 Designation designation = designationRepo.findById(userDTO.getDesignationId())

@@ -6,6 +6,7 @@ import com.dgs.mapper.MapperConfig;
 import com.dgs.service.iService.IDepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,14 +22,14 @@ public class DepartmentController {
     @Autowired
     private MapperConfig mapperConfig;
 
-
+    //@PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/addDept")
     public ResponseEntity<DepartmentDTO> createDepartment(@RequestBody DepartmentDTO departmentDTO) {
         departmentDTO.setDepartmentId(null);
         DepartmentDTO createdDepartment = departmentService.createDepartment(departmentDTO);
         return ResponseEntity.ok(createdDepartment);
     }
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/getAll")
     public ResponseEntity<List<DepartmentDTO>> getAllDepartments() {
         List<DepartmentDTO> departments = departmentService.getAll();
@@ -45,7 +46,7 @@ public class DepartmentController {
         departmentService.delete(id);
         return ResponseEntity.noContent().build();
     }
-
+   // @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getByName/{name}")
     public ResponseEntity<DepartmentDTO> getByName(@PathVariable String name) {
         DepartmentDTO departmentDTO = departmentService.getDepartmentByName(name);
