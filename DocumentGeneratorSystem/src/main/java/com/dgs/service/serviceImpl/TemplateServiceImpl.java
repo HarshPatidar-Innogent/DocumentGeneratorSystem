@@ -1,10 +1,13 @@
 package com.dgs.service.serviceImpl;
 
 import com.dgs.DTO.TemplateDTO;
+import com.dgs.entity.Placeholder;
 import com.dgs.entity.Template;
 import com.dgs.entity.User;
+import com.dgs.exception.CustomException.TemplateNotFoundException;
 import com.dgs.mapper.MapperConfig;
 import com.dgs.repository.AccessControlRepo;
+import com.dgs.repository.PlaceholderRepo;
 import com.dgs.repository.TemplateRepo;
 import com.dgs.repository.UserRepo;
 import com.dgs.service.iService.ITemplateService;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TemplateServiceImpl implements ITemplateService {
@@ -30,6 +34,9 @@ public class TemplateServiceImpl implements ITemplateService {
 
     @Autowired
     private AccessControlRepo accessControlRepo;
+
+    @Autowired
+    private PlaceholderRepo placeholderRepo;
 
     @Override
     public List<TemplateDTO> getAllTemplate(Long userId) {
@@ -80,19 +87,61 @@ public class TemplateServiceImpl implements ITemplateService {
         Long departmentId = user.getDepartment().getDepartmentId();
         Long designationId = user.getDesignation().getDesignationId();
 
-        boolean hasAccess = accessControlRepo.existsByTemplate_TemplateIdAndDepartment_DepartmentIdAndDesignation_DesignationId(templateId, departmentId, designationId);
 
-        if (hasAccess) {
             Template template = templateRepo.findById(templateId).orElseThrow(() -> new EntityNotFoundException("Template Not Found"));
             return mapperConfig.toTemplateDto(template);
-        } else {
-            throw new AccessDeniedException("User does not have Access to this Document");
-        }
+
     }
 
     @Override
     public void deleteTemplateById(Long id) {
         templateRepo.deleteById(id);
+    }
+
+    @Override
+    public TemplateDTO updateTemplate(TemplateDTO templateDTO, Long templateId) {
+        Template existingTemplate = templateRepo.findById(templateId).orElseThrow(()->{throw new TemplateNotFoundException("Template Not found");});
+        User existingUser = userRepo.findById(templateDTO.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        //existing placeholders
+//        List<Placeholder> existingPlaceholders = existingTemplate.getPlaceholderList();
+
+        //all placeholder including new and old
+        List<Placeholder> newPlaceholders = templateDTO.getPlaceholderDTOS().stream()
+                .map((placeholder) -> mapperConfig.toPlaceholder(placeholder, existingTemplate))
+                .collect(Collectors.toList());
+
+        //filter out placeholders that already exists
+//        List<Placeholder> placeholderToAdd = newPlaceholders.stream()
+//                        .filter(newPlaceholder->
+//                            existingPlaceholders.stream()
+//                                    .noneMatch(existingPlaceholder->
+//                                            existingPlaceholder.getPlaceholderName().equals(newPlaceholder.getPlaceholderName()) &&
+//                                            existingPlaceholder.getPlaceholderType().equals(newPlaceholder.getPlaceholderType()))
+//                        ).collect(Collectors.toList());
+
+//        existingPlaceholders.addAll(placeholderToAdd);
+
+        //delete existing placeholders of template by templateId
+        placeholderRepo.deleteAllByTemplateId(existingTemplate.getTemplateId());
+
+
+
+        existingTemplate.setTemplateFormat(templateDTO.getTemplateFormat());
+        existingTemplate.setTemplateBody(templateDTO.getTemplateBody());
+        existingTemplate.setUser(existingUser);
+        existingTemplate.setTemplateName(templateDTO.getTemplateName());
+        existingTemplate.setPlaceholderList(newPlaceholders);
+
+        System.out.println("Existing Template Before Save: " + existingTemplate); // Debug
+
+
+        Template save = templateRepo.save(existingTemplate);
+        if(save==null){
+            throw new RuntimeException("Template not updated");
+        }
+        return MapperConfig.toTemplateDto(save);
     }
 
 }
