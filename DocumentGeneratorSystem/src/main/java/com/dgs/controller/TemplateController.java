@@ -30,8 +30,13 @@ public class TemplateController {
     }
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @PostMapping("/create")
-    public TemplateDTO createTemplate(@RequestBody TemplateDTO templateDTO){
-        return templateService.createTemplate(templateDTO);
+    public ResponseEntity<TemplateDTO> createTemplate(@RequestBody TemplateDTO templateDTO){
+        TemplateDTO template = templateService.createTemplate(templateDTO);
+        try{
+            return ResponseEntity.ok(template);
+        }catch(Exception e){
+            throw new RuntimeException("Error Creating an Template");
+        }
     }
 
     @GetMapping("/get/{id}")
@@ -63,6 +68,16 @@ public class TemplateController {
             return ResponseEntity.ok("Templated Deleted");
         }else{
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/update-template/{templateId}")
+    public ResponseEntity<TemplateDTO> updateTemplate(@RequestBody TemplateDTO templateDTO, @PathVariable Long templateId){
+        TemplateDTO dto = templateService.updateTemplate(templateDTO, templateId);
+        try{
+            return ResponseEntity.ok(dto);
+        }catch (Exception e){
+            throw new RuntimeException("Exception Updating an Template"+ templateId);
         }
     }
 }

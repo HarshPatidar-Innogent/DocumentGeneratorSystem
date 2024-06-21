@@ -1,5 +1,6 @@
 package com.dgs.entity;
 
+import com.dgs.enums.TemplateAccess;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,12 +21,11 @@ public class AccessControl {
     @JoinColumn(name="templateId",referencedColumnName = "templateId")
     private Template template;
 
-    @ManyToOne
-    @JoinColumn(name ="departmentId" ,referencedColumnName = "departmentId")
-    private Department department;
+    @Enumerated(EnumType.STRING)
+    private TemplateAccess templateAccess;
 
-    @ManyToOne
-    @JoinColumn(name="designationId" ,referencedColumnName = "designationId")
-    private Designation designation;
+    private User ownerId;
+
+    private User userId;
 
 }

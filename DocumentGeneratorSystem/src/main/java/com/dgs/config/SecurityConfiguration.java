@@ -24,18 +24,9 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http.csrf().disable()
                 .authorizeHttpRequests()
-               // .requestMatchers("/api/v1/auth/**", "/template/**", "/document/**", "/placeholder/**","/api/v1/users","/department/**","/designation/**")
-
-              //  .requestMatchers("/api/v1/auth/**").hasRole("ADMIN")
-                .requestMatchers("/template/**", "/document/save", "/document/delete-doc/**", "/document/**", "/placeholder/**")
-                .hasAnyRole("ADMIN", "USER")
-                .requestMatchers("/department/**", "/designation/**")
-                .hasRole("ADMIN")
-                .requestMatchers("/api/v1/users", "/api/v1/auth/**")
+//               .requestMatchers("/api/v1/**", "/template/**", "/placeholder/**", "/document/**")
+                .requestMatchers("/api/v1/auth/**", "/sign/**", "/document/**","/signature/**","/department/**","/designation/**")
                 .permitAll()
-
-
-            //    .permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
