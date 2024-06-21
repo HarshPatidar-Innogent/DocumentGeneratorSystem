@@ -34,7 +34,7 @@ public class Document {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "templateId", referencedColumnName = "templateId")
     private Template template;
 
