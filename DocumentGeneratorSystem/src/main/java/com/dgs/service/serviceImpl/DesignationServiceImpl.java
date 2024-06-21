@@ -22,10 +22,10 @@ public class DesignationServiceImpl implements IDesignationService {
 
     @Override
     public DesignationDTO createDesignation(DesignationDTO designationDTO) {
-        designationDTO.setDesignationId(null);
-
-        Designation designation = mapperConfig.toDesignation(designationDTO);
+        Designation designation = new Designation();
+        designation.setDesignationName(designationDTO.getDesignationName());
         Designation savedDesignation = designationRepo.save(designation);
+        System.out.println(savedDesignation);
         return mapperConfig.toDesignationDTO(savedDesignation);
     }
     @Override

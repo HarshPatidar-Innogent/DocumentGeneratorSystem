@@ -1,5 +1,6 @@
 package com.dgs.controller;
 
+import com.dgs.DTO.ChangePasswordDTO;
 import com.dgs.DTO.UserDTO;
 import com.dgs.repository.UserRepo;
 import com.dgs.service.iService.IUserService;
@@ -42,6 +43,7 @@ public class UserController {
     @PostMapping("/addUser")
     // @PreAuthorize("hasauthority('ROLE_ADMIN')")
     public ResponseEntity<UserDTO> addUser(@RequestBody UserDTO userDTO) {
+        System.out.println(userDTO.getManager());
         UserDTO createUser = userService.addUser(userDTO);
         return ResponseEntity.status(HttpStatus.OK).body(createUser);
     }
@@ -81,9 +83,11 @@ public class UserController {
         return ResponseEntity.ok(userDTO);
     }
 
-//    @GetMapping("/getUser/{id}")
-//    public UserDTO getUserById(@PathVariable Long id){
-//        return iUserService.findUserById(id);
-//    }
+    @PostMapping("/changePassword/{email}")
+    public ResponseEntity<String> changePassword(@PathVariable String email, @RequestBody ChangePasswordDTO requestPassword){
+        System.out.println(email);
+        userService.changePassword(email,requestPassword);
+        return ResponseEntity.status(HttpStatus.OK).body("Password Changed Successfully");
+    }
 
 }

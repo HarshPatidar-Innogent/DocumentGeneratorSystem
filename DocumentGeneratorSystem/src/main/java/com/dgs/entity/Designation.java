@@ -2,10 +2,7 @@ package com.dgs.entity;
 
 import com.dgs.enums.DesignationPermission;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "designation")
@@ -13,7 +10,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
+@ToString
 public class Designation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
