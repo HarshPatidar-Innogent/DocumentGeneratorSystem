@@ -3,6 +3,7 @@ package com.dgs.service.serviceImpl;
 import com.dgs.DTO.SignatureDTO;
 import com.dgs.entity.Document;
 import com.dgs.entity.Signature;
+import com.dgs.entity.User;
 import com.dgs.enums.DocumentStatus;
 import com.dgs.mapper.MapperConfig;
 import com.dgs.repository.DocumentRepo;
@@ -170,19 +171,23 @@ public class SignatureServiceImpl implements ISignatureService {
         Set<Boolean> signedStatuses = signatureRepo.checkAllSignature(documentId);
         if (signedStatuses.size() == 1 && signedStatuses.contains(true)) {
 
+            String userEmail = "";
             Optional<Document> document = documentRepo.findById(documentId);
             if (document.isPresent()){
                 Document document1 = document.get();
                 document1.setStatus(DocumentStatus.SIGNED);
-                documentRepo.save(document1);
+                Document savedDocument = documentRepo.save(document1);
+                userEmail = savedDocument.getUser().getEmail();
             }
 
             String encodedDocumentId = encode(String.valueOf(documentId));
 
             Set<String> emails = signatureRepo.getRecipientEmailsOfDocument(documentId);
+            emails.add(userEmail);
             emails.stream().forEach(email->{
                 String url = "http://192.168.5.219:3000/final-document/" + encodedDocumentId;
-                emailService.sendEmail(email, "Completed Document", url);
+                emailService.sendEmail(email, "Document Completed", url);
+
             });
 
         }
