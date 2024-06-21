@@ -1,5 +1,6 @@
 package com.dgs.service.serviceImpl;
 
+import com.dgs.DTO.ChangePasswordDTO;
 import com.dgs.DTO.UserDTO;
 import com.dgs.entity.Department;
 import com.dgs.entity.Designation;
@@ -9,8 +10,11 @@ import com.dgs.repository.DepartmentRepo;
 import com.dgs.repository.DesignationRepo;
 import com.dgs.repository.UserRepo;
 import com.dgs.service.iService.IUserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -33,6 +37,9 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private DepartmentRepo departmentRepo;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 
 
     @Override
@@ -41,9 +48,10 @@ public class UserServiceImpl implements IUserService {
                 .orElseThrow(() -> new RuntimeException("Designation not found with id: " + userDTO.getDesignationId()));
         Department department = departmentRepo.findById(userDTO.getDepartmentId())
                 .orElseThrow(() -> new RuntimeException("Department not found with id: " + userDTO.getDepartmentId()));
-
+        System.out.println(userDTO.getManager());
         User userEntity = mapperConfig.toUser(userDTO);
         userEntity.setFirstName(userDTO.getFirstName());
+        userEntity.setManager(userDTO.getManager());
         userEntity.setLastName(userDTO.getLastName());
         userEntity.setEmail(userDTO.getEmail());
         userEntity.setPassword(userDTO.getPassword());
@@ -98,6 +106,7 @@ public class UserServiceImpl implements IUserService {
         }
     }
 
+    @Transactional
     @Override
     public void deleteUserById(Long id) {
         if (userRepo.existsById(id)) {
@@ -127,5 +136,28 @@ public class UserServiceImpl implements IUserService {
         User user = userRepo.findById(id).orElseThrow(()->new UsernameNotFoundException("User Not Found"));
         return mapperConfig.toUserDTO(user);
     }
+
+    @Override
+    public void changePassword(String email, ChangePasswordDTO requestPassword) {
+        User user = userRepo.findByEmail(email).orElseThrow(()->new RuntimeException("User Not Found"));
+
+        System.out.println("New Password Length: " + requestPassword.getNewPassword().length());
+        System.out.println("Confirm Password Length: " + requestPassword.getConfirmPassword().length());
+
+        if(!passwordEncoder.matches(requestPassword.getOldPassword(),user.getPassword())){
+            System.out.println(requestPassword.getOldPassword());
+            System.out.println(user.getPassword());
+            throw new RuntimeException("Old password do not match");
+        }
+
+        if (!requestPassword.getNewPassword().equals(requestPassword.getConfirmPassword())) {
+            throw new RuntimeException("New password and confirm password do not match");
+        }
+
+        String encryptPassword = passwordEncoder.encode(requestPassword.getNewPassword());
+        user.setPassword(encryptPassword);
+        userRepo.save(user);
+    }
+
 
 }

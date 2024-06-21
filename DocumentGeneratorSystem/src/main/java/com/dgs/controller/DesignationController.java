@@ -23,7 +23,8 @@ public class DesignationController {
             designationDTO.setDesignationId(null);
 
             DesignationDTO createdDesignation = designationService.createDesignation(designationDTO);
-            return ResponseEntity.ok(createdDesignation);
+
+            return ResponseEntity.status(HttpStatus.OK).body(createdDesignation);
         }
 
         @GetMapping("/getAll")

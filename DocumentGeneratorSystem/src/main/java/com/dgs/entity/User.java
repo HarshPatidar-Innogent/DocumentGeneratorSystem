@@ -35,6 +35,8 @@ public class User implements UserDetails {
     @Column(length = 500,nullable = false)
     private String password;
 
+    private String manager;
+
     @JoinColumn(name = "designationId",referencedColumnName ="designationId")
     @ManyToOne
     private Designation designation;
@@ -47,10 +49,10 @@ public class User implements UserDetails {
   //  @Column(nullable = false)
     private Role role;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Template> template;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Document> Document;
 
     @Override

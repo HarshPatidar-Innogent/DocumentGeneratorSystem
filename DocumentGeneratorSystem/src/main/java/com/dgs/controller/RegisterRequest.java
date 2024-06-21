@@ -19,4 +19,5 @@ public class RegisterRequest {
     private Long departmentId;
     private Long designationId;
     private String role;
+    private String manager;
 }
