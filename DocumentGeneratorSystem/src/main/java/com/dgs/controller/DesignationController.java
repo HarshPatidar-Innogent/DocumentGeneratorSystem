@@ -48,4 +48,9 @@ public class DesignationController {
         DesignationDTO designationDTO = designationService.getDesignationByName(name);
         return ResponseEntity.ok(designationDTO);
     }
+    @GetMapping("/getDes/{id}")
+    public ResponseEntity<DesignationDTO> getDesignationById(@PathVariable Long id){
+        DesignationDTO designationDTO = designationService.getDesignationById(id);
+        return ResponseEntity.ok(designationDTO);
+    }
 }

@@ -57,6 +57,7 @@ public class UserController {
 
         @PutMapping("/updateUser/{id}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+            System.out.println(userDTO);
         UserDTO updatedUser = userService.updateUser(id, userDTO);
         return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
     }
@@ -79,6 +80,7 @@ public class UserController {
 
     @GetMapping("/getUser/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
+        System.out.println("Hello....");
         UserDTO userDTO = userService.getUserById(id);
         return ResponseEntity.ok(userDTO);
     }

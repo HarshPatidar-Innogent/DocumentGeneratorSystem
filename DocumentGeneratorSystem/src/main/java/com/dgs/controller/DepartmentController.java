@@ -52,5 +52,10 @@ public class DepartmentController {
         DepartmentDTO departmentDTO = departmentService.getDepartmentByName(name);
         return ResponseEntity.ok(departmentDTO);
     }
+    @GetMapping("/getDept/{id}")
+    public ResponseEntity<DepartmentDTO> getDepartmentById(@PathVariable Long id){
+        DepartmentDTO departmentDTO = departmentService.getDepartmentById(id);
+        return ResponseEntity.ok(departmentDTO);
+    }
 
 }

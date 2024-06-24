@@ -14,5 +14,6 @@ public interface IDepartmentService {
 
     void delete(Long departmentId);
     DepartmentDTO getDepartmentByName(String name);
+    DepartmentDTO getDepartmentById(Long id);
 
 }
