@@ -1,5 +1,5 @@
 package com.dgs.enums;
 
 public enum Role {
-    USER ,ROLE_ADMIN
+    ROLE_USER ,ROLE_ADMIN
 }

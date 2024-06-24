@@ -16,4 +16,6 @@ public interface IDesignationService {
     void delete(Long designationId);
 
     DesignationDTO getDesignationByName(String name);
+
+    DesignationDTO getDesignationById(Long id);
 }

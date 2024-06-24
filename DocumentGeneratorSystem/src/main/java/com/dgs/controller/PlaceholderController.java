@@ -20,4 +20,5 @@ public class PlaceholderController {
         return placeholderService.getAllPlaceholderOfTemplate(id);
     }
 
+
 }

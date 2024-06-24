@@ -24,6 +24,7 @@ public class PlaceholderServiceImpl implements IPlaceholderService {
     @Autowired
     private MapperConfig mapperConfig;
 
+
     @Override
     public List<PlaceholderDTO> getAllPlaceholderOfTemplate(Long templateId) {
         List<Placeholder> placeholderList = placeholderRepo.getAllPlaceholderByTemplateId(templateId);

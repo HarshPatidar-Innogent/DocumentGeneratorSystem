@@ -143,7 +143,7 @@ public class MapperConfig {
         user.setDepartment(departmentRepo.findById(userDTO.getDepartmentId()).get());
         user.setDesignation(designationRepo.findById(userDTO.getDesignationId()).get());
         user.setManager(userDTO.getManager());
-        user.setRole(Role.USER);
+        user.setRole(Role.ROLE_USER);
         return user;
     }
 

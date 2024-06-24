@@ -1,6 +1,8 @@
 package com.dgs.service.serviceImpl;
 
+import com.dgs.DTO.DepartmentDTO;
 import com.dgs.DTO.DesignationDTO;
+import com.dgs.entity.Department;
 import com.dgs.entity.Designation;
 import com.dgs.mapper.MapperConfig;
 import com.dgs.repository.DesignationRepo;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -62,6 +65,16 @@ public class DesignationServiceImpl implements IDesignationService {
     public DesignationDTO getDesignationByName(String name) {
         Designation designation = (Designation) designationRepo.findByDesignationName(name).orElseThrow(() -> new IllegalArgumentException("Designation not found"));
         return mapperConfig.toDesignationDTO(designation);
+    }
+
+    @Override
+    public DesignationDTO getDesignationById(Long id) {
+        Optional<Designation> designationOptional = designationRepo.findById(id);
+        if (designationOptional.isPresent()) {
+            return mapperConfig.toDesignationDTO(designationOptional.get());
+        } else {
+            throw new RuntimeException("designation not found with id: " + id);
+        }
     }
 
 }
