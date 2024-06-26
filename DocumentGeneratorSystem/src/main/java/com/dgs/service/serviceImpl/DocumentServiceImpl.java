@@ -119,7 +119,6 @@ public class DocumentServiceImpl implements IDocumentService {
                 signature.setSigned(false);
                 signature.setRecipientEmail(email);
                 signatureRepo.save(signature);
-
             });
         }
 

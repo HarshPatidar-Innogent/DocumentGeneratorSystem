@@ -35,6 +35,7 @@ public class UserController {
 
     @Autowired
     private IUserService iUserService;
+
     @GetMapping("/user")
     public ResponseEntity<String> sayHello() {
         return ResponseEntity.ok("Hello");

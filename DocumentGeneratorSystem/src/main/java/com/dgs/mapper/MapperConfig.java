@@ -5,6 +5,7 @@ import com.dgs.entity.*;
 import com.dgs.enums.Role;
 import com.dgs.repository.DepartmentRepo;
 import com.dgs.repository.DesignationRepo;
+import com.dgs.repository.UserRepo;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,9 @@ public class MapperConfig {
 
     @Autowired
     private DesignationRepo designationRepo;
+
+    @Autowired
+    private UserRepo userRepo;
 
     public MapperConfig() {
         mapper = new ModelMapper();
@@ -103,12 +107,21 @@ public class MapperConfig {
     }
 
     public AccessControlDTO toAccessControlDTO(AccessControl accessControl) {
-        return mapper.map(accessControl, AccessControlDTO.class);
+//        return mapper.map(accessControl, AccessControlDTO.class);
 //        AccessControlDTO accessControlDTO = new AccessControlDTO();
 //        accessControlDTO.setDepartment(departmentDTO);
 //        accessControlDTO.setDesignation(designationDTO);
 //        accessControlDTO.setTemplate(templateDTO);
 //        return accessControlDTO;
+        AccessControlDTO accessControlDTO = new AccessControlDTO();
+        accessControlDTO.setAccessControlId(accessControl.getAccessControlId());
+//        accessControlDTO.setEmail(accessControl.getUserId().getEmail());
+        accessControlDTO.setUserId(accessControl.getUserId().getUserId());
+        accessControlDTO.setOwnerId(accessControl.getOwnerId().getUserId());
+        accessControlDTO.setTemplateAccess(String.valueOf(accessControl.getTemplateAccess()));
+        accessControlDTO.setTemplate(accessControl.getTemplate().getTemplateId());
+        accessControlDTO.setOwnerName(accessControl.getOwnerName());
+        return accessControlDTO;
     }
 
     public AccessControl toAccessControl(AccessControlDTO accessControlDTO) {
@@ -118,6 +131,15 @@ public class MapperConfig {
 //          accessControl.setDepartment(accessControl.getDepartment());
 //          accessControl.setDesignation(accessControl.getDesignation());
 //          return accessControl;
+
+//        AccessControl accessControl = new AccessControl();
+//        accessControl.setUserId(user);
+//        accessControl.setOwnerId(userRepo.findById(accessControlDTO.getOwnerId()).get());
+//        accessControl.setTemplate(existingTemplate);
+//        accessControl.setTemplateAccess(com.dgs.enums.AccessControl.valueOf(accessControlDTO.getTemplateAccess()));
+//
+//        return accessControl;
+
     }
 
     public AuditTrailDTO toAuditTrailDTO(AuditTrail auditTrail) {
@@ -147,7 +169,6 @@ public class MapperConfig {
         return user;
     }
 
-
     //convert department entity into dto
     public DepartmentDTO toDepartmentDTO(Department department) {
         return mapper.map(department, DepartmentDTO.class);
@@ -167,6 +188,5 @@ public class MapperConfig {
     public Designation toDesignation(DesignationDTO designationDTO) {
         return mapper.map(designationDTO, Designation.class);
     }
-
 
 }
