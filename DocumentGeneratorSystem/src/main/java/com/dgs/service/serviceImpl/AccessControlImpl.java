@@ -1,24 +1,23 @@
 package com.dgs.service.serviceImpl;
 
 import com.dgs.DTO.AccessControlDTO;
-import com.dgs.DTO.DocumentDTO;
-import com.dgs.entity.*;
-import com.dgs.enums.DesignationPermission;
-import com.dgs.enums.TemplateAccess;
+import com.dgs.DTO.TemplateDTO;
+import com.dgs.DTO.UserDTO;
+import com.dgs.entity.AccessControl;
+import com.dgs.entity.Template;
+import com.dgs.entity.User;
+import com.dgs.exception.CustomException.TemplateNotFoundException;
+import com.dgs.exception.CustomException.UserNotFoundException;
 import com.dgs.mapper.MapperConfig;
-import com.dgs.repository.*;
+import com.dgs.repository.AccessControlRepo;
+import com.dgs.repository.TemplateRepo;
+import com.dgs.repository.UserRepo;
 import com.dgs.service.iService.IAccessControlService;
-import jakarta.persistence.Access;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AccessControlImpl implements IAccessControlService {
@@ -36,23 +35,55 @@ public class AccessControlImpl implements IAccessControlService {
     private MapperConfig mapperConfig;
 
     @Override
-    public String addAccess(AccessControlDTO accessControlDTO) {
-        String email = accessControlDTO.getEmail();
-        User user = userRepo.findByEmail(email).orElseThrow(()->new UsernameNotFoundException("User Not Found"));
-        Template template =templateRepo.findById(accessControlDTO.getTemplate()).get();
-        User ownerId = userRepo.findById(accessControlDTO.getOwnerId()).get();
+    public AccessControlDTO addAccess(AccessControlDTO accessControlDTO) {
+
+        Long userId = accessControlDTO.getUserId();
+        System.out.println(userId);
+        User user = userRepo.findById(userId).orElseThrow(()->new UserNotFoundException("User Not Found"));
+        System.out.println("Here");
+        Template template =templateRepo.findById(accessControlDTO.getTemplate()).orElseThrow(()->new TemplateNotFoundException("Template Not Found"));
+        User ownerId = userRepo.findById(accessControlDTO.getOwnerId()).orElseThrow(()->new UserNotFoundException("User Not Found"));
 
         AccessControl accessControl = new AccessControl();
         accessControl.setTemplate(template);
         accessControl.setUserId(user);
         accessControl.setOwnerId(ownerId);
-        accessControl.setTemplateAccess(TemplateAccess.valueOf(accessControlDTO.getTemplateAccess()));
+        accessControl.setTemplateAccess(com.dgs.enums.AccessControl.valueOf(accessControlDTO.getTemplateAccess()));
+        accessControl.setOwnerName(accessControlDTO.getOwnerName());
 
         AccessControl save = accessControlRepo.save(accessControl);
-        if(save!=null){
-            return "Saved";
-        }else{
-            return "Not Saved";
-        }
+        return mapperConfig.toAccessControlDTO(save);
+
+    }
+
+    @Override
+    public List<UserDTO> getAllAccessOfTemplate(Long templateId) {
+        List<AccessControl> accessControls = accessControlRepo.findByTemplateId(templateId);
+        List<User> users = accessControls.stream().map(AccessControl::getUserId).toList();
+        return users.stream().map(user -> mapperConfig.toUserDTO(user)).toList();
+    }
+
+    @Override
+    public List<AccessControlDTO> getAllAccessDetails(Long templateId) {
+        List<AccessControl> accessControls = accessControlRepo.findByTemplateId(templateId);
+        return accessControls.stream().map(access->mapperConfig.toAccessControlDTO(access)).toList();
+    }
+
+    @Override
+    public void deleteAccessById(Long accessId) {
+        accessControlRepo.deleteById(accessId);
+    }
+
+    @Override
+    public List<TemplateDTO> getAccessTemplateOfUser(Long userId) {
+        List<Long> templatesId = accessControlRepo.findTemplateIdByUserId(userId);
+        List<Template> templates = templatesId.stream().map(id->templateRepo.findById(id).get()).toList();
+        return templates.stream().map(template -> mapperConfig.toTemplateDto(template)).toList();
+    }
+
+    @Override
+    public List<AccessControlDTO> getAccessOfUser(Long userId) {
+        List<AccessControl> accessControls = accessControlRepo.findAllByUserId(userId);
+        return accessControls.stream().map(access->mapperConfig.toAccessControlDTO(access)).toList();
     }
 }

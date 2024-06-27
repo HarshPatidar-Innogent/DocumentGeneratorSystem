@@ -25,7 +25,7 @@ public class TemplateController {
 
     @GetMapping("/all/{id}")
     public ResponseEntity<?> getAllTemplate(@PathVariable Long id){
-        List<TemplateDTO> templateDTOS = templateService.getAllTemplate(id  );
+        List<TemplateDTO> templateDTOS = templateService.getAllTemplate(id);
         return ResponseEntity.status(HttpStatus.OK).body(templateDTOS);
     }
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")

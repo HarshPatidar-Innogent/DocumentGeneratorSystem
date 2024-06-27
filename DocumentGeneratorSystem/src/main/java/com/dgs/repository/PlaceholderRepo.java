@@ -13,11 +13,11 @@ import java.util.List;
 public interface PlaceholderRepo extends JpaRepository<Placeholder, Long> {
 
     //    @Query("SELECT p FROM placeholder p WHERE p.templateId = :templateId")
-    @Query(value = "select * from placeholder where template_Id = :templateId", nativeQuery = true)
+    @Query("SELECT p FROM Placeholder p WHERE p.template = :templateId")
     public List<Placeholder> getAllPlaceholderByTemplateId(@Param("templateId") Long templateId);
 
     @Modifying
     @Transactional
-    @Query(value = "delete from placeholder where template_Id= :templateId", nativeQuery = true)
+    @Query("DELETE FROM Placeholder p WHERE p.template = :templateId")
     void deleteAllByTemplateId(@PathParam("templateId") Long templateId);
 }

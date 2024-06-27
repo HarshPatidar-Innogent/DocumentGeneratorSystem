@@ -40,7 +40,7 @@ public class TemplateServiceImpl implements ITemplateService {
 
     @Override
     public List<TemplateDTO> getAllTemplate(Long userId) {
-        List<Template> templateList = templateRepo.findAll();
+        List<Template> templateList = templateRepo.getAllTemplatesOfUser(userId);
         List<TemplateDTO> templateDTOS = templateList.stream().map(MapperConfig::toTemplateDto).toList();
         return templateDTOS;
     }

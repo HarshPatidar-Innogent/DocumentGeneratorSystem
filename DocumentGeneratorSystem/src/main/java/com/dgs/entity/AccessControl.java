@@ -1,11 +1,10 @@
 package com.dgs.entity;
 
-import com.dgs.enums.TemplateAccess;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name ="access_control")
+@Table(name = "access_control")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -18,14 +17,20 @@ public class AccessControl {
     private Long accessControlId;
 
     @ManyToOne
-    @JoinColumn(name="templateId",referencedColumnName = "templateId")
+    @JoinColumn(name = "templateId", referencedColumnName = "templateId")
     private Template template;
 
     @Enumerated(EnumType.STRING)
-    private TemplateAccess templateAccess;
+    private com.dgs.enums.AccessControl templateAccess;
 
+    @ManyToOne
+    @JoinColumn(name = "ownerId", referencedColumnName = "userId")
     private User ownerId;
 
+    @ManyToOne
+    @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User userId;
+
+    private String ownerName;
 
 }
