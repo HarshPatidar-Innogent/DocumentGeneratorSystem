@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,10 +59,22 @@ public class DesignationServiceImpl implements IDesignationService {
     }
 
     @Override
+    public DesignationDTO getDesignationById(Long id) {
+        Optional<Designation> designationOptional = designationRepo.findById(id);
+        if (designationOptional.isPresent()) {
+            return mapperConfig.toDesignationDTO(designationOptional.get());
+        } else {
+            throw new RuntimeException("designation not found with id: " + id);
+        }
+    }
+
+    @Override
     public DesignationDTO getDesignationByName(String name) {
         Designation designation = (Designation) designationRepo.findByDesignationName(name).orElseThrow(() -> new IllegalArgumentException("Designation not found"));
         return mapperConfig.toDesignationDTO(designation);
     }
+
+
 
 
 

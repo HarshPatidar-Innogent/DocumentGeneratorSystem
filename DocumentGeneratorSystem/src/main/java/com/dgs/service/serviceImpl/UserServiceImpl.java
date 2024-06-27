@@ -80,6 +80,7 @@ public class UserServiceImpl implements IUserService {
             User user = userOptional.get();
             user.setFirstName(userDTO.getFirstName());
             user.setLastName(userDTO.getLastName());
+            user.setManager(userDTO.getManager());
             user.setEmail(userDTO.getEmail());
 //            user.setPassword(userDTO.getPassword());
 
@@ -158,6 +159,10 @@ public class UserServiceImpl implements IUserService {
         user.setPassword(encryptPassword);
         userRepo.save(user);
     }
+
+
+
+
 
 
 }

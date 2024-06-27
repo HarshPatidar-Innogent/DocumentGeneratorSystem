@@ -2,6 +2,7 @@ package com.dgs.service.iService;
 
 import com.dgs.DTO.ChangePasswordDTO;
 import com.dgs.DTO.UserDTO;
+import com.dgs.entity.User;
 
 import java.util.List;
 

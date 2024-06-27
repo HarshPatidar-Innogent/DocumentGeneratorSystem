@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -65,5 +66,15 @@ public class DepartmentServiceImpl implements IDepartmentService {
     public DepartmentDTO getDepartmentByName(String name) {
         Department department = (Department) departmentRepo.findByDepartmentName(name).orElseThrow(() -> new IllegalArgumentException("Department not found"));
         return mapperConfig.toDepartmentDTO(department);
+    }
+
+    @Override
+    public DepartmentDTO getDepartmentById(Long id) {
+        Optional<Department> departmentOptional = departmentRepo.findById(id);
+        if (departmentOptional.isPresent()) {
+            return mapperConfig.toDepartmentDTO(departmentOptional.get());
+        } else {
+            throw new RuntimeException("department not found with id: " + id);
+        }
     }
 }
