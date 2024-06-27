@@ -21,4 +21,6 @@ public interface IDocumentService {
 
     public String submitSignature(String templateBody, Long documentId);
 
+    public Integer countDocument(Long userId);
+
 }

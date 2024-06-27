@@ -79,4 +79,11 @@ public class TemplateController {
             throw new RuntimeException("Exception Updating an Template"+ templateId);
         }
     }
+
+    @GetMapping("/countTemplate/{id}")
+    public ResponseEntity<?> countTemplate(@PathVariable Long id){
+        Integer count = templateService.countTemplate(id);
+        System.out.println(count);
+        return ResponseEntity.status(HttpStatus.OK).body(count);
+    }
 }

@@ -12,4 +12,6 @@ public interface TemplateRepo extends JpaRepository<Template, Long> {
     @Query(value = "select * from template where user_id=:userId",nativeQuery = true)
     public List<Template> getAllTemplatesOfUser(@PathParam("userId") Long userId);
 
+    @Query(value = "select count(*) from template where user_id = :userId",nativeQuery = true)
+    public Integer countTemplate(@PathParam("userId") Long userId);
 }

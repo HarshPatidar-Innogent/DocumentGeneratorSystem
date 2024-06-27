@@ -84,4 +84,12 @@ public class DocumentController {
         documentService.deleteDocument(id);
     }
 
+    @GetMapping("/countDocument/{id}")
+    public ResponseEntity<?> countDepartment(@PathVariable Long id){
+        Integer count = documentService.countDocument(id);
+        return ResponseEntity.status(HttpStatus.OK).body(count);
+    }
+
+
+
 }
