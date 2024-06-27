@@ -1,6 +1,5 @@
 package com.dgs.controller;
 
-import com.dgs.DTO.DepartmentDTO;
 import com.dgs.DTO.DesignationDTO;
 import com.dgs.service.iService.IDesignationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,13 +46,6 @@ public class DesignationController {
     @GetMapping("/getByName/{name}")
     public ResponseEntity<DesignationDTO> getByName(@PathVariable String name) {
         DesignationDTO designationDTO = designationService.getDesignationByName(name);
-        return ResponseEntity.ok(designationDTO);
-    }
-
-
-    @GetMapping("/getDes/{id}")
-    public ResponseEntity<DesignationDTO> getDesignationById(@PathVariable Long id){
-        DesignationDTO designationDTO = designationService.getDesignationById(id);
         return ResponseEntity.ok(designationDTO);
     }
 }

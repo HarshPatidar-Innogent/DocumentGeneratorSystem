@@ -12,10 +12,6 @@ public interface IDesignationService {
 
     DesignationDTO update(Long id, DesignationDTO designationDTO);
 
-
-    void delete(Long designationId);
-
     DesignationDTO getDesignationByName(String name);
-
-    DesignationDTO getDesignationById(Long id);
+    void delete(Long designationId);
 }

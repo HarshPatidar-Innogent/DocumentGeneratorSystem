@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
@@ -36,9 +37,7 @@ public class UserController {
     @Autowired
     private IUserService iUserService;
     @GetMapping("/user")
-    public ResponseEntity<String> sayHello() {
-        return ResponseEntity.ok("Hello");
-    }
+
 
     @PostMapping("/addUser")
     // @PreAuthorize("hasauthority('ROLE_ADMIN')")
@@ -57,6 +56,7 @@ public class UserController {
 
         @PutMapping("/updateUser/{id}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+            System.out.println(userDTO);
         UserDTO updatedUser = userService.updateUser(id, userDTO);
         return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
     }
@@ -78,6 +78,7 @@ public class UserController {
 
     @GetMapping("/getUser/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
+        System.out.println("Hello....");
         UserDTO userDTO = userService.getUserById(id);
         return ResponseEntity.ok(userDTO);
     }
