@@ -59,14 +59,22 @@ public class DocumentController {
 
     @GetMapping("/get-document/{id}")
     public ResponseEntity<DocumentDTO> getDocumentForSign(@PathVariable Long id) {
-        DocumentDTO document = documentService.getDocumentById(id);
-        return ResponseEntity.ok(document);
+        try{
+            DocumentDTO document = documentService.getDocumentById(id);
+            return ResponseEntity.ok(document);
+        }catch (Exception e){
+            throw new DocumentNotFoundException("Document Not found for getting an document for Signature");
+        }
     }
 
     @GetMapping("/getDocument/{id}")
     public ResponseEntity<DocumentDTO> getDocumentById(@PathVariable Long id){
-        DocumentDTO documentDTO = documentService.getDocumentById(id);
-        return ResponseEntity.ok(documentDTO);
+        try{
+            DocumentDTO documentDTO = documentService.getDocumentById(id);
+            return ResponseEntity.ok(documentDTO);
+        }catch (Exception e){
+            throw new DocumentNotFoundException("Document not found with id "+id);
+        }
     }
 
     @PutMapping("/sign-submit/{id}")
@@ -81,7 +89,11 @@ public class DocumentController {
 
     @DeleteMapping("/delete-doc/{id}")
     public void deleteDocumentById(@PathVariable Long id){
-        documentService.deleteDocument(id);
+        try{
+            documentService.deleteDocument(id);
+        }catch (Exception e){
+            throw new DocumentNotFoundException("Document not found for delete");
+        }
     }
 
 }

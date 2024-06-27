@@ -6,6 +6,7 @@ import com.dgs.DTO.UserDTO;
 import com.dgs.entity.AccessControl;
 import com.dgs.entity.User;
 import com.dgs.enums.DesignationPermission;
+import com.dgs.exception.CustomException.AccessControlException;
 import com.dgs.service.iService.IAccessControlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,7 @@ public class AccessControlController {
          try{
              return ResponseEntity.ok(accessControlDTO);
          }catch (Exception e){
-             throw new RuntimeException("Error in adding an access to Template "+ accessControlDTO.getTemplate());
+             throw new AccessControlException("Error in adding an access to Template "+ accessControlDTO.getTemplate());
          }
     }
 
@@ -39,7 +40,7 @@ public class AccessControlController {
             List<UserDTO> allAccessOfTemplate = accessControlService.getAllAccessOfTemplate(templateId);
             return ResponseEntity.ok(allAccessOfTemplate);
         }catch (Exception e){
-            throw new RuntimeException("Exception Occurred in fetching access of template "+templateId);
+            throw new AccessControlException("Exception Occurred in fetching access of template "+templateId);
         }
     }
 
@@ -49,7 +50,7 @@ public class AccessControlController {
             List<AccessControlDTO> accessControlDTOS = accessControlService.getAllAccessDetails(templateId);
             return ResponseEntity.ok(accessControlDTOS);
         }catch (Exception e){
-            throw new RuntimeException("Exception Occurred in fetching access of template "+templateId);
+            throw new AccessControlException("Exception Occurred in fetching access of template "+templateId);
         }
     }
 
@@ -58,20 +59,28 @@ public class AccessControlController {
         try{
             accessControlService.deleteAccessById(accessId);
         }catch (Exception e){
-            throw new RuntimeException("Access Not deleted");
+            throw new AccessControlException("Access Not deleted");
         }
     }
 
     @GetMapping("/access-template/{userId}")
     public List<TemplateDTO> getAccessTemplateOfUser(@PathVariable Long userId){
-        List<TemplateDTO> accessTemplateOfUser = accessControlService.getAccessTemplateOfUser(userId);
-        return accessTemplateOfUser;
+        try{
+            List<TemplateDTO> accessTemplateOfUser = accessControlService.getAccessTemplateOfUser(userId);
+            return accessTemplateOfUser;
+        }catch (Exception e){
+            throw new AccessControlException("Access Template Not found");
+        }
     }
 
     @GetMapping("/access/{userId}")
     public List<AccessControlDTO> getAccess(@PathVariable Long userId){
-        List<AccessControlDTO> accessControlDTOS = accessControlService.getAccessOfUser(userId);
-        System.out.println("Here");
-        return accessControlDTOS;
+        try{
+            List<AccessControlDTO> accessControlDTOS = accessControlService.getAccessOfUser(userId);
+            System.out.println("Here");
+            return accessControlDTOS;
+        }catch (Exception e){
+            throw new AccessControlException("Access Template Not found");
+        }
     }
 }
