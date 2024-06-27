@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface TemplateRepo extends JpaRepository<Template, Long> {
-    @Query(value = "select * from templates where user=:userId",nativeQuery = true)
+    @Query(value = "select * from template where user_id=:userId",nativeQuery = true)
     public List<Template> getAllTemplatesOfUser(@PathParam("userId") Long userId);
+
 }

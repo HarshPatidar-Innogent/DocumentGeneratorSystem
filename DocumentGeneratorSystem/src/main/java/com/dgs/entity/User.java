@@ -1,6 +1,7 @@
 package com.dgs.entity;
 
 import com.dgs.enums.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -32,6 +33,7 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @JsonIgnore
     @Column(length = 500,nullable = false)
     private String password;
 

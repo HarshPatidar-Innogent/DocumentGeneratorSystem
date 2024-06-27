@@ -8,7 +8,8 @@ import java.util.List;
 public class AccessControlDTO {
     private Long accessControlId;
     private Long template;
-    private String email;
+    private Long userId;
     private String templateAccess;
     private Long ownerId;
+    private String ownerName;
 }
