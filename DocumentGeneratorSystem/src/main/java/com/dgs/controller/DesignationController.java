@@ -37,11 +37,11 @@ public class DesignationController {
             return ResponseEntity.ok(updatedDesignation);
         }
 
-        @DeleteMapping("/delete/{id}")
-        public ResponseEntity<DesignationDTO>delete(@PathVariable long id) {
-            designationService.delete(id);
-            return ResponseEntity.noContent().build();
-        }
+//        @DeleteMapping("/delete/{id}")
+//        public ResponseEntity<DesignationDTO>delete(@PathVariable long id) {
+//            designationService.delete(id);
+//            return ResponseEntity.noContent().build();
+//        }
 
     @GetMapping("/getByName/{name}")
     public ResponseEntity<DesignationDTO> getByName(@PathVariable String name) {
@@ -52,5 +52,14 @@ public class DesignationController {
     public ResponseEntity<DesignationDTO> getDesignationById(@PathVariable Long id){
         DesignationDTO designationDTO = designationService.getDesignationById(id);
         return ResponseEntity.ok(designationDTO);
+    }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Boolean> delete(@PathVariable Long id) {
+        try {
+            Boolean result = designationService.delete(id);
+            return ResponseEntity.ok(result);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

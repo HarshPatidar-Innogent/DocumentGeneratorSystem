@@ -12,8 +12,8 @@ public interface IDepartmentService {
 
     DepartmentDTO update(Long id, DepartmentDTO departmentDTO);
 
-    void delete(Long departmentId);
     DepartmentDTO getDepartmentByName(String name);
     DepartmentDTO getDepartmentById(Long id);
 
+    Boolean delete(Long id);
 }
