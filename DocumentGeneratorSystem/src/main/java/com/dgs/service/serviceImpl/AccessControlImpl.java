@@ -39,10 +39,10 @@ public class AccessControlImpl implements IAccessControlService {
 
         Long userId = accessControlDTO.getUserId();
         System.out.println(userId);
-        User user = userRepo.findById(userId).orElseThrow(()->new UserNotFoundException("User Not Found"));
+        User user = userRepo.findById(userId).orElseThrow(() -> new UserNotFoundException("User Not Found"));
         System.out.println("Here");
-        Template template =templateRepo.findById(accessControlDTO.getTemplate()).orElseThrow(()->new TemplateNotFoundException("Template Not Found"));
-        User ownerId = userRepo.findById(accessControlDTO.getOwnerId()).orElseThrow(()->new UserNotFoundException("User Not Found"));
+        Template template = templateRepo.findById(accessControlDTO.getTemplate()).orElseThrow(() -> new TemplateNotFoundException("Template Not Found"));
+        User ownerId = userRepo.findById(accessControlDTO.getOwnerId()).orElseThrow(() -> new UserNotFoundException("User Not Found"));
 
         AccessControl accessControl = new AccessControl();
         accessControl.setTemplate(template);
@@ -66,7 +66,7 @@ public class AccessControlImpl implements IAccessControlService {
     @Override
     public List<AccessControlDTO> getAllAccessDetails(Long templateId) {
         List<AccessControl> accessControls = accessControlRepo.findByTemplateId(templateId);
-        return accessControls.stream().map(access->mapperConfig.toAccessControlDTO(access)).toList();
+        return accessControls.stream().map(access -> mapperConfig.toAccessControlDTO(access)).toList();
     }
 
     @Override
@@ -77,13 +77,13 @@ public class AccessControlImpl implements IAccessControlService {
     @Override
     public List<TemplateDTO> getAccessTemplateOfUser(Long userId) {
         List<Long> templatesId = accessControlRepo.findTemplateIdByUserId(userId);
-        List<Template> templates = templatesId.stream().map(id->templateRepo.findById(id).get()).toList();
+        List<Template> templates = templatesId.stream().map(id -> templateRepo.findById(id).get()).toList();
         return templates.stream().map(template -> mapperConfig.toTemplateDto(template)).toList();
     }
 
     @Override
     public List<AccessControlDTO> getAccessOfUser(Long userId) {
         List<AccessControl> accessControls = accessControlRepo.findAllByUserId(userId);
-        return accessControls.stream().map(access->mapperConfig.toAccessControlDTO(access)).toList();
+        return accessControls.stream().map(access -> mapperConfig.toAccessControlDTO(access)).toList();
     }
 }

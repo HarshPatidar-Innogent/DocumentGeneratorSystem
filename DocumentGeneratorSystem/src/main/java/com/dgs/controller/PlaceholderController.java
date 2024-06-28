@@ -16,7 +16,7 @@ public class PlaceholderController {
 
 
     @GetMapping("/template/{id}")
-    public List<PlaceholderDTO> getAllPlaceholderOfTemplate(@PathVariable Long id){
+    public List<PlaceholderDTO> getAllPlaceholderOfTemplate(@PathVariable Long id) {
         return placeholderService.getAllPlaceholderOfTemplate(id);
     }
 

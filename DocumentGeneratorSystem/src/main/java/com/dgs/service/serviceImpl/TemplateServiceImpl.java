@@ -88,8 +88,8 @@ public class TemplateServiceImpl implements ITemplateService {
         Long designationId = user.getDesignation().getDesignationId();
 
 
-            Template template = templateRepo.findById(templateId).orElseThrow(() -> new EntityNotFoundException("Template Not Found"));
-            return mapperConfig.toTemplateDto(template);
+        Template template = templateRepo.findById(templateId).orElseThrow(() -> new EntityNotFoundException("Template Not Found"));
+        return mapperConfig.toTemplateDto(template);
 
     }
 
@@ -100,7 +100,9 @@ public class TemplateServiceImpl implements ITemplateService {
 
     @Override
     public TemplateDTO updateTemplate(TemplateDTO templateDTO, Long templateId) {
-        Template existingTemplate = templateRepo.findById(templateId).orElseThrow(()->{throw new TemplateNotFoundException("Template Not found");});
+        Template existingTemplate = templateRepo.findById(templateId).orElseThrow(() -> {
+            throw new TemplateNotFoundException("Template Not found");
+        });
         User existingUser = userRepo.findById(templateDTO.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -127,7 +129,6 @@ public class TemplateServiceImpl implements ITemplateService {
         placeholderRepo.deleteAllByTemplateId(existingTemplate.getTemplateId());
 
 
-
         existingTemplate.setTemplateFormat(templateDTO.getTemplateFormat());
         existingTemplate.setTemplateBody(templateDTO.getTemplateBody());
         existingTemplate.setUser(existingUser);
@@ -138,7 +139,7 @@ public class TemplateServiceImpl implements ITemplateService {
 
 
         Template save = templateRepo.save(existingTemplate);
-        if(save==null){
+        if (save == null) {
             throw new RuntimeException("Template not updated");
         }
         return MapperConfig.toTemplateDto(save);

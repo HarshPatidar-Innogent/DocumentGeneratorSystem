@@ -24,60 +24,60 @@ public class TemplateController {
     private IUserService iUserService;
 
     @GetMapping("/all/{id}")
-    public ResponseEntity<?> getAllTemplate(@PathVariable Long id){
+    public ResponseEntity<?> getAllTemplate(@PathVariable Long id) {
         List<TemplateDTO> templateDTOS = templateService.getAllTemplate(id);
         return ResponseEntity.status(HttpStatus.OK).body(templateDTOS);
     }
+
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @PostMapping("/create")
-    public ResponseEntity<TemplateDTO> createTemplate(@RequestBody TemplateDTO templateDTO){
+    public ResponseEntity<TemplateDTO> createTemplate(@RequestBody TemplateDTO templateDTO) {
         TemplateDTO template = templateService.createTemplate(templateDTO);
-        try{
+        try {
             return ResponseEntity.ok(template);
-        }catch(Exception e){
+        } catch (Exception e) {
             throw new RuntimeException("Error Creating an Template");
         }
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<TemplateDTO> getTemplateById(@PathVariable Long id){
+    public ResponseEntity<TemplateDTO> getTemplateById(@PathVariable Long id) {
 //        return templateService.getTemplateById(id);
         TemplateDTO dto = templateService.getTemplateById(id);
-        if(dto != null){
+        if (dto != null) {
             return ResponseEntity.ok(dto);
-        }else{
+        } else {
             throw new TemplateNotFoundException("Template not found");
         }
     }
 
     @GetMapping("/getTemplate")
-    public ResponseEntity<?> getTempById(@RequestParam("templateId") Long templateId,@RequestParam("userId") Long userId) throws AccessDeniedException {
-        TemplateDTO templateDTO = templateService.getTemplateDTOById(templateId,userId);
-        if(templateDTO!=null){
+    public ResponseEntity<?> getTempById(@RequestParam("templateId") Long templateId, @RequestParam("userId") Long userId) throws AccessDeniedException {
+        TemplateDTO templateDTO = templateService.getTemplateDTOById(templateId, userId);
+        if (templateDTO != null) {
             return ResponseEntity.ok(templateDTO);
-        }
-        else{
+        } else {
             return ResponseEntity.notFound().build();
         }
     }
 
     @DeleteMapping("/deleteTemplate/{id}")
-    public ResponseEntity<?> deleteTemplateById(@PathVariable Long id){
-        if(templateService.getTemplateById(id)!=null){
+    public ResponseEntity<?> deleteTemplateById(@PathVariable Long id) {
+        if (templateService.getTemplateById(id) != null) {
             templateService.deleteTemplateById(id);
             return ResponseEntity.ok("Templated Deleted");
-        }else{
+        } else {
             return ResponseEntity.notFound().build();
         }
     }
 
     @PutMapping("/update-template/{templateId}")
-    public ResponseEntity<TemplateDTO> updateTemplate(@RequestBody TemplateDTO templateDTO, @PathVariable Long templateId){
+    public ResponseEntity<TemplateDTO> updateTemplate(@RequestBody TemplateDTO templateDTO, @PathVariable Long templateId) {
         TemplateDTO dto = templateService.updateTemplate(templateDTO, templateId);
-        try{
+        try {
             return ResponseEntity.ok(dto);
-        }catch (Exception e){
-            throw new RuntimeException("Exception Updating an Template"+ templateId);
+        } catch (Exception e) {
+            throw new RuntimeException("Exception Updating an Template" + templateId);
         }
     }
 }

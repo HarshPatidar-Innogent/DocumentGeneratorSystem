@@ -24,52 +24,52 @@ public class AccessControlController {
     private IAccessControlService accessControlService;
 
     @PostMapping("/addAccess")
-    public ResponseEntity<?> addAccess(@RequestBody AccessControlDTO accessControlDTO){
-         AccessControlDTO accessControlDTO1 = accessControlService.addAccess(accessControlDTO);
-         try{
-             return ResponseEntity.ok(accessControlDTO);
-         }catch (Exception e){
-             throw new RuntimeException("Error in adding an access to Template "+ accessControlDTO.getTemplate());
-         }
+    public ResponseEntity<?> addAccess(@RequestBody AccessControlDTO accessControlDTO) {
+        AccessControlDTO accessControlDTO1 = accessControlService.addAccess(accessControlDTO);
+        try {
+            return ResponseEntity.ok(accessControlDTO);
+        } catch (Exception e) {
+            throw new RuntimeException("Error in adding an access to Template " + accessControlDTO.getTemplate());
+        }
     }
 
     @GetMapping("/template/access/user/{templateId}")
-    public ResponseEntity<?> getAllAccessOfTemplate(@PathVariable Long templateId){
+    public ResponseEntity<?> getAllAccessOfTemplate(@PathVariable Long templateId) {
         try {
             List<UserDTO> allAccessOfTemplate = accessControlService.getAllAccessOfTemplate(templateId);
             return ResponseEntity.ok(allAccessOfTemplate);
-        }catch (Exception e){
-            throw new RuntimeException("Exception Occurred in fetching access of template "+templateId);
+        } catch (Exception e) {
+            throw new RuntimeException("Exception Occurred in fetching access of template " + templateId);
         }
     }
 
     @GetMapping("/template/access/{templateId}")
-    public ResponseEntity<?> getAllAccessDetails(@PathVariable Long templateId){
-        try{
+    public ResponseEntity<?> getAllAccessDetails(@PathVariable Long templateId) {
+        try {
             List<AccessControlDTO> accessControlDTOS = accessControlService.getAllAccessDetails(templateId);
             return ResponseEntity.ok(accessControlDTOS);
-        }catch (Exception e){
-            throw new RuntimeException("Exception Occurred in fetching access of template "+templateId);
+        } catch (Exception e) {
+            throw new RuntimeException("Exception Occurred in fetching access of template " + templateId);
         }
     }
 
     @DeleteMapping("/delete/access/{accessId}")
-    public void deleteAccess(@PathVariable Long accessId){
-        try{
+    public void deleteAccess(@PathVariable Long accessId) {
+        try {
             accessControlService.deleteAccessById(accessId);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException("Access Not deleted");
         }
     }
 
     @GetMapping("/access-template/{userId}")
-    public List<TemplateDTO> getAccessTemplateOfUser(@PathVariable Long userId){
+    public List<TemplateDTO> getAccessTemplateOfUser(@PathVariable Long userId) {
         List<TemplateDTO> accessTemplateOfUser = accessControlService.getAccessTemplateOfUser(userId);
         return accessTemplateOfUser;
     }
 
     @GetMapping("/access/{userId}")
-    public List<AccessControlDTO> getAccess(@PathVariable Long userId){
+    public List<AccessControlDTO> getAccess(@PathVariable Long userId) {
         List<AccessControlDTO> accessControlDTOS = accessControlService.getAccessOfUser(userId);
         System.out.println("Here");
         return accessControlDTOS;

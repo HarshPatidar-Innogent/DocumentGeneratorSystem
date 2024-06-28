@@ -19,18 +19,18 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody RegisterRequest request
-    ){
+    ) {
         System.out.println(request);
         return ResponseEntity.ok(service.register(request));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticate (
+    public ResponseEntity<?> authenticate(
             @RequestBody AuthenticationRequest request
-    )  {
-        try{
+    ) {
+        try {
             return ResponseEntity.ok(service.authenticate(request));
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new UserNotFoundException("User Not Found");
         }
     }

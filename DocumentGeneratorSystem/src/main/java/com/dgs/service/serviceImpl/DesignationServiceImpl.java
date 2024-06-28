@@ -6,6 +6,7 @@ import com.dgs.entity.Department;
 import com.dgs.entity.Designation;
 import com.dgs.mapper.MapperConfig;
 import com.dgs.repository.DesignationRepo;
+import com.dgs.repository.UserRepo;
 import com.dgs.service.iService.IDesignationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,9 @@ public class DesignationServiceImpl implements IDesignationService {
     @Autowired
     private MapperConfig mapperConfig;
 
+    @Autowired
+    private UserRepo userRepo;
+
     @Override
     public DesignationDTO createDesignation(DesignationDTO designationDTO) {
         Designation designation = new Designation();
@@ -31,6 +35,7 @@ public class DesignationServiceImpl implements IDesignationService {
         System.out.println(savedDesignation);
         return mapperConfig.toDesignationDTO(savedDesignation);
     }
+
     @Override
     public List<DesignationDTO> getAll() {
         List<Designation> designations = designationRepo.findAll();
@@ -38,38 +43,28 @@ public class DesignationServiceImpl implements IDesignationService {
                 .map(mapperConfig::toDesignationDTO)
                 .collect(Collectors.toList());
     }
+
     @Override
-    public DesignationDTO update(Long designationId, DesignationDTO designationDTO){
+    public DesignationDTO update(Long designationId, DesignationDTO designationDTO) {
         Designation designation = designationRepo.findById(designationId)
-                .orElseThrow(()->new RuntimeException("Designation not found with id :"+designationId));
+                .orElseThrow(() -> new RuntimeException("Designation not found with id :" + designationId));
 
         designation.setDesignationName(designationDTO.getDesignationName());
         designation.setDescription(designationDTO.getDescription());
         designation.setPermission(designation.getPermission());
 
         Designation update = designationRepo.save(designation);
-        return  mapperConfig.toDesignationDTO(update);
+        return mapperConfig.toDesignationDTO(update);
 
     }
 
-    @Override
-    public void delete(Long designationId) {
-        if (!designationRepo.existsById(designationId)) {
-            throw new RuntimeException("Designation not found with id: " + designationId);
-        }
-        designationRepo.deleteById(designationId);
-    }
-
-
-    @Override
-    public DesignationDTO getDesignationById(Long id) {
-        Optional<Designation> designationOptional = designationRepo.findById(id);
-        if (designationOptional.isPresent()) {
-            return mapperConfig.toDesignationDTO(designationOptional.get());
-        } else {
-            throw new RuntimeException("designation not found with id: " + id);
-        }
-    }
+//    @Override
+//    public void delete(Long designationId) {
+//        if (!designationRepo.existsById(designationId)) {
+//            throw new RuntimeException("Designation not found with id: " + designationId);
+//        }
+//        designationRepo.deleteById(designationId);
+//    }
 
     @Override
     public DesignationDTO getDesignationByName(String name) {
@@ -88,5 +83,20 @@ public class DesignationServiceImpl implements IDesignationService {
     }
 
 
+    @Override
+    public Boolean delete(Long designationId) {
+        if (!designationRepo.existsById(designationId)) {
+            throw new RuntimeException("Designation not found with id: " + designationId);
+        }
+        if (userRepo.existsByDesignation(designationRepo.findById(designationId).get())) {
+            return false;
+        }
+        try {
+            designationRepo.deleteByDesignationId(designationId);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return true;
+    }
+    }
 
-}

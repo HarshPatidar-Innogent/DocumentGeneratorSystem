@@ -29,8 +29,8 @@ public class SignatureController {
                                           @RequestParam("signatureType") SignatureType signatureType,
                                           @RequestParam Long documentId,
                                           @RequestParam("placeholder") String placeholder,
-                                            @RequestParam("signed") Boolean Signed ,
-                                            @RequestParam("recipientEmail") String RecipientEmail) throws IOException {
+                                          @RequestParam("signed") Boolean Signed,
+                                          @RequestParam("recipientEmail") String RecipientEmail) throws IOException {
         List<SignatureDTO> signatureDTOS = new ArrayList<>();
 
         for (MultipartFile file : files) {
@@ -93,34 +93,34 @@ public class SignatureController {
         signatureDTO2.setDocumentId(documentId);
         signatureDTO2.setPlaceholder(placeholder);
         System.out.println(documentId);
-        SignatureDTO signatureDTO = signatureService.addSignatureDrawn(file , signatureDTO2);
+        SignatureDTO signatureDTO = signatureService.addSignatureDrawn(file, signatureDTO2);
         return ResponseEntity.status(HttpStatus.OK).body(signatureDTO);
     }
 
-    @PutMapping(value = "/addSignatureElectronic/{recipientEmail}/{documentId}/{name}",consumes = "application/json")
-    public ResponseEntity<?> addSignatureElectronic(@RequestBody SignatureDTO signatureDTO, @PathVariable("name") String name,@PathVariable Long documentId, @PathVariable String recipientEmail) throws IOException {
+    @PutMapping(value = "/addSignatureElectronic/{recipientEmail}/{documentId}/{name}", consumes = "application/json")
+    public ResponseEntity<?> addSignatureElectronic(@RequestBody SignatureDTO signatureDTO, @PathVariable("name") String name, @PathVariable Long documentId, @PathVariable String recipientEmail) throws IOException {
         System.out.println(signatureDTO.getPlaceholder());
-        SignatureDTO signatureDTO1 = signatureService.addSignatureElectronic(signatureDTO, name,recipientEmail,documentId);
+        SignatureDTO signatureDTO1 = signatureService.addSignatureElectronic(signatureDTO, name, recipientEmail, documentId);
         return ResponseEntity.status(HttpStatus.OK).body(signatureDTO1);
     }
 
 
     @GetMapping("/getSignatures/{id}")
-    public ResponseEntity<List<SignatureDTO>> getAllSignaturesOfDocument(@PathVariable Long id){
+    public ResponseEntity<List<SignatureDTO>> getAllSignaturesOfDocument(@PathVariable Long id) {
         List<SignatureDTO> signatureDTOS = signatureService.getAllSignatureOfDocument(id);
         return ResponseEntity.ok(signatureDTOS);
     }
 
     @GetMapping("/status/{documentId}/{placeholder}")
-    public ResponseEntity<Boolean> checkSignatureStatus(@PathVariable Long documentId, @PathVariable String placeholder){
+    public ResponseEntity<Boolean> checkSignatureStatus(@PathVariable Long documentId, @PathVariable String placeholder) {
         Boolean isSigned = signatureService.isSigned(documentId, placeholder);
         return ResponseEntity.ok(isSigned);
     }
 
     @PutMapping("/updateSign/{recipientEmail}/{documentId}")
-    public ResponseEntity<?> updateSign( @PathVariable String recipientEmail,
-                                         @PathVariable Long documentId,
-                                         @RequestParam("signatureData") MultipartFile file,
+    public ResponseEntity<?> updateSign(@PathVariable String recipientEmail,
+                                        @PathVariable Long documentId,
+                                        @RequestParam("signatureData") MultipartFile file,
                                         @RequestParam("signatureType") SignatureType signatureType,
                                         @RequestParam("placeholder") String placeholder,
                                         @RequestParam("signed") Boolean Signed) throws IOException {
@@ -128,13 +128,9 @@ public class SignatureController {
         signatureDTO.setSignatureType(signatureType);
         signatureDTO.setSigned(Signed);
         signatureDTO.setPlaceholder(placeholder);
-        SignatureDTO signatureDTO1 = signatureService.updateSign( recipientEmail,documentId,file, signatureDTO);
+        SignatureDTO signatureDTO1 = signatureService.updateSign(recipientEmail, documentId, file, signatureDTO);
         return ResponseEntity.status(HttpStatus.OK).body(signatureDTO1);
     }
-
-
-
-
 
 
 }

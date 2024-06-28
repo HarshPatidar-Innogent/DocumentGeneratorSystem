@@ -14,38 +14,56 @@ import java.util.List;
 @CrossOrigin
 public class DesignationController {
 
-        @Autowired
-        private IDesignationService designationService;
+    @Autowired
+    private IDesignationService designationService;
 
-        @PostMapping("/add")
-        public ResponseEntity<DesignationDTO> createDesignation(@RequestBody DesignationDTO designationDTO){
-            designationDTO.setDesignationId(null);
+    @PostMapping("/add")
+    public ResponseEntity<DesignationDTO> createDesignation(@RequestBody DesignationDTO designationDTO) {
+        designationDTO.setDesignationId(null);
 
-            DesignationDTO createdDesignation = designationService.createDesignation(designationDTO);
+        DesignationDTO createdDesignation = designationService.createDesignation(designationDTO);
 
-            return ResponseEntity.status(HttpStatus.OK).body(createdDesignation);
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(createdDesignation);
+    }
 
-        @GetMapping("/getAll")
-        public ResponseEntity<List<DesignationDTO>>getall(){
-            List<DesignationDTO> designation = designationService.getAll();
-            return ResponseEntity.status(HttpStatus.OK).body(designation);
-        }
-        @PutMapping("/update/{id}")
-        public ResponseEntity<DesignationDTO> update(@PathVariable Long id, @RequestBody DesignationDTO designationDTO) {
-            DesignationDTO updatedDesignation = designationService.update(id, designationDTO);
-            return ResponseEntity.ok(updatedDesignation);
-        }
+    @GetMapping("/getAll")
+    public ResponseEntity<List<DesignationDTO>> getall() {
+        List<DesignationDTO> designation = designationService.getAll();
+        return ResponseEntity.status(HttpStatus.OK).body(designation);
+    }
 
-        @DeleteMapping("/delete/{id}")
-        public ResponseEntity<DesignationDTO>delete(@PathVariable long id) {
-            designationService.delete(id);
-            return ResponseEntity.noContent().build();
-        }
+    @PutMapping("/update/{id}")
+    public ResponseEntity<DesignationDTO> update(@PathVariable Long id, @RequestBody DesignationDTO designationDTO) {
+        DesignationDTO updatedDesignation = designationService.update(id, designationDTO);
+        return ResponseEntity.ok(updatedDesignation);
+    }
+//
+//    @DeleteMapping("/delete/{id}")
+//    public ResponseEntity<DesignationDTO> delete(@PathVariable long id) {
+//        designationService.delete(id);
+//        return ResponseEntity.noContent().build();
+//    }
 
     @GetMapping("/getByName/{name}")
     public ResponseEntity<DesignationDTO> getByName(@PathVariable String name) {
         DesignationDTO designationDTO = designationService.getDesignationByName(name);
         return ResponseEntity.ok(designationDTO);
     }
+
+    @GetMapping("/getDes/{id}")
+    public ResponseEntity<DesignationDTO> getDesignationById(@PathVariable Long id) {
+        DesignationDTO designationDTO = designationService.getDesignationById(id);
+        return ResponseEntity.ok(designationDTO);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Boolean> delete(@PathVariable Long id) {
+        try {
+            Boolean result = designationService.delete(id);
+            return ResponseEntity.ok(result);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
 }

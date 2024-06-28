@@ -13,8 +13,8 @@ public class EmailService {
     @Autowired
     private JavaMailSender emailSender;
 
-    public void sendEmail(String to, String subject, String text){
-  //     log.info("Inside email send method ");
+    public void sendEmail(String to, String subject, String text) {
+        //     log.info("Inside email send method ");
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject(subject);

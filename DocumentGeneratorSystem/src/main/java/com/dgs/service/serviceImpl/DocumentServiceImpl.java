@@ -37,7 +37,6 @@ public class DocumentServiceImpl implements IDocumentService {
     private Map<String, String> emails;
 
 
-
     @Override
     public List<DocumentDTO> getAllDocumentOfUser(Long userId) {
         List<Document> documents = documentRepo.findAllByUserId(userId);
@@ -85,7 +84,7 @@ public class DocumentServiceImpl implements IDocumentService {
                 .anyMatch(placeholder -> placeholder.getPlaceholderName().equals(placeholderName) && placeholder.getPlaceholderType().equals("signature"));
     }
 
-    private String encode(String value){
+    private String encode(String value) {
         return Base64.getUrlEncoder().withoutPadding().encodeToString(value.getBytes(StandardCharsets.UTF_8));
     }
 
@@ -108,10 +107,10 @@ public class DocumentServiceImpl implements IDocumentService {
         if (!documentDTO.getSignatureEmails().isEmpty()) {
             documentDTO.getSignatureEmails().forEach((placeholder, email) -> {
                 String encodedDocumentId = encode(String.valueOf(document.getDocumentId()));
-                String encodedPlaceholder = encode("{{"+placeholder+"}}");
+                String encodedPlaceholder = encode("{{" + placeholder + "}}");
                 String encodedEmail = encode(email);
 //                String url = "http://192.168.5.215:3000/sign/" + encodedDocumentId + "/" + encodedPlaceholder ;
-                String url = "http://192.168.5.219:3000/sign/" + encodedDocumentId + "/" + encodedPlaceholder +"/"+encodedEmail;
+                String url = "http://192.168.5.219:3000/sign/" + encodedDocumentId + "/" + encodedPlaceholder + "/" + encodedEmail;
                 emailService.sendEmail(email, "Document Signature Request", url);
                 Signature signature = new Signature();
 //                signature.setPlaceholder("{{"+emails.get(email)+"}}");

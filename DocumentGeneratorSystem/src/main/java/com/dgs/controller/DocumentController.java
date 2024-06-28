@@ -28,48 +28,53 @@ public class DocumentController {
     @GetMapping("/get-documents/{userId}")
     public ResponseEntity<List<DocumentDTO>> getDocumentByUserId(@PathVariable Long userId) {
         log.info("Get All Documents of users");
-        try{
+        try {
             List<DocumentDTO> documentDTOList = documentService.getAllDocumentOfUser(userId);
             return ResponseEntity.ok(documentDTOList);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new DocumentNotFoundException("Error Occurred in Fetching the documents");
         }
     }
+
     //@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @PostMapping(value = "/populate/{id}")
     public String populateDoc(@RequestParam Map<String, String> dynamicData, @PathVariable("id") Long templateId) {
         log.info("Document Populated");
-        try{
+        try {
             String document = documentService.populateDocument(dynamicData, templateId);
             System.out.println(document);
             return document;
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new DocumentPopulationException("Exception Occurred in Populating the Document");
         }
     }
+
     //@PreAuthorize("hasRole('ADMIN','USER')")
     @PostMapping(value = "/save")
     public ResponseEntity<?> createDocument(@RequestBody DocumentDTO documentDTO) {
         log.info("Document Creation");
-        try{
+        try {
             DocumentDTO documentDTO1 = documentService.createDocument(documentDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(documentDTO1);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new DocumentCreationException("Document Not Crated");
         }
     }
-   // @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+
+    // @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping("/get-document/{id}")
     public ResponseEntity<DocumentDTO> getDocumentForSign(@PathVariable Long id) {
         DocumentDTO document = documentService.getDocumentById(id);
         return ResponseEntity.ok(document);
     }
+
     //@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping("/getDocument/{id}")
-    public ResponseEntity<DocumentDTO> getDocumentById(@PathVariable Long id){
+    public ResponseEntity<DocumentDTO> getDocumentById(@PathVariable Long id) {
         DocumentDTO documentDTO = documentService.getDocumentById(id);
         return ResponseEntity.ok(documentDTO);
     }
+
     //@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @PutMapping("/sign-submit/{id}")
     public ResponseEntity<?> submitSignedDocument(@RequestBody String documentBody, @PathVariable Long id) {
@@ -80,9 +85,10 @@ public class DocumentController {
             throw new DocumentNotFoundException("Document Not found");
         }
     }
-  //  @PreAuthorize("hasRole('ADMIN')")
+
+    //  @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete-doc/{id}")
-    public void deleteDocumentById(@PathVariable Long id){
+    public void deleteDocumentById(@PathVariable Long id) {
         documentService.deleteDocument(id);
     }
 

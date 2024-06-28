@@ -38,7 +38,7 @@ public class AuthenticateService {
     private EmailService emailService;
 
     public AuthenticationResponse register(RegisterRequest request) {
-            String password = generatePassword();
+        String password = generatePassword();
 //        System.out.println(request.getFirstName());
 //        System.out.println(request.getLastName());
 //        var user = User.builder()
@@ -61,7 +61,7 @@ public class AuthenticateService {
                 .role(request.getRole())
                 .build();
         System.out.println();
-        sendEmail(request.getEmail(),password);
+        sendEmail(request.getEmail(), password);
         repository.save(mapperConfig.toUser(user));
         var jwtToken = jwtService.generateToken(mapperConfig.toUser(user));
         return AuthenticationResponse.builder()
@@ -86,14 +86,15 @@ public class AuthenticateService {
     }
 
 
-    public String generatePassword(){
+    public String generatePassword() {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~!@#$%^&*()-_=+[{]}<.>/?";
-        String pwd = RandomStringUtils.random( 8, characters );
-        return  pwd;
+        String pwd = RandomStringUtils.random(8, characters);
+        return pwd;
     }
-    public void sendEmail(String email,String password){
+
+    public void sendEmail(String email, String password) {
         String subject = "Your Account Password";
-        String text = "Dear user,\n\n Your Account has been created Successfully.\n Email "+email+"\n Password : "+password+"\nPlease change your Password after logging in";
-        emailService.sendEmail(email,subject,text);
+        String text = "Dear user,\n\n Your Account has been created Successfully.\n Email " + email + "\n Password : " + password + "\nPlease change your Password after logging in";
+        emailService.sendEmail(email, subject, text);
     }
 }

@@ -30,7 +30,6 @@ public class UserController {
     @Autowired
     private UserRepo userRepository;
 
-
     @Autowired
     private UserDetailsService userDetailsService;
 
@@ -55,9 +54,9 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(getAllUserDTO);
     }
 
-        @PutMapping("/updateUser/{id}")
+    @PutMapping("/updateUser/{id}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
-            System.out.println(userDTO);
+        System.out.println(userDTO);
         UserDTO updatedUser = userService.updateUser(id, userDTO);
         return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
     }
@@ -72,6 +71,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
@@ -85,9 +85,9 @@ public class UserController {
     }
 
     @PostMapping("/changePassword/{email}")
-    public ResponseEntity<String> changePassword(@PathVariable String email, @RequestBody ChangePasswordDTO requestPassword){
+    public ResponseEntity<String> changePassword(@PathVariable String email, @RequestBody ChangePasswordDTO requestPassword) {
         System.out.println(email);
-        userService.changePassword(email,requestPassword);
+        userService.changePassword(email, requestPassword);
         return ResponseEntity.status(HttpStatus.OK).body("Password Changed Successfully");
     }
 

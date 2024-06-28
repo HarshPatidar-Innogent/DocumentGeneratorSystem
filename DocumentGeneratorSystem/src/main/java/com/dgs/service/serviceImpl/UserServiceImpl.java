@@ -41,10 +41,9 @@ public class UserServiceImpl implements IUserService {
     private PasswordEncoder passwordEncoder;
 
 
-
     @Override
     public UserDTO addUser(UserDTO userDTO) {
-        Designation designation =  designationRepo.findById(userDTO.getDesignationId())
+        Designation designation = designationRepo.findById(userDTO.getDesignationId())
                 .orElseThrow(() -> new RuntimeException("Designation not found with id: " + userDTO.getDesignationId()));
         Department department = departmentRepo.findById(userDTO.getDepartmentId())
                 .orElseThrow(() -> new RuntimeException("Department not found with id: " + userDTO.getDepartmentId()));
@@ -73,6 +72,7 @@ public class UserServiceImpl implements IUserService {
                 .map(mapperConfig::toUserDTO)
                 .collect(Collectors.toList());
     }
+
     @Override
     public UserDTO updateUser(Long id, UserDTO userDTO) {
         Optional<User> userOptional = userRepo.findById(id);
@@ -116,6 +116,7 @@ public class UserServiceImpl implements IUserService {
             throw new IllegalArgumentException("User not found with id: " + id);
         }
     }
+
     @Override
     public UserDTO getUserById(Long id) {
         Optional<User> userOptional = userRepo.findById(id);
@@ -134,18 +135,18 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public UserDTO findUserById(Long id) {
-        User user = userRepo.findById(id).orElseThrow(()->new UsernameNotFoundException("User Not Found"));
+        User user = userRepo.findById(id).orElseThrow(() -> new UsernameNotFoundException("User Not Found"));
         return mapperConfig.toUserDTO(user);
     }
 
     @Override
     public void changePassword(String email, ChangePasswordDTO requestPassword) {
-        User user = userRepo.findByEmail(email).orElseThrow(()->new RuntimeException("User Not Found"));
+        User user = userRepo.findByEmail(email).orElseThrow(() -> new RuntimeException("User Not Found"));
 
         System.out.println("New Password Length: " + requestPassword.getNewPassword().length());
         System.out.println("Confirm Password Length: " + requestPassword.getConfirmPassword().length());
 
-        if(!passwordEncoder.matches(requestPassword.getOldPassword(),user.getPassword())){
+        if (!passwordEncoder.matches(requestPassword.getOldPassword(), user.getPassword())) {
             System.out.println(requestPassword.getOldPassword());
             System.out.println(user.getPassword());
             throw new RuntimeException("Old password do not match");
@@ -159,10 +160,6 @@ public class UserServiceImpl implements IUserService {
         user.setPassword(encryptPassword);
         userRepo.save(user);
     }
-
-
-
-
 
 
 }
