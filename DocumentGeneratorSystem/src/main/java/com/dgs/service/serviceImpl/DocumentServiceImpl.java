@@ -150,4 +150,10 @@ public class DocumentServiceImpl implements IDocumentService {
         Document save = documentRepo.save(document1);
         return "Document Signed";
     }
+
+    @Override
+    public Integer countDocument(Long userId) {
+        Integer count = documentRepo.countDocument(userId);
+        return count;
+    }
 }

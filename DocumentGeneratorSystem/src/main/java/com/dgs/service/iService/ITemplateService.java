@@ -23,4 +23,6 @@ public interface ITemplateService {
     public void deleteTemplateById(Long id);
 
     public TemplateDTO updateTemplate(TemplateDTO templateDTO, Long templateId);
+
+    public Integer countTemplate(Long userId);
 }

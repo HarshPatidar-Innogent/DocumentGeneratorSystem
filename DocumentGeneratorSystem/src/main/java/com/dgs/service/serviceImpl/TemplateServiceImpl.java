@@ -144,4 +144,9 @@ public class TemplateServiceImpl implements ITemplateService {
         return MapperConfig.toTemplateDto(save);
     }
 
+    @Override
+    public Integer countTemplate(Long userId) {
+        return templateRepo.countTemplate(userId);
+    }
+
 }
