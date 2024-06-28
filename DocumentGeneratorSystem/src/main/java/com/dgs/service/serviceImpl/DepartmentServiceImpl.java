@@ -4,6 +4,7 @@ import com.dgs.DTO.DepartmentDTO;
 import com.dgs.entity.Department;
 import com.dgs.mapper.MapperConfig;
 import com.dgs.repository.DepartmentRepo;
+import com.dgs.repository.UserRepo;
 import com.dgs.service.iService.IDepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,9 @@ public class DepartmentServiceImpl implements IDepartmentService {
 
     @Autowired
     private DepartmentRepo departmentRepo;
+
+    @Autowired
+    private UserRepo userRepo;
 
 
     @Override
@@ -53,14 +57,14 @@ public class DepartmentServiceImpl implements IDepartmentService {
 
     }
 
-    @Override
-    public void delete(Long departmentId) {
-        if (!departmentRepo.existsById(departmentId)) {
-            throw new RuntimeException("Department not found with id: " + departmentId);
-        }
-        departmentRepo.deleteById(departmentId);
-
-    }
+//    @Override
+//    public void delete(Long departmentId) {
+//        if (!departmentRepo.existsById(departmentId)) {
+//            throw new RuntimeException("Department not found with id: " + departmentId);
+//        }
+//        departmentRepo.deleteById(departmentId);
+//
+//    }
 
     @Override
     public DepartmentDTO getDepartmentByName(String name) {
@@ -76,5 +80,21 @@ public class DepartmentServiceImpl implements IDepartmentService {
         } else {
             throw new RuntimeException("department not found with id: " + id);
         }
+    }
+
+    public Boolean delete(Long departmentId) {
+        if (!departmentRepo.existsById(departmentId)) {
+            throw new RuntimeException("Department not found with id: " + departmentId);
+        }
+        if (userRepo.existsByDepartment(departmentRepo.findById(departmentId).get())) {
+            //throw new RuntimeException(("department cannot be deleted........."));
+            return false;
+        }
+        try {
+            departmentRepo.deleteByDepartmentId(departmentId);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return true;
     }
 }

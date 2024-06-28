@@ -162,6 +162,7 @@ public class MapperConfig {
         user.setLastName(userDTO.getLastName());
         user.setEmail(userDTO.getEmail());
         user.setPassword(userDTO.getPassword());
+//        user.setPassword("");
         user.setDepartment(departmentRepo.findById(userDTO.getDepartmentId()).get());
         user.setDesignation(designationRepo.findById(userDTO.getDesignationId()).get());
         user.setManager(userDTO.getManager());

@@ -54,7 +54,7 @@ public class UserServiceImpl implements IUserService {
         userEntity.setManager(userDTO.getManager());
         userEntity.setLastName(userDTO.getLastName());
         userEntity.setEmail(userDTO.getEmail());
-        userEntity.setPassword(userDTO.getPassword());
+//        userEntity.setPassword(userDTO.getPassword());
         userEntity.setDepartment(department);
         userEntity.setDesignation(designation);
 

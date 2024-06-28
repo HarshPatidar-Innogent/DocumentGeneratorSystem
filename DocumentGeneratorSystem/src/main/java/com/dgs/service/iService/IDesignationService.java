@@ -13,6 +13,7 @@ public interface IDesignationService {
     DesignationDTO update(Long id, DesignationDTO designationDTO);
 
     DesignationDTO getDesignationByName(String name);
-    void delete(Long designationId);
     DesignationDTO getDesignationById(Long id);
+
+    Boolean delete(Long designationId);
 }

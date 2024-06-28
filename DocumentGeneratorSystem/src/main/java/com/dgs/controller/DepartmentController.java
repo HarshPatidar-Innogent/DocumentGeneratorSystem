@@ -41,11 +41,20 @@ public class DepartmentController {
         return ResponseEntity.ok(updatedDepartment);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<DesignationDTO>delete(@PathVariable long id) {
-        departmentService.delete(id);
-        return ResponseEntity.noContent().build();
+//    @DeleteMapping("/delete/{id}")
+//    public ResponseEntity<DesignationDTO>delete(@PathVariable long id) {
+//        departmentService.delete(id);
+//        return ResponseEntity.noContent().build();
+//    }
+@DeleteMapping("/delete/{id}")
+public ResponseEntity<Boolean> delete(@PathVariable Long id) {
+    try {
+        Boolean result = departmentService.delete(id);
+        return ResponseEntity.ok(result);
+    } catch (RuntimeException e) {
+        return ResponseEntity.badRequest().build();
     }
+}
 
     @GetMapping("/getByName/{name}")
     public ResponseEntity<DepartmentDTO> getByName(@PathVariable String name) {
