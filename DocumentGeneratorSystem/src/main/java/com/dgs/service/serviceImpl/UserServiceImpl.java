@@ -48,7 +48,7 @@ public class UserServiceImpl implements IUserService {
                 .orElseThrow(() -> new RuntimeException("Designation not found with id: " + userDTO.getDesignationId()));
         Department department = departmentRepo.findById(userDTO.getDepartmentId())
                 .orElseThrow(() -> new RuntimeException("Department not found with id: " + userDTO.getDepartmentId()));
-        System.out.println(userDTO.getManager());
+//        System.out.println(userDTO.getManager());
         User userEntity = mapperConfig.toUser(userDTO);
         userEntity.setFirstName(userDTO.getFirstName());
         userEntity.setManager(userDTO.getManager());
@@ -142,12 +142,12 @@ public class UserServiceImpl implements IUserService {
     public void changePassword(String email, ChangePasswordDTO requestPassword) {
         User user = userRepo.findByEmail(email).orElseThrow(()->new RuntimeException("User Not Found"));
 
-        System.out.println("New Password Length: " + requestPassword.getNewPassword().length());
-        System.out.println("Confirm Password Length: " + requestPassword.getConfirmPassword().length());
+//        System.out.println("New Password Length: " + requestPassword.getNewPassword().length());
+//        System.out.println("Confirm Password Length: " + requestPassword.getConfirmPassword().length());
 
         if(!passwordEncoder.matches(requestPassword.getOldPassword(),user.getPassword())){
-            System.out.println(requestPassword.getOldPassword());
-            System.out.println(user.getPassword());
+//            System.out.println(requestPassword.getOldPassword());
+//            System.out.println(user.getPassword());
             throw new RuntimeException("Old password do not match");
         }
 

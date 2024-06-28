@@ -134,7 +134,7 @@ public class TemplateServiceImpl implements ITemplateService {
         existingTemplate.setTemplateName(templateDTO.getTemplateName());
         existingTemplate.setPlaceholderList(newPlaceholders);
 
-        System.out.println("Existing Template Before Save: " + existingTemplate); // Debug
+//        System.out.println("Existing Template Before Save: " + existingTemplate); // Debug
 
 
         Template save = templateRepo.save(existingTemplate);

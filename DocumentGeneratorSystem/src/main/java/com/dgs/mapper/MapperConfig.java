@@ -152,7 +152,17 @@ public class MapperConfig {
 
     public UserDTO toUserDTO(User user) {
 
-        return mapper.map(user, UserDTO.class);
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUserId(user.getUserId());
+        userDTO.setFirstName(user.getFirstName());
+        userDTO.setLastName(user.getLastName());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setManager(user.getManager());
+        userDTO.setDepartmentId(user.getDepartment().getDepartmentId());
+        userDTO.setDesignationId(user.getDesignation().getDesignationId());
+        userDTO.setRole(String.valueOf(user.getRole()));
+        return userDTO;
+//        return mapper.map(user, UserDTO.class);
     }
 
     public User toUser(UserDTO userDTO) {

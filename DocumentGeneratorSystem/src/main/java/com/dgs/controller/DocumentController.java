@@ -25,11 +25,11 @@ public class DocumentController {
 
     @GetMapping("/get-documents/{userId}")
     public ResponseEntity<List<DocumentDTO>> getDocumentByUserId(@PathVariable Long userId) {
-        log.info("Get All Documents of users");
+//        log.info("Get All Documents of users");
         try{
             List<DocumentDTO> documentDTOList = documentService.getAllDocumentOfUser(userId);
             return ResponseEntity.ok(documentDTOList);
-        }catch (Exception e){
+        }catch (DocumentNotFoundException e){
             throw new DocumentNotFoundException("Error Occurred in Fetching the documents");
         }
     }

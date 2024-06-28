@@ -38,9 +38,7 @@ public class AccessControlImpl implements IAccessControlService {
     public AccessControlDTO addAccess(AccessControlDTO accessControlDTO) {
 
         Long userId = accessControlDTO.getUserId();
-        System.out.println(userId);
         User user = userRepo.findById(userId).orElseThrow(()->new UserNotFoundException("User Not Found"));
-        System.out.println("Here");
         Template template =templateRepo.findById(accessControlDTO.getTemplate()).orElseThrow(()->new TemplateNotFoundException("Template Not Found"));
         User ownerId = userRepo.findById(accessControlDTO.getOwnerId()).orElseThrow(()->new UserNotFoundException("User Not Found"));
 

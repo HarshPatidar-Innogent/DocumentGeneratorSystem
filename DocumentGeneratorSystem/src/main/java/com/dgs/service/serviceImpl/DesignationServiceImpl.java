@@ -30,7 +30,7 @@ public class DesignationServiceImpl implements IDesignationService {
         Designation designation = new Designation();
         designation.setDesignationName(designationDTO.getDesignationName());
         Designation savedDesignation = designationRepo.save(designation);
-        System.out.println(savedDesignation);
+//        System.out.println(savedDesignation);
         return mapperConfig.toDesignationDTO(savedDesignation);
     }
     @Override

@@ -31,6 +31,7 @@ public class AccessControlController {
              return ResponseEntity.ok(accessControlDTO);
          }catch (Exception e){
              throw new AccessControlException("Error in adding an access to Template "+ accessControlDTO.getTemplate());
+//            return ResponseEntity.badRequest().build();
          }
     }
 

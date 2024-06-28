@@ -109,7 +109,7 @@ public class SignatureServiceImpl implements ISignatureService {
            signature1.setSignatureType(signatureDTO.getSignatureType());
            signature1.setDocument(document);
            signature1.setPlaceholder(signatureDTO.getPlaceholder());
-           System.out.println(signature1);
+//           System.out.println(signature1);
            Signature signature = signatureRepo.save(signature1);
            return mapperConfig.toSignatureDTO(signature);
     }
@@ -118,7 +118,7 @@ public class SignatureServiceImpl implements ISignatureService {
     public SignatureDTO addSignatureElectronic(SignatureDTO signatureDTO, String Name,String recipientEmail,Long documentId) throws IOException {
         Signature esign = signatureRepo.findByRecipientEmail(recipientEmail,documentId);
 //        Signature sign = new Signature();
-        System.out.println(esign);
+//        System.out.println(esign);
         esign.setSignatureType(signatureDTO.getSignatureType());
         byte[] signatureImage = SignatureGenerator.generateSignatureImage(Name);
         esign.setSignatureData(signatureImage);
@@ -146,7 +146,7 @@ public class SignatureServiceImpl implements ISignatureService {
     @Override
     public SignatureDTO updateSign(String recipientEmail, Long documentId, MultipartFile file, SignatureDTO signatureDTO) throws IOException {
         Signature sign1 = signatureRepo.findByRecipientEmail(recipientEmail,documentId);
-        System.out.println(file.getBytes());
+//        System.out.println(file.getBytes());
         if(sign1!=null){
             sign1.setSignatureType(signatureDTO.getSignatureType());
             sign1.setSignatureData(file.getBytes());
