@@ -116,7 +116,7 @@ public class MapperConfig {
         AccessControlDTO accessControlDTO = new AccessControlDTO();
         accessControlDTO.setAccessControlId(accessControl.getAccessControlId());
 //        accessControlDTO.setEmail(accessControl.getUserId().getEmail());
-        accessControlDTO.setUserId(accessControl.getUserId().getUserId());
+        accessControlDTO.setUserId(accessControl.getUser().getUserId());
         accessControlDTO.setOwnerId(accessControl.getOwnerId().getUserId());
         accessControlDTO.setTemplateAccess(String.valueOf(accessControl.getTemplateAccess()));
         accessControlDTO.setTemplate(accessControl.getTemplate().getTemplateId());

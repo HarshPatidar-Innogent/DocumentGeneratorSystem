@@ -14,6 +14,7 @@ public interface DepartmentRepo extends JpaRepository<Department,Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "DELETE FROM department WHERE department_id = :departmentId", nativeQuery = true)
+//    @Query(value = "DELETE FROM department WHERE department_id = :departmentId", nativeQuery = true)
+    @Query("DELETE from Department d WHERE d.departmentId =:departmentId")
     void deleteByDepartmentId( @Param("departmentId") Long departmentId);
 }

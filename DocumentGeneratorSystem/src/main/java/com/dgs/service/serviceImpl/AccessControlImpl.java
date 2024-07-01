@@ -14,7 +14,6 @@ import com.dgs.repository.TemplateRepo;
 import com.dgs.repository.UserRepo;
 import com.dgs.service.iService.IAccessControlService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,7 +43,7 @@ public class AccessControlImpl implements IAccessControlService {
 
         AccessControl accessControl = new AccessControl();
         accessControl.setTemplate(template);
-        accessControl.setUserId(user);
+        accessControl.setUser(user);
         accessControl.setOwnerId(ownerId);
         accessControl.setTemplateAccess(com.dgs.enums.AccessControl.valueOf(accessControlDTO.getTemplateAccess()));
         accessControl.setOwnerName(accessControlDTO.getOwnerName());
@@ -57,7 +56,7 @@ public class AccessControlImpl implements IAccessControlService {
     @Override
     public List<UserDTO> getAllAccessOfTemplate(Long templateId) {
         List<AccessControl> accessControls = accessControlRepo.findByTemplateId(templateId);
-        List<User> users = accessControls.stream().map(AccessControl::getUserId).toList();
+        List<User> users = accessControls.stream().map(AccessControl::getUser).toList();
         return users.stream().map(user -> mapperConfig.toUserDTO(user)).toList();
     }
 

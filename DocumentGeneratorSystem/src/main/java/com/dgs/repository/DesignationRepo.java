@@ -13,6 +13,7 @@ public interface DesignationRepo extends JpaRepository<Designation,Long> {
     Optional<Object> findByDesignationName(String name);
     @Modifying
     @Transactional
-    @Query(value = "DELETE FROM designation WHERE designation_id = :designationId", nativeQuery = true)
+//    @Query(value = "DELETE FROM designation WHERE designation_id = :designationId", nativeQuery = true)
+    @Query("DELETE FROM Designation d WHERE d.designationId =:designationId")
     void deleteByDesignationId( @Param("designationId") Long designationId);
 }

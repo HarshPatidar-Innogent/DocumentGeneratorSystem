@@ -51,7 +51,7 @@ public class UserController {
 
     @GetMapping("/getallUser")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
-        System.out.println("getAllUserDTO");
+//        System.out.println("getAllUserDTO");
 
         List<UserDTO> getAllUserDTO = userService.getAllUser();
         return ResponseEntity.status(HttpStatus.OK).body(getAllUserDTO);

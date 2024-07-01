@@ -11,12 +11,15 @@ import java.util.List;
 
 public interface AccessControlRepo extends JpaRepository<AccessControl,Long> {
 
-    @Query(value = "select * from access_control where template_id=:templateId", nativeQuery = true)
+//    @Query(value = "select * from access_control where template_id=:templateId", nativeQuery = true)
+    @Query("SELECT a FROM AccessControl a WHERE a.template.templateId =:templateId")
     List<AccessControl> findByTemplateId(@PathParam("templateId") Long templateId);
 
-    @Query(value = "select template_id from access_control where user_id=:userId", nativeQuery = true)
+//    @Query(value = "select template_id from access_control where user_id=:userId", nativeQuery = true)
+    @Query("SELECT a.template.templateId FROM AccessControl a WHERE a.user.userId =:userId")
     List<Long> findTemplateIdByUserId(@PathParam("userId") Long userId);
 
-    @Query(value = "select * from access_control where user_id=:userId", nativeQuery = true)
+//    @Query(value = "select * from access_control where user_id=:userId", nativeQuery = true)
+    @Query("SELECT a FROM AccessControl a WHERE a.user.userId =:userId")
     List<AccessControl> findAllByUserId(@PathParam("userId") Long userId);
 }
