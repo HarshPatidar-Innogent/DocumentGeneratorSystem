@@ -22,4 +22,7 @@ public interface AccessControlRepo extends JpaRepository<AccessControl,Long> {
 //    @Query(value = "select * from access_control where user_id=:userId", nativeQuery = true)
     @Query("SELECT a FROM AccessControl a WHERE a.user.userId =:userId")
     List<AccessControl> findAllByUserId(@PathParam("userId") Long userId);
+
+    @Query("SELECT count(*) from AccessControl a WHERE a.user.userId =:userId")
+    public Integer countAccessTemplate(@PathParam("userId") Long userId);
 }

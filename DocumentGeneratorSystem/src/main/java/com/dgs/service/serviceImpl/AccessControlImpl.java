@@ -83,4 +83,13 @@ public class AccessControlImpl implements IAccessControlService {
         List<AccessControl> accessControls = accessControlRepo.findAllByUserId(userId);
         return accessControls.stream().map(access->mapperConfig.toAccessControlDTO(access)).toList();
     }
+
+    @Override
+    public Integer countAccessTemplate(Long userId) {
+        Integer countAccessTemplate = accessControlRepo.countAccessTemplate(userId);
+        System.out.println(countAccessTemplate);
+        return countAccessTemplate;
+    }
+
+
 }

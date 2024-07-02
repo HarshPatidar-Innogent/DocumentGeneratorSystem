@@ -21,4 +21,6 @@ public interface IAccessControlService {
     List<TemplateDTO> getAccessTemplateOfUser(Long userId);
 
     List<AccessControlDTO> getAccessOfUser(Long userId);
+
+    Integer countAccessTemplate(Long userId);
 }
