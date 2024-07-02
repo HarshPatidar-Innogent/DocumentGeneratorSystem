@@ -56,6 +56,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Document> Document;
 
+    @OneToMany(mappedBy = "user" ,cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<AccessControl> accessControls;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));

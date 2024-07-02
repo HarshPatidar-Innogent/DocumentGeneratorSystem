@@ -7,6 +7,7 @@ import com.dgs.entity.AccessControl;
 import com.dgs.entity.User;
 import com.dgs.enums.DesignationPermission;
 import com.dgs.exception.CustomException.AccessControlException;
+import com.dgs.exception.CustomException.UserNotFoundException;
 import com.dgs.service.iService.IAccessControlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -82,6 +83,17 @@ public class AccessControlController {
             return ResponseEntity.ok(accessControlDTOS);
         }catch (Exception e){
             throw new AccessControlException("Access Template Not found");
+        }
+    }
+
+    @GetMapping("/countAccessTemplate/{id}")
+    public ResponseEntity<?> countAccessTemplate(@PathVariable Long id){
+        try {
+            Integer countAccessTemplate = accessControlService.countAccessTemplate(id);
+            return ResponseEntity.status(HttpStatus.OK).body(countAccessTemplate);
+        }
+        catch (Exception e){
+            throw new UserNotFoundException("User not found");
         }
     }
 

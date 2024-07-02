@@ -88,4 +88,13 @@ public class AccessControlImpl implements IAccessControlService {
     public List<Long> getAccessTemplateIdByUserId(Long userId) {
         return accessControlRepo.getAllAccessTemplateId(userId);
     }
+
+    @Override
+    public Integer countAccessTemplate(Long userId) {
+        Integer countAccessTemplate = accessControlRepo.countAccessTemplate(userId);
+        System.out.println(countAccessTemplate);
+        return countAccessTemplate;
+    }
+
+
 }
