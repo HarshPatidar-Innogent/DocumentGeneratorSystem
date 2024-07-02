@@ -6,6 +6,7 @@ import com.dgs.DTO.UserDTO;
 import com.dgs.entity.AccessControl;
 import com.dgs.entity.User;
 import com.dgs.enums.DesignationPermission;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -23,4 +24,6 @@ public interface IAccessControlService {
     List<AccessControlDTO> getAccessOfUser(Long userId);
 
     Integer countAccessTemplate(Long userId);
+
+    List<Long> getAccessTemplateIdByUserId(Long userId);
 }

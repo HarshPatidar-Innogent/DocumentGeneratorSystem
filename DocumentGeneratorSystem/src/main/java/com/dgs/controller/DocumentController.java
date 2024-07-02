@@ -35,12 +35,12 @@ public class DocumentController {
     }
 
     @PostMapping(value = "/populate/{id}")
-    public String populateDoc(@RequestParam Map<String, String> dynamicData, @PathVariable("id") Long templateId) {
+    public ResponseEntity<String> populateDoc(@RequestParam Map<String, String> dynamicData, @PathVariable("id") Long templateId) {
         log.info("Document Populated");
         try{
             String document = documentService.populateDocument(dynamicData, templateId);
-            System.out.println(document);
-            return document;
+//            System.out.println(document);
+            return ResponseEntity.ok(document);
         }catch (Exception e){
             throw new DocumentPopulationException("Exception Occurred in Populating the Document");
         }

@@ -66,21 +66,21 @@ public class AccessControlController {
     }
 
     @GetMapping("/access-template/{userId}")
-    public List<TemplateDTO> getAccessTemplateOfUser(@PathVariable Long userId){
+    public ResponseEntity<List<TemplateDTO>> getAccessTemplateOfUser(@PathVariable Long userId){
         try{
             List<TemplateDTO> accessTemplateOfUser = accessControlService.getAccessTemplateOfUser(userId);
-            return accessTemplateOfUser;
+            return ResponseEntity.ok(accessTemplateOfUser);
         }catch (Exception e){
             throw new AccessControlException("Access Template Not found");
         }
     }
 
     @GetMapping("/access/{userId}")
-    public List<AccessControlDTO> getAccess(@PathVariable Long userId){
+    public ResponseEntity<List<AccessControlDTO>> getAccess(@PathVariable Long userId){
         try{
             List<AccessControlDTO> accessControlDTOS = accessControlService.getAccessOfUser(userId);
-            System.out.println("Here");
-            return accessControlDTOS;
+//            System.out.println("Here");
+            return ResponseEntity.ok(accessControlDTOS);
         }catch (Exception e){
             throw new AccessControlException("Access Template Not found");
         }
@@ -94,6 +94,15 @@ public class AccessControlController {
         }
         catch (Exception e){
             throw new UserNotFoundException("User not found");
+        }
+    }
+
+    @GetMapping("/all/access/{userId}/templateId")
+    public ResponseEntity<List<Long>> getAccessTemplateIdByUserId(@PathVariable Long userId){
+        try{
+            return ResponseEntity.ok(accessControlService.getAccessTemplateIdByUserId(userId));
+        }catch (Exception e){
+            throw new AccessControlException("Exception on fetching templateId");
         }
     }
 }

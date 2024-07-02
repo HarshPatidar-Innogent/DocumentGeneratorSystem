@@ -25,7 +25,7 @@ public class AccessControl {
 
     @ManyToOne
     @JoinColumn(name = "ownerId", referencedColumnName = "userId")
-    private User ownerId;
+    private User owner;
 
     @ManyToOne
     @JoinColumn(name = "userId", referencedColumnName = "userId")
