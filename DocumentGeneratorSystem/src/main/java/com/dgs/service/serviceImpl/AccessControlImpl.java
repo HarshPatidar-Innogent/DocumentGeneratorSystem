@@ -44,7 +44,7 @@ public class AccessControlImpl implements IAccessControlService {
         AccessControl accessControl = new AccessControl();
         accessControl.setTemplate(template);
         accessControl.setUser(user);
-        accessControl.setOwnerId(ownerId);
+        accessControl.setOwner(ownerId);
         accessControl.setTemplateAccess(com.dgs.enums.AccessControl.valueOf(accessControlDTO.getTemplateAccess()));
         accessControl.setOwnerName(accessControlDTO.getOwnerName());
 
@@ -82,5 +82,10 @@ public class AccessControlImpl implements IAccessControlService {
     public List<AccessControlDTO> getAccessOfUser(Long userId) {
         List<AccessControl> accessControls = accessControlRepo.findAllByUserId(userId);
         return accessControls.stream().map(access->mapperConfig.toAccessControlDTO(access)).toList();
+    }
+
+    @Override
+    public List<Long> getAccessTemplateIdByUserId(Long userId) {
+        return accessControlRepo.getAllAccessTemplateId(userId);
     }
 }
