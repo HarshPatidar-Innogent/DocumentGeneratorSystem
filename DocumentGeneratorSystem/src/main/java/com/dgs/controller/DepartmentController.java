@@ -2,6 +2,7 @@ package com.dgs.controller;
 
 import com.dgs.DTO.DepartmentDTO;
 import com.dgs.DTO.DesignationDTO;
+import com.dgs.exception.CustomException.DepartmentException;
 import com.dgs.mapper.MapperConfig;
 import com.dgs.service.iService.IDepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,21 +25,34 @@ public class DepartmentController {
 
     @PostMapping("/addDept")
     public ResponseEntity<DepartmentDTO> createDepartment(@RequestBody DepartmentDTO departmentDTO) {
-        departmentDTO.setDepartmentId(null);
-        DepartmentDTO createdDepartment = departmentService.createDepartment(departmentDTO);
-        return ResponseEntity.ok(createdDepartment);
+        try{
+            departmentDTO.setDepartmentId(null);
+            DepartmentDTO createdDepartment = departmentService.createDepartment(departmentDTO);
+            return ResponseEntity.ok(createdDepartment);
+        }catch (Exception e){
+            throw new DepartmentException("Exception occurred in creating a department");
+        }
     }
 
     @GetMapping("/getAll")
     public ResponseEntity<List<DepartmentDTO>> getAllDepartments() {
-        List<DepartmentDTO> departments = departmentService.getAll();
-        return ResponseEntity.ok(departments);
+        try{
+            List<DepartmentDTO> departments = departmentService.getAll();
+            return ResponseEntity.ok(departments);
+        }catch (Exception e){
+            throw new DepartmentException("Exception occurred in fetching all departments");
+        }
     }
+
     @PutMapping("/update/{id}")
 
     public ResponseEntity<DepartmentDTO> update(@PathVariable Long id, @RequestBody DepartmentDTO departmentDTO) {
-        DepartmentDTO updatedDepartment = departmentService.update(id, departmentDTO);
-        return ResponseEntity.ok(updatedDepartment);
+        try{
+            DepartmentDTO updatedDepartment = departmentService.update(id, departmentDTO);
+            return ResponseEntity.ok(updatedDepartment);
+        }catch (Exception e){
+            throw new DepartmentException("Exception occurred in updating the department");
+        }
     }
 
 //    @DeleteMapping("/delete/{id}")
@@ -52,19 +66,28 @@ public ResponseEntity<Boolean> delete(@PathVariable Long id) {
         Boolean result = departmentService.delete(id);
         return ResponseEntity.ok(result);
     } catch (RuntimeException e) {
-        return ResponseEntity.badRequest().build();
+        throw new DepartmentException("Exception occurred in deleting an department");
     }
 }
 
     @GetMapping("/getByName/{name}")
     public ResponseEntity<DepartmentDTO> getByName(@PathVariable String name) {
-        DepartmentDTO departmentDTO = departmentService.getDepartmentByName(name);
-        return ResponseEntity.ok(departmentDTO);
+        try{
+            DepartmentDTO departmentDTO = departmentService.getDepartmentByName(name);
+            return ResponseEntity.ok(departmentDTO);
+        }catch (Exception e){
+            throw new DepartmentException("Exception occurred in fetching department");
+        }
     }
+
     @GetMapping("/getDept/{id}")
     public ResponseEntity<DepartmentDTO> getDepartmentById(@PathVariable Long id){
-        DepartmentDTO departmentDTO = departmentService.getDepartmentById(id);
-        return ResponseEntity.ok(departmentDTO);
+        try{
+            DepartmentDTO departmentDTO = departmentService.getDepartmentById(id);
+            return ResponseEntity.ok(departmentDTO);
+        }catch (Exception e){
+            throw new DepartmentException("Exception occurred in fetching department");
+        }
     }
 
 }
