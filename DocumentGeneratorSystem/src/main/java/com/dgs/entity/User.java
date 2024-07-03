@@ -37,6 +37,7 @@ public class User implements UserDetails {
     @Column(length = 500,nullable = false)
     private String password;
 
+    @Column(columnDefinition = "varchar(255) default '-'")
     private String manager;
 
     @JoinColumn(name = "designationId",referencedColumnName ="designationId")
