@@ -1,6 +1,7 @@
 package com.dgs.controller;
 
 import com.dgs.DTO.DesignationDTO;
+import com.dgs.exception.CustomException.DesignationException;
 import com.dgs.service.iService.IDesignationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,22 +20,33 @@ public class DesignationController {
 
         @PostMapping("/add")
         public ResponseEntity<DesignationDTO> createDesignation(@RequestBody DesignationDTO designationDTO){
-            designationDTO.setDesignationId(null);
-
-            DesignationDTO createdDesignation = designationService.createDesignation(designationDTO);
-
-            return ResponseEntity.status(HttpStatus.OK).body(createdDesignation);
+            try{
+                designationDTO.setDesignationId(null);
+                DesignationDTO createdDesignation = designationService.createDesignation(designationDTO);
+                return ResponseEntity.status(HttpStatus.OK).body(createdDesignation);
+            }catch (Exception e){
+                throw new DesignationException("Exception occurred in creating a designation");
+            }
         }
 
         @GetMapping("/getAll")
         public ResponseEntity<List<DesignationDTO>>getall(){
-            List<DesignationDTO> designation = designationService.getAll();
-            return ResponseEntity.status(HttpStatus.OK).body(designation);
+            try{
+                List<DesignationDTO> designation = designationService.getAll();
+                return ResponseEntity.status(HttpStatus.OK).body(designation);
+            }catch (Exception e){
+                throw new DesignationException("Exception occurred in fetching designations");
+            }
         }
+
         @PutMapping("/update/{id}")
         public ResponseEntity<DesignationDTO> update(@PathVariable Long id, @RequestBody DesignationDTO designationDTO) {
-            DesignationDTO updatedDesignation = designationService.update(id, designationDTO);
-            return ResponseEntity.ok(updatedDesignation);
+            try{
+                DesignationDTO updatedDesignation = designationService.update(id, designationDTO);
+                return ResponseEntity.ok(updatedDesignation);
+            }catch (Exception e){
+                throw new DesignationException("Exception occurred in updating designation");
+            }
         }
 
 //        @DeleteMapping("/delete/{id}")
@@ -45,21 +57,31 @@ public class DesignationController {
 
     @GetMapping("/getByName/{name}")
     public ResponseEntity<DesignationDTO> getByName(@PathVariable String name) {
-        DesignationDTO designationDTO = designationService.getDesignationByName(name);
-        return ResponseEntity.ok(designationDTO);
+        try{
+            DesignationDTO designationDTO = designationService.getDesignationByName(name);
+            return ResponseEntity.ok(designationDTO);
+        }catch (Exception e){
+            throw new DesignationException("Exception occurred in fetching an designation by name");
+        }
     }
+
     @GetMapping("/getDes/{id}")
     public ResponseEntity<DesignationDTO> getDesignationById(@PathVariable Long id){
-        DesignationDTO designationDTO = designationService.getDesignationById(id);
-        return ResponseEntity.ok(designationDTO);
+        try{
+            DesignationDTO designationDTO = designationService.getDesignationById(id);
+            return ResponseEntity.ok(designationDTO);
+        }catch (Exception e){
+            throw new DesignationException("Exception occurred in fetching an designation by id");
+        }
     }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable Long id) {
         try {
             Boolean result = designationService.delete(id);
             return ResponseEntity.ok(result);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
+            throw new DesignationException("Exception occurred in deleting an designation");
         }
     }
 }

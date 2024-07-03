@@ -89,4 +89,37 @@ public class ApiExceptionHandler {
         );
         return new ResponseEntity<>(apiException, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(value = {DepartmentException.class})
+    public static ResponseEntity<Object> handleDepartmentException(DepartmentException departmentException){
+        ApiException apiException = new ApiException(
+                departmentException.getMessage(),
+                HttpStatus.BAD_REQUEST,
+                ZonedDateTime.now(ZoneId.of("Z")),
+                departmentException
+        );
+        return new ResponseEntity<>(apiException, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = {DesignationException.class})
+    public static ResponseEntity<Object> handleDesignationException(DesignationException designationException){
+        ApiException apiException = new ApiException(
+                designationException.getMessage(),
+                HttpStatus.BAD_REQUEST,
+                ZonedDateTime.now(ZoneId.of("Z")),
+                designationException
+        );
+        return new ResponseEntity<>(apiException, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = {PlaceholderException.class})
+    public static ResponseEntity<Object> handlePlaceholderException(PlaceholderException placeholderException){
+        ApiException apiException = new ApiException(
+                placeholderException.getMessage(),
+                HttpStatus.BAD_REQUEST,
+                ZonedDateTime.now(ZoneId.of("Z")),
+                placeholderException
+        );
+        return new ResponseEntity<>(apiException, HttpStatus.BAD_REQUEST);
+    }
 }
