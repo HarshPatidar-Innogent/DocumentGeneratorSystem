@@ -2,13 +2,13 @@ package com.dgs.controller;
 
 import com.dgs.DTO.ChangePasswordDTO;
 import com.dgs.DTO.UserDTO;
+import com.dgs.exception.CustomException.UserException;
 import com.dgs.repository.UserRepo;
 import com.dgs.service.iService.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
@@ -20,7 +20,6 @@ import java.util.List;
 @RequestMapping("/api/v1/users")
 public class UserController {
 
-
     @Autowired
     private IUserService userService;
 
@@ -30,7 +29,6 @@ public class UserController {
     @Autowired
     private UserRepo userRepository;
 
-
     @Autowired
     private UserDetailsService userDetailsService;
 
@@ -39,31 +37,39 @@ public class UserController {
 
     @GetMapping("/user")
 
-
     @PostMapping("/addUser")
     // @PreAuthorize("hasauthority('ROLE_ADMIN')")
     public ResponseEntity<UserDTO> addUser(@RequestBody UserDTO userDTO) {
-        System.out.println(userDTO.getManager());
-        UserDTO createUser = userService.addUser(userDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(createUser);
+        try {
+            System.out.println(userDTO.getManager());
+            UserDTO createUser = userService.addUser(userDTO);
+            return ResponseEntity.status(HttpStatus.OK).body(createUser);
+        } catch (Exception e) {
+            throw new UserException("Exception in adding new user");
+        }
     }
-
 
     @GetMapping("/getallUser")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
 //        System.out.println("getAllUserDTO");
 
-        List<UserDTO> getAllUserDTO = userService.getAllUser();
-        return ResponseEntity.status(HttpStatus.OK).body(getAllUserDTO);
+        try {
+            List<UserDTO> getAllUserDTO = userService.getAllUser();
+            return ResponseEntity.status(HttpStatus.OK).body(getAllUserDTO);
+        } catch (Exception e) {
+            throw new UserException("Exception in getting all users");
+        }
     }
 
-        @PutMapping("/updateUser/{id}")
+    @PutMapping("/updateUser/{id}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
-            System.out.println(userDTO);
-        UserDTO updatedUser = userService.updateUser(id, userDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
+        try {
+            UserDTO updatedUser = userService.updateUser(id, userDTO);
+            return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
+        } catch (Exception e) {
+            throw new UserException("Exception in updating user");
+        }
     }
-
 
     @DeleteMapping("/user/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
@@ -82,16 +88,23 @@ public class UserController {
 
     @GetMapping("/getUser/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
-        System.out.println("Hello....");
-        UserDTO userDTO = userService.getUserById(id);
-        return ResponseEntity.ok(userDTO);
+        try{
+            System.out.println("Hello....");
+            UserDTO userDTO = userService.getUserById(id);
+            return ResponseEntity.ok(userDTO);
+        }catch (Exception e){
+            throw new UserException("Exception in getting user");
+        }
     }
 
     @PostMapping("/changePassword/{email}")
-    public ResponseEntity<String> changePassword(@PathVariable String email, @RequestBody ChangePasswordDTO requestPassword){
-        System.out.println(email);
-        userService.changePassword(email,requestPassword);
-        return ResponseEntity.status(HttpStatus.OK).body("Password Changed Successfully");
+    public ResponseEntity<String> changePassword(@PathVariable String email, @RequestBody ChangePasswordDTO requestPassword) {
+        try{
+            userService.changePassword(email, requestPassword);
+            return ResponseEntity.status(HttpStatus.OK).body("Password Changed Successfully");
+        }catch (Exception e){
+            throw new UserException("Exception in changing password");
+        }
     }
 
 }

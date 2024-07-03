@@ -49,7 +49,7 @@ public class ApiExceptionHandler {
     public static ResponseEntity<Object> handleDocumentCreationException(DocumentCreationException documentCreationException){
         ApiException apiException = new ApiException(
                 documentCreationException.getMessage(),
-                HttpStatus.UNAUTHORIZED,
+                HttpStatus.BAD_REQUEST,
                 ZonedDateTime.now(ZoneId.of("Z")),
                 documentCreationException
         );
@@ -60,12 +60,33 @@ public class ApiExceptionHandler {
     public static ResponseEntity<Object> handleDocumentNotFoundException(DocumentNotFoundException documentNotFoundException){
         ApiException apiException = new ApiException(
                 documentNotFoundException.getMessage(),
-                HttpStatus.UNAUTHORIZED,
+                HttpStatus.BAD_REQUEST,
                 ZonedDateTime.now(ZoneId.of("Z")),
                 documentNotFoundException
         );
         return new ResponseEntity<>(apiException, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(value = {UserException.class})
+    public static ResponseEntity<Object> handleUserException(UserException userException){
+        ApiException apiException = new ApiException(
+                userException.getMessage(),
+                HttpStatus.BAD_REQUEST,
+                ZonedDateTime.now(ZoneId.of("Z")),
+                userException
+        );
+        return new ResponseEntity<>(apiException, HttpStatus.BAD_REQUEST);
+    }
 
+
+    @ExceptionHandler(value = {TemplateException.class})
+    public static ResponseEntity<Object> handleTemplateException(TemplateException templateException){
+        ApiException apiException = new ApiException(
+                templateException.getMessage(),
+                HttpStatus.BAD_REQUEST,
+                ZonedDateTime.now(ZoneId.of("Z")),
+                templateException
+        );
+        return new ResponseEntity<>(apiException, HttpStatus.BAD_REQUEST);
+    }
 }
