@@ -105,7 +105,4 @@ public class DocumentController {
             throw new RuntimeException("Exception in fetching count");
         }
     }
-
-
-
 }

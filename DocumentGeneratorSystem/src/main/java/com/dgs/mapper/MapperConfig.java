@@ -107,12 +107,7 @@ public class MapperConfig {
     }
 
     public AccessControlDTO toAccessControlDTO(AccessControl accessControl) {
-//        return mapper.map(accessControl, AccessControlDTO.class);
-//        AccessControlDTO accessControlDTO = new AccessControlDTO();
-//        accessControlDTO.setDepartment(departmentDTO);
-//        accessControlDTO.setDesignation(designationDTO);
-//        accessControlDTO.setTemplate(templateDTO);
-//        return accessControlDTO;
+
         AccessControlDTO accessControlDTO = new AccessControlDTO();
         accessControlDTO.setAccessControlId(accessControl.getAccessControlId());
 //        accessControlDTO.setEmail(accessControl.getUserId().getEmail());

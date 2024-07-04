@@ -34,7 +34,6 @@ public class DocumentServiceImpl implements IDocumentService {
     @Autowired
     private SignatureRepo signatureRepo;
 
-    private Map<String, String> emails;
 
     @Override
     public List<DocumentDTO> getAllDocumentOfUser(Long userId) {
@@ -59,7 +58,6 @@ public class DocumentServiceImpl implements IDocumentService {
     }
 
     public String populateDocument(Map<String, String> textData, Long templateId) {
-        emails = new HashMap<>();
         Optional<Template> templateOptional = templateRepo.findById(templateId);
         if (templateOptional.isEmpty()) {
             throw new IllegalArgumentException("Template not found with id: " + templateId);
@@ -73,8 +71,6 @@ public class DocumentServiceImpl implements IDocumentService {
             String value = entry.getValue();
 
             if (!isSignaturePlaceholder(key, template)) {
-//                emails.put(value, key);
-//            } else {
                 templateBody = templateBody.replace("{{" + entry.getKey() + "}}", entry.getValue());
             }
         }
@@ -93,17 +89,9 @@ public class DocumentServiceImpl implements IDocumentService {
     @Override
     public DocumentDTO createDocument(DocumentDTO documentDTO) {
         Document document = mapperConfig.toDocument(documentDTO);
-//        System.out.println(documentDTO);
+
         Document savedDocument = documentRepo.save(document);
         DocumentDTO saveDocumentDTO = mapperConfig.toDocumentDTO(savedDocument);
-
-        Map<String, String> documentEmails = documentDTO.getSignatureEmails();
-        for (Map.Entry<String, String> entry : documentEmails.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-
-            emails.put(key, value);
-        }
 
         if (!documentDTO.getSignatureEmails().isEmpty()) {
             documentDTO.getSignatureEmails().forEach((placeholder, email) -> {
@@ -114,7 +102,6 @@ public class DocumentServiceImpl implements IDocumentService {
                 String url = "http://192.168.5.219:3000/sign/" + encodedDocumentId + "/" + encodedPlaceholder + "/" + encodedEmail;
                 emailService.sendEmail(email, "Document Signature Request", url);
                 Signature signature = new Signature();
-//                signature.setPlaceholder("{{"+emails.get(email)+"}}");
                 signature.setDocument(documentRepo.findById(document.getDocumentId()).orElseThrow(() -> new IllegalArgumentException("Invalid document ID")));
                 signature.setSigned(false);
                 signature.setRecipientEmail(email);
@@ -122,23 +109,17 @@ public class DocumentServiceImpl implements IDocumentService {
             });
         }
 
-        emails.clear();
         return saveDocumentDTO;
     }
 
-    @Override
-    public DocumentDTO updateDocument(Long id) {
-        return null;
-    }
+
 
     @Override
     public void deleteDocument(Long id) {
         Optional<Document> documentOptional = documentRepo.findById(id);
         if (documentOptional.isPresent()) {
             documentRepo.deleteById(id);
-//            return "Document Deleted";
         }
-//        return "Document Not Found";
     }
 
     @Override

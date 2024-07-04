@@ -14,10 +14,6 @@ public interface ITemplateService {
 
     public TemplateDTO createTemplate(TemplateDTO templateDTO);
 
-    public TemplateDTO updateTemplate(Long id);
-
-    public String deleteTemplate(Long id);
-
     public TemplateDTO getTemplateDTOById(Long templateId,Long userId) throws AccessDeniedException;
 
     public void deleteTemplateById(Long id);
