@@ -1,23 +1,24 @@
 package com.dgs.exception;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 import java.time.ZonedDateTime;
 
+@EqualsAndHashCode(callSuper = true)
 @Getter
-public class ApiException {
-    private final String message;
-    private final HttpStatus httpStatus;
-    private final ZonedDateTime timestamp;
-    private final Throwable throwable;
+public class ApiException extends RuntimeException{
+    final HttpStatus httpStatus;
 
-    public ApiException(String message,
-                        HttpStatus httpStatus, ZonedDateTime timestamp, Throwable throwable) {
-        this.message = message;
+    public ApiException(String message, HttpStatus httpStatus) {
+        super(message);
         this.httpStatus = httpStatus;
-        this.throwable = throwable;
-        this.timestamp = timestamp;
+    }
+
+    public ApiException(String message, Exception exception, HttpStatus httpStatus) {
+        super(message, exception);
+        this.httpStatus = httpStatus;
     }
 }

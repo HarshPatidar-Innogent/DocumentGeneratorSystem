@@ -1,7 +1,10 @@
 package com.dgs.exception.CustomException;
 
-public class DesignationException extends RuntimeException{
-    public DesignationException(String message) {
-        super(message);
+import com.dgs.exception.ApiException;
+import org.springframework.http.HttpStatus;
+
+public class DesignationException extends ApiException {
+    public DesignationException(String message, HttpStatus httpStatus) {
+        super(message, httpStatus);
     }
 }

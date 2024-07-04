@@ -1,7 +1,10 @@
 package com.dgs.exception.CustomException;
 
-public class DepartmentException extends RuntimeException{
-    public DepartmentException(String message) {
-        super(message);
+import com.dgs.exception.ApiException;
+import org.springframework.http.HttpStatus;
+
+public class DepartmentException extends ApiException {
+    public DepartmentException(String message, HttpStatus httpStatus) {
+        super(message, httpStatus);
     }
 }

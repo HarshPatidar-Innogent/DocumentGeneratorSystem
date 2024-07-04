@@ -1,7 +1,10 @@
 package com.dgs.exception.CustomException;
 
-public class PlaceholderException extends RuntimeException{
-    public PlaceholderException(String message) {
-        super(message);
+import com.dgs.exception.ApiException;
+import org.springframework.http.HttpStatus;
+
+public class PlaceholderException extends ApiException {
+    public PlaceholderException(String message, HttpStatus httpStatus) {
+        super(message, httpStatus);
     }
 }

@@ -25,7 +25,7 @@ public class DesignationController {
                 DesignationDTO createdDesignation = designationService.createDesignation(designationDTO);
                 return ResponseEntity.status(HttpStatus.OK).body(createdDesignation);
             }catch (Exception e){
-                throw new DesignationException("Exception occurred in creating a designation");
+                throw new RuntimeException("Exception occurred in creating a designation");
             }
         }
 
@@ -35,7 +35,7 @@ public class DesignationController {
                 List<DesignationDTO> designation = designationService.getAll();
                 return ResponseEntity.status(HttpStatus.OK).body(designation);
             }catch (Exception e){
-                throw new DesignationException("Exception occurred in fetching designations");
+                throw new RuntimeException("Exception occurred in fetching designations");
             }
         }
 
@@ -45,7 +45,7 @@ public class DesignationController {
                 DesignationDTO updatedDesignation = designationService.update(id, designationDTO);
                 return ResponseEntity.ok(updatedDesignation);
             }catch (Exception e){
-                throw new DesignationException("Exception occurred in updating designation");
+                throw new RuntimeException("Exception occurred in updating designation");
             }
         }
 
@@ -61,7 +61,7 @@ public class DesignationController {
             DesignationDTO designationDTO = designationService.getDesignationByName(name);
             return ResponseEntity.ok(designationDTO);
         }catch (Exception e){
-            throw new DesignationException("Exception occurred in fetching an designation by name");
+            throw new RuntimeException("Exception occurred in fetching an designation by name");
         }
     }
 
@@ -71,7 +71,7 @@ public class DesignationController {
             DesignationDTO designationDTO = designationService.getDesignationById(id);
             return ResponseEntity.ok(designationDTO);
         }catch (Exception e){
-            throw new DesignationException("Exception occurred in fetching an designation by id");
+            throw new RuntimeException("Exception occurred in fetching an designation by id");
         }
     }
 
@@ -81,7 +81,7 @@ public class DesignationController {
             Boolean result = designationService.delete(id);
             return ResponseEntity.ok(result);
         } catch (RuntimeException e) {
-            throw new DesignationException("Exception occurred in deleting an designation");
+            throw new RuntimeException("Exception occurred in deleting an designation");
         }
     }
 }

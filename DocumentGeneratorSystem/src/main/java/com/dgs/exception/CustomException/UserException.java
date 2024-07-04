@@ -1,7 +1,10 @@
 package com.dgs.exception.CustomException;
 
-public class UserException extends RuntimeException{
-    public UserException(String message) {
-        super(message);
+import com.dgs.exception.ApiException;
+import org.springframework.http.HttpStatus;
+
+public class UserException extends ApiException {
+    public UserException(String message, HttpStatus httpStatus) {
+        super(message, httpStatus);
     }
 }

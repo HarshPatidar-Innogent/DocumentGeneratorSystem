@@ -5,6 +5,7 @@ import com.dgs.DTO.UserDTO;
 import com.dgs.entity.Department;
 import com.dgs.entity.Designation;
 import com.dgs.entity.User;
+import com.dgs.exception.CustomException.UserNotFoundException;
 import com.dgs.mapper.MapperConfig;
 import com.dgs.repository.DepartmentRepo;
 import com.dgs.repository.DesignationRepo;
@@ -12,12 +13,14 @@ import com.dgs.repository.UserRepo;
 import com.dgs.service.iService.IUserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -48,13 +51,12 @@ public class UserServiceImpl implements IUserService {
                 .orElseThrow(() -> new RuntimeException("Designation not found with id: " + userDTO.getDesignationId()));
         Department department = departmentRepo.findById(userDTO.getDepartmentId())
                 .orElseThrow(() -> new RuntimeException("Department not found with id: " + userDTO.getDepartmentId()));
-//        System.out.println(userDTO.getManager());
+
         User userEntity = mapperConfig.toUser(userDTO);
         userEntity.setFirstName(userDTO.getFirstName());
         userEntity.setManager(userDTO.getManager());
         userEntity.setLastName(userDTO.getLastName());
         userEntity.setEmail(userDTO.getEmail());
-//        userEntity.setPassword(userDTO.getPassword());
         userEntity.setDepartment(department);
         userEntity.setDesignation(designation);
 
@@ -66,8 +68,8 @@ public class UserServiceImpl implements IUserService {
     @Override
     public List<UserDTO> getAllUser() {
         List<User> users = userRepo.findAll();
-        if (users == null || users.isEmpty()) {
-            return new ArrayList<>();
+        if ( users.isEmpty()) {
+           throw new UserNotFoundException("Users Not Found", HttpStatus.NOT_FOUND);
         }
         return users.stream()
                 .map(mapperConfig::toUserDTO)
@@ -122,7 +124,7 @@ public class UserServiceImpl implements IUserService {
         if (userOptional.isPresent()) {
             return mapperConfig.toUserDTO(userOptional.get());
         } else {
-            throw new RuntimeException("User not found with id: " + id);
+            throw new UserNotFoundException("User not found with id: " + id, HttpStatus.NOT_FOUND);
         }
     }
 

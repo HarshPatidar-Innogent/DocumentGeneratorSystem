@@ -1,7 +1,11 @@
 package com.dgs.exception.CustomException;
 
-public class AccessControlException extends RuntimeException{
-    public AccessControlException(String message) {
-        super(message);
+import com.dgs.exception.ApiException;
+import com.dgs.exception.ApiExceptionHandler;
+import org.springframework.http.HttpStatus;
+
+public class AccessControlException extends ApiException {
+    public AccessControlException(String message, HttpStatus httpStatus) {
+        super(message, httpStatus);
     }
 }

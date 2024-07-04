@@ -1,11 +1,11 @@
 package com.dgs.exception.CustomException;
 
-public class UserNotFoundException extends RuntimeException{
-    public UserNotFoundException(String message) {
-        super(message);
-    }
+import com.dgs.exception.ApiException;
+import org.springframework.http.HttpStatus;
 
-    public UserNotFoundException(String message, Throwable cause) {
-        super(message, cause);
+public class UserNotFoundException extends ApiException {
+
+    public UserNotFoundException(String message, HttpStatus httpStatus) {
+        super(message, httpStatus);
     }
 }
