@@ -137,13 +137,7 @@ public class MapperConfig {
 
     }
 
-    public AuditTrailDTO toAuditTrailDTO(AuditTrail auditTrail) {
-        return mapper.map(auditTrail, AuditTrailDTO.class);
-    }
-
-    public AuditTrail toAuditTrail(AuditTrailDTO auditTrailDTO) {
-        return mapper.map(auditTrailDTO, AuditTrail.class);
-    }
+    
 
     public UserDTO toUserDTO(User user) {
 

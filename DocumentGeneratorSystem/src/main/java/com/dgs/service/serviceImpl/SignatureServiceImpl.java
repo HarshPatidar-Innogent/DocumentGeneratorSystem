@@ -43,20 +43,15 @@ public class SignatureServiceImpl implements ISignatureService {
     @Override
     public SignatureDTO addSignature(MultipartFile file , SignatureDTO signatureDTO) throws IOException {
         Document document = documentRepo.findById(signatureDTO.getDocumentId()).get();
-        if(document !=null){
-            Signature sign = new Signature();
-            sign.setSignatureData(file.getBytes());
-            sign.setSignatureType(signatureDTO.getSignatureType());
-            sign.setPlaceholder(signatureDTO.getPlaceholder());
-            sign.setDocument(document);
-            sign.setSigned(signatureDTO.getSigned());
-            sign.setRecipientEmail(signatureDTO.getRecipientEmail());
-            Signature signature = signatureRepo.save(sign);
-            return mapperConfig.toSignatureDTO(signature);
-        }
-        else{
-            return null;
-        }
+        Signature sign = new Signature();
+        sign.setSignatureData(file.getBytes());
+        sign.setSignatureType(signatureDTO.getSignatureType());
+        sign.setPlaceholder(signatureDTO.getPlaceholder());
+        sign.setDocument(document);
+        sign.setSigned(signatureDTO.getSigned());
+        sign.setRecipientEmail(signatureDTO.getRecipientEmail());
+        Signature signature = signatureRepo.save(sign);
+        return mapperConfig.toSignatureDTO(signature);
     }
 
   @Override
