@@ -49,7 +49,6 @@ public class TemplateServiceImpl implements ITemplateService {
     public TemplateDTO getTemplateById(Long id) {
         Optional<Template> template = templateRepo.findById(id);
         if (template.isPresent()) {
-//            TemplateDTO templateDTO = mapperConfig.toTemplateDto(template.get());
             TemplateDTO dto = MapperConfig.toTemplateDto(template.get());
             return dto;
         }
@@ -66,23 +65,9 @@ public class TemplateServiceImpl implements ITemplateService {
         return MapperConfig.toTemplateDto(savedTemplate);
     }
 
-    @Override
-    public TemplateDTO updateTemplate(Long id) {
-        return null;
-    }
 
     @Override
-    public String deleteTemplate(Long id) {
-        Optional<Template> template = templateRepo.findById(id);
-        if (template.isPresent()) {
-            templateRepo.deleteById(id);
-            return "Template Deleted";
-        }
-        return "Template not found";
-    }
-
-    @Override
-    public TemplateDTO getTemplateDTOById(Long templateId, Long userId) throws AccessDeniedException {
+    public TemplateDTO getTemplateDTOById(Long templateId, Long userId)  {
         User user = userRepo.findById(userId).orElseThrow(() -> new EntityNotFoundException("User Not Found"));
         Long departmentId = user.getDepartment().getDepartmentId();
         Long designationId = user.getDesignation().getDesignationId();
@@ -133,9 +118,6 @@ public class TemplateServiceImpl implements ITemplateService {
         existingTemplate.setUser(existingUser);
         existingTemplate.setTemplateName(templateDTO.getTemplateName());
         existingTemplate.setPlaceholderList(newPlaceholders);
-
-//        System.out.println("Existing Template Before Save: " + existingTemplate); // Debug
-
 
         Template save = templateRepo.save(existingTemplate);
         if(save==null){

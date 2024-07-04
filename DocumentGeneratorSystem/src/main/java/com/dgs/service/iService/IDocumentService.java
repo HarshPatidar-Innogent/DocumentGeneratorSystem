@@ -15,8 +15,6 @@ public interface IDocumentService {
 
     public DocumentDTO createDocument(DocumentDTO documentDTO);
 
-    public DocumentDTO updateDocument(Long id);
-
     public void deleteDocument(Long id);
 
     public String submitSignature(String templateBody, Long documentId);

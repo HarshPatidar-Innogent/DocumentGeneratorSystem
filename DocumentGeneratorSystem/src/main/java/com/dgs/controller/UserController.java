@@ -3,6 +3,7 @@ package com.dgs.controller;
 import com.dgs.DTO.ChangePasswordDTO;
 import com.dgs.DTO.UserDTO;
 import com.dgs.exception.CustomException.UserException;
+import com.dgs.exception.CustomException.UserNotFoundException;
 import com.dgs.repository.UserRepo;
 import com.dgs.service.iService.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,11 +90,10 @@ public class UserController {
     @GetMapping("/getUser/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
         try{
-            System.out.println("Hello....");
             UserDTO userDTO = userService.getUserById(id);
             return ResponseEntity.ok(userDTO);
         }catch (Exception e){
-            throw new UserException("Exception in getting user");
+            throw new UserNotFoundException("No user with userId "+id+" exists");
         }
     }
 
