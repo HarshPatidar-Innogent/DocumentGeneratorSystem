@@ -119,25 +119,19 @@ public class MapperConfig {
         return accessControlDTO;
     }
 
-    public AccessControl toAccessControl(AccessControlDTO accessControlDTO) {
-        return mapper.map(accessControlDTO, AccessControl.class);
-//          AccessControl accessControl = new AccessControl();
-//          accessControl.setTemplate(accessControl.getTemplate());
-//          accessControl.setDepartment(accessControl.getDepartment());
-//          accessControl.setDesignation(accessControl.getDesignation());
-//          return accessControl;
-
-//        AccessControl accessControl = new AccessControl();
-//        accessControl.setUserId(user);
-//        accessControl.setOwnerId(userRepo.findById(accessControlDTO.getOwnerId()).get());
-//        accessControl.setTemplate(existingTemplate);
-//        accessControl.setTemplateAccess(com.dgs.enums.AccessControl.valueOf(accessControlDTO.getTemplateAccess()));
-//
-//        return accessControl;
+    public AccessControl toAccessControl(AccessControlDTO accessControlDTO, User user, User owner, Template template) {
+//        return mapper.map(accessControlDTO, AccessControl.class);
+        AccessControl accessControl = new AccessControl();
+        accessControl.setTemplate(template);
+        accessControl.setUser(user);
+        accessControl.setOwner(owner);
+        accessControl.setTemplateAccess(com.dgs.enums.AccessControl.valueOf(accessControlDTO.getTemplateAccess()));
+        accessControl.setOwnerName(accessControlDTO.getOwnerName());
+        return accessControl;
 
     }
 
-    
+
 
     public UserDTO toUserDTO(User user) {
 

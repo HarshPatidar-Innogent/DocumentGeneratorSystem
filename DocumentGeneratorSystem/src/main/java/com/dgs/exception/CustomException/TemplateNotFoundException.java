@@ -2,7 +2,8 @@ package com.dgs.exception.CustomException;
 
 
 public class TemplateNotFoundException extends RuntimeException{
-    public TemplateNotFoundException(String message) {
-        super(message);
+    public TemplateNotFoundException(Long id) {
+        super("Template with ID " + id + " not found");
+
     }
 }

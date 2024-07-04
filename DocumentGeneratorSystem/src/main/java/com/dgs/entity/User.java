@@ -34,7 +34,7 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Transient
+//    @Transient
     @Column(length = 500,nullable = false)
     private String password;
 
