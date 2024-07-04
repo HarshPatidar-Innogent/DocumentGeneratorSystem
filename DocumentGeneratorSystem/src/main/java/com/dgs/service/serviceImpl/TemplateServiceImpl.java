@@ -97,17 +97,6 @@ public class TemplateServiceImpl implements ITemplateService {
                 .map((placeholder) -> mapperConfig.toPlaceholder(placeholder, existingTemplate))
                 .collect(Collectors.toList());
 
-        //filter out placeholders that already exists
-//        List<Placeholder> placeholderToAdd = newPlaceholders.stream()
-//                        .filter(newPlaceholder->
-//                            existingPlaceholders.stream()
-//                                    .noneMatch(existingPlaceholder->
-//                                            existingPlaceholder.getPlaceholderName().equals(newPlaceholder.getPlaceholderName()) &&
-//                                            existingPlaceholder.getPlaceholderType().equals(newPlaceholder.getPlaceholderType()))
-//                        ).collect(Collectors.toList());
-
-//        existingPlaceholders.addAll(placeholderToAdd);
-
         //delete existing placeholders of template by templateId
         placeholderRepo.deleteAllByTemplateId(existingTemplate.getTemplateId());
 
