@@ -14,17 +14,22 @@ import com.dgs.repository.AccessControlRepo;
 import com.dgs.repository.TemplateRepo;
 import com.dgs.repository.UserRepo;
 import com.dgs.service.iService.IAccessControlService;
+import lombok.extern.log4j.Log4j2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Log4j2
 @Service
 public class AccessControlImpl implements IAccessControlService {
 
+//    private static final Logger log = LoggerFactory.getLogger(AccessControlImpl.class);
     @Autowired
     private AccessControlRepo accessControlRepo;
 
@@ -39,41 +44,35 @@ public class AccessControlImpl implements IAccessControlService {
 
     @Override
     public AccessControlDTO addAccess(AccessControlDTO accessControlDTO) {
-
         Long userId = accessControlDTO.getUserId();
-
-        User user = userRepo.findById(userId).orElse(null);
-        if(user==null){
-            throw new UserNotFoundException("User Not Found with userid "+userId);
-        }
-
-        Template template =templateRepo.findById(accessControlDTO.getTemplate()).orElseThrow(null);
-        if(template == null){
-            throw new TemplateNotFoundException(accessControlDTO.getTemplate());
-        }
-
-        User owner = userRepo.findById(accessControlDTO.getOwnerId()).orElse(null);
-        if(owner==null){
-            throw new UserNotFoundException("User Not Found with userid "+accessControlDTO.getOwnerId());
-        }
-
-        AccessControl accessControl = mapperConfig.toAccessControl(accessControlDTO, user, owner, template.orElse(null));
+        User user = getUser(userId);
+        User owner = getUser(accessControlDTO.getOwnerId());
+        Template template = getTemplate(accessControlDTO.getTemplate());
+        AccessControl accessControl = mapperConfig.toAccessControl(accessControlDTO, user, owner, template);
         AccessControl save = accessControlRepo.save(accessControl);
         return mapperConfig.toAccessControlDTO(save);
-
     }
 
     @Override
     public List<UserDTO> getAllAccessOfTemplate(Long templateId) {
-        List<AccessControl> accessControls = accessControlRepo.findByTemplateId(templateId);
-        List<User> users = accessControls.stream().map(AccessControl::getUser).toList();
-        return users.stream().map(user -> mapperConfig.toUserDTO(user)).toList();
+        try{
+            List<AccessControl> accessControls = accessControlRepo.findByTemplateId(templateId);
+            List<User> users = accessControls.stream().map(AccessControl::getUser).toList();
+            return users.stream().map(user -> mapperConfig.toUserDTO(user)).toList();
+        }catch (Exception e){
+            throw new AccessControlException("Exception in fetching AccessControl", HttpStatus.NOT_FOUND);
+        }
+
     }
 
     @Override
     public List<AccessControlDTO> getAllAccessDetails(Long templateId) {
         List<AccessControl> accessControls = accessControlRepo.findByTemplateId(templateId);
-        return accessControls.stream().map(access->mapperConfig.toAccessControlDTO(access)).toList();
+//        if (accessControls.isEmpty()) {
+//            log.info("getAllAccessDetails");
+//            throw new AccessControlException("AccessControl not found with Template Id");
+//        }
+        return accessControls.stream().map(access -> mapperConfig.toAccessControlDTO(access)).toList();
     }
 
     @Override
@@ -83,35 +82,27 @@ public class AccessControlImpl implements IAccessControlService {
 
     @Override
     public List<TemplateDTO> getAccessTemplateOfUser(Long userId) {
+        List<Long> templatesIds = accessControlRepo.findTemplateIdByUserId(userId);
 
-        List<Long> templatesIds;
-
-        try{
-            templatesIds = accessControlRepo.findTemplateIdByUserId(userId);
-        }catch (Exception e){
-            throw new AccessControlException("Failed to retrieve template IDs for user: " + userId);
+        if (templatesIds.isEmpty()) {
+            throw new AccessControlException("Access Control not found", HttpStatus.NOT_FOUND);
         }
-//        List<Template> templates = templatesIds.stream().map(id->templateRepo.findById(id).get()).toList();
-//        return templates.stream().map(template -> mapperConfig.toTemplateDto(template)).toList();
         return templatesIds.stream()
-                .map(id->{
-                    try{
-                        return templateRepo.findById(id).orElseThrow(()->new TemplateNotFoundException(id));
-                    }catch(TemplateNotFoundException e){
-                        System.err.println(e.getMessage());
-                        return null;
-                    }catch (Exception e){
-                        System.err.println(e.getMessage());
-                        return null;
-                    }
-                }).filter(Objects::nonNull).map(template->mapperConfig.toTemplateDto(template)).collect(Collectors.toList()
+                .map(this::getTemplate)
+//                .filter(Objects::nonNull)
+                .map(template -> MapperConfig.toTemplateDto(template))
+                .collect(Collectors.toList()
                 );
     }
 
     @Override
     public List<AccessControlDTO> getAccessOfUser(Long userId) {
         List<AccessControl> accessControls = accessControlRepo.findAllByUserId(userId);
-        return accessControls.stream().map(access->mapperConfig.toAccessControlDTO(access)).toList();
+        if (accessControls.isEmpty()) {
+            throw new AccessControlException("Access Control not found with userId " + userId, HttpStatus.NOT_FOUND);
+        }
+        return accessControls.stream().map(access -> mapperConfig.toAccessControlDTO(access)).toList();
+
     }
 
     @Override
@@ -122,9 +113,23 @@ public class AccessControlImpl implements IAccessControlService {
     @Override
     public Integer countAccessTemplate(Long userId) {
         Integer countAccessTemplate = accessControlRepo.countAccessTemplate(userId);
-        System.out.println(countAccessTemplate);
         return countAccessTemplate;
     }
 
+    private User getUser(Long userId) {
+        Optional<User> userOptional = userRepo.findById(userId);
+        if (userOptional.isEmpty()) {
+            throw new UserNotFoundException("User not found with userId " + userId, HttpStatus.NOT_FOUND);
+        }
+        return userOptional.get();
+    }
+
+    private Template getTemplate(Long templateId) {
+        Optional<Template> templateOptional = templateRepo.findById(templateId);
+        if (templateOptional.isEmpty()) {
+            throw new TemplateNotFoundException("Template Not Found", HttpStatus.NOT_FOUND);
+        }
+        return templateOptional.get();
+    }
 
 }

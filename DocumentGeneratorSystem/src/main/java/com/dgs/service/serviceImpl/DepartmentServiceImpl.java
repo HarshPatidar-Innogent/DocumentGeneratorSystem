@@ -28,7 +28,6 @@ public class DepartmentServiceImpl implements IDepartmentService {
 
     @Override
     public DepartmentDTO createDepartment(DepartmentDTO departmentDTO) {
-
             departmentDTO.setDepartmentId(null);
             Department department = mapperConfig.toDepartment(departmentDTO);
             Department savedDepartment = departmentRepo.save(department);

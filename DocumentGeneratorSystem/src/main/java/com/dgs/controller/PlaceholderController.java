@@ -17,11 +17,7 @@ public class PlaceholderController {
 
     @GetMapping("/template/{id}")
     public List<PlaceholderDTO> getAllPlaceholderOfTemplate(@PathVariable Long id) {
-        try {
             return placeholderService.getAllPlaceholderOfTemplate(id);
-        }catch (Exception e){
-            throw new PlaceholderException("Exception occurred in fetching placeholder by templateId");
-        }
     }
 
 }

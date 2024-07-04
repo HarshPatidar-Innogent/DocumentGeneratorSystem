@@ -1,7 +1,10 @@
 package com.dgs.exception.CustomException;
 
-public class TemplateException extends RuntimeException{
-    public TemplateException(String message) {
-        super(message);
+import com.dgs.exception.ApiException;
+import org.springframework.http.HttpStatus;
+
+public class TemplateException extends ApiException {
+    public TemplateException(String message, HttpStatus httpStatus) {
+        super(message, httpStatus);
     }
 }

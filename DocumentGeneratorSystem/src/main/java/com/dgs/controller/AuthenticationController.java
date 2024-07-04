@@ -31,7 +31,7 @@ public class AuthenticationController {
         try{
             return ResponseEntity.ok(service.authenticate(request));
         }catch (Exception e){
-            throw new UserNotFoundException("User Not Found");
+            throw new UserNotFoundException("User Not Found", HttpStatus.NOT_FOUND);
         }
     }
 }

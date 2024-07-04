@@ -41,45 +41,26 @@ public class UserController {
     @PostMapping("/addUser")
     // @PreAuthorize("hasauthority('ROLE_ADMIN')")
     public ResponseEntity<UserDTO> addUser(@RequestBody UserDTO userDTO) {
-        try {
-            System.out.println(userDTO.getManager());
-            UserDTO createUser = userService.addUser(userDTO);
-            return ResponseEntity.status(HttpStatus.OK).body(createUser);
-        } catch (Exception e) {
-            throw new UserException("Exception in adding new user");
-        }
+        UserDTO createUser = userService.addUser(userDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(createUser);
     }
 
     @GetMapping("/getallUser")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
-//        System.out.println("getAllUserDTO");
-
-        try {
-            List<UserDTO> getAllUserDTO = userService.getAllUser();
-            return ResponseEntity.status(HttpStatus.OK).body(getAllUserDTO);
-        } catch (Exception e) {
-            throw new UserException("Exception in getting all users");
-        }
+        List<UserDTO> getAllUserDTO = userService.getAllUser();
+        return ResponseEntity.status(HttpStatus.OK).body(getAllUserDTO);
     }
 
     @PutMapping("/updateUser/{id}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
-        try {
-            UserDTO updatedUser = userService.updateUser(id, userDTO);
-            return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
-        } catch (Exception e) {
-            throw new UserException("Exception in updating user");
-        }
+        UserDTO updatedUser = userService.updateUser(id, userDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
     }
 
     @DeleteMapping("/user/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        try {
-            userService.deleteUserById(id);
-            return ResponseEntity.noContent().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        userService.deleteUserById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -89,21 +70,19 @@ public class UserController {
 
     @GetMapping("/getUser/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
-        try{
-            UserDTO userDTO = userService.getUserById(id);
-            return ResponseEntity.ok(userDTO);
-        }catch (Exception e){
-            throw new UserNotFoundException("No user with userId "+id+" exists");
-        }
+        UserDTO userDTO = userService.getUserById(id);
+
+        return ResponseEntity.ok(userDTO);
+
     }
 
     @PostMapping("/changePassword/{email}")
     public ResponseEntity<String> changePassword(@PathVariable String email, @RequestBody ChangePasswordDTO requestPassword) {
-        try{
+        try {
             userService.changePassword(email, requestPassword);
             return ResponseEntity.status(HttpStatus.OK).body("Password Changed Successfully");
-        }catch (Exception e){
-            throw new UserException("Exception in changing password");
+        } catch (Exception e) {
+            throw new UserException("Exception in changing password", HttpStatus.);
         }
     }
 

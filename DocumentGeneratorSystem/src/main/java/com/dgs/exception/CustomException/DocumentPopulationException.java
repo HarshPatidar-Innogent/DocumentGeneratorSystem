@@ -1,7 +1,12 @@
 package com.dgs.exception.CustomException;
 
-public class DocumentPopulationException extends RuntimeException{
-    public DocumentPopulationException(String message) {
-        super(message);
+import com.dgs.exception.ApiException;
+import org.springframework.http.HttpStatus;
+
+import java.util.HashMap;
+
+public class DocumentPopulationException extends ApiException {
+    public DocumentPopulationException(String message, HttpStatus httpStatus) {
+        super(message, httpStatus);
     }
 }

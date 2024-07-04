@@ -30,7 +30,7 @@ public class DepartmentController {
             DepartmentDTO createdDepartment = departmentService.createDepartment(departmentDTO);
             return ResponseEntity.ok(createdDepartment);
         }catch (Exception e){
-            throw new DepartmentException("Exception occurred in creating a department");
+            throw new RuntimeException("Exception occurred in creating a department");
         }
     }
 
@@ -40,7 +40,7 @@ public class DepartmentController {
             List<DepartmentDTO> departments = departmentService.getAll();
             return ResponseEntity.ok(departments);
         }catch (Exception e){
-            throw new DepartmentException("Exception occurred in fetching all departments");
+            throw new RuntimeException("Exception occurred in fetching all departments");
         }
     }
 
@@ -51,7 +51,7 @@ public class DepartmentController {
             DepartmentDTO updatedDepartment = departmentService.update(id, departmentDTO);
             return ResponseEntity.ok(updatedDepartment);
         }catch (Exception e){
-            throw new DepartmentException("Exception occurred in updating the department");
+            throw new RuntimeException("Exception occurred in updating the department");
         }
     }
 
@@ -66,7 +66,7 @@ public ResponseEntity<Boolean> delete(@PathVariable Long id) {
         Boolean result = departmentService.delete(id);
         return ResponseEntity.ok(result);
     } catch (RuntimeException e) {
-        throw new DepartmentException("Exception occurred in deleting an department");
+        throw new RuntimeException("Exception occurred in deleting an department");
     }
 }
 
@@ -76,7 +76,7 @@ public ResponseEntity<Boolean> delete(@PathVariable Long id) {
             DepartmentDTO departmentDTO = departmentService.getDepartmentByName(name);
             return ResponseEntity.ok(departmentDTO);
         }catch (Exception e){
-            throw new DepartmentException("Exception occurred in fetching department");
+            throw new RuntimeException("Exception occurred in fetching department");
         }
     }
 
@@ -86,7 +86,8 @@ public ResponseEntity<Boolean> delete(@PathVariable Long id) {
             DepartmentDTO departmentDTO = departmentService.getDepartmentById(id);
             return ResponseEntity.ok(departmentDTO);
         }catch (Exception e){
-            throw new DepartmentException("Exception occurred in fetching department");
+            throw new RuntimeException(
+                    "Exception occurred in fetching department");
         }
     }
 
