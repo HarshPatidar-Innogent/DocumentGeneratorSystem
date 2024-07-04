@@ -56,7 +56,7 @@ public class TemplateController {
             TemplateDTO dto = templateService.getTemplateById(id);
             return ResponseEntity.ok(dto);
         }catch (Exception e){
-            throw new TemplateNotFoundException("Template not found");
+            throw new TemplateNotFoundException(id);
         }
     }
 

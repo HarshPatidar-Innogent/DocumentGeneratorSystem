@@ -85,7 +85,7 @@ public class TemplateServiceImpl implements ITemplateService {
 
     @Override
     public TemplateDTO updateTemplate(TemplateDTO templateDTO, Long templateId) {
-        Template existingTemplate = templateRepo.findById(templateId).orElseThrow(()->{throw new TemplateNotFoundException("Template Not found");});
+        Template existingTemplate = templateRepo.findById(templateId).orElseThrow(()->{throw new TemplateNotFoundException(templateId);});
         User existingUser = userRepo.findById(templateDTO.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 

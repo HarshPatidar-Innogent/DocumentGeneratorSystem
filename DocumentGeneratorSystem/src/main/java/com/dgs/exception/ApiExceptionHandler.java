@@ -122,4 +122,15 @@ public class ApiExceptionHandler {
         );
         return new ResponseEntity<>(apiException, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(value = {MappingException.class})
+    public static ResponseEntity<Object> handleMappingException(MappingException mappingException){
+        ApiException apiException = new ApiException(
+                mappingException.getMessage(),
+                HttpStatus.BAD_REQUEST,
+                ZonedDateTime.now(ZoneId.of("Z")),
+                mappingException
+        );
+        return new ResponseEntity<>(apiException, HttpStatus.BAD_REQUEST);
+    }
 }

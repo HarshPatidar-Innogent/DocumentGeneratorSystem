@@ -34,6 +34,8 @@ public class DocumentServiceImpl implements IDocumentService {
     @Autowired
     private SignatureRepo signatureRepo;
 
+    private StringBuilder url = new StringBuilder("http://192.168.5.219:3000/sign/");
+
 
     @Override
     public List<DocumentDTO> getAllDocumentOfUser(Long userId) {
@@ -98,9 +100,13 @@ public class DocumentServiceImpl implements IDocumentService {
                 String encodedDocumentId = encode(String.valueOf(document.getDocumentId()));
                 String encodedPlaceholder = encode("{{" + placeholder + "}}");
                 String encodedEmail = encode(email);
-//                String url = "http://192.168.5.215:3000/sign/" + encodedDocumentId + "/" + encodedPlaceholder ;
-                String url = "http://192.168.5.219:3000/sign/" + encodedDocumentId + "/" + encodedPlaceholder + "/" + encodedEmail;
-                emailService.sendEmail(email, "Document Signature Request", url);
+                url.append(encodedDocumentId)
+                        .append("/")
+                        .append(encodedPlaceholder)
+                        .append("/")
+                        .append(encodedEmail);
+//                String url = "http://192.168.5.219:3000/sign/" + encodedDocumentId + "/" + encodedPlaceholder + "/" + encodedEmail;
+                emailService.sendEmail(email, "Document Signature Request", String.valueOf(url));
                 Signature signature = new Signature();
                 signature.setDocument(documentRepo.findById(document.getDocumentId()).orElseThrow(() -> new IllegalArgumentException("Invalid document ID")));
                 signature.setSigned(false);
