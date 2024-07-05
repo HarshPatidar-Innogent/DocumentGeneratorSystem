@@ -82,7 +82,7 @@ public class UserController {
             userService.changePassword(email, requestPassword);
             return ResponseEntity.status(HttpStatus.OK).body("Password Changed Successfully");
         } catch (Exception e) {
-            throw new UserException("Exception in changing password", HttpStatus.);
+            throw new UserException("Exception in changing password", HttpStatus.NOT_FOUND);
         }
     }
 

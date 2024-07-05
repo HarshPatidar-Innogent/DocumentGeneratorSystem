@@ -23,7 +23,7 @@ public class TemplateController {
 
     @GetMapping("/all/{userId}")
     public ResponseEntity<?> getAllTemplate(@PathVariable Long userId) {
-        System.out.println(userId);
+//        System.out.println(userId);
         List<TemplateDTO> templateDTOS = templateService.getAllTemplate(userId);
         return ResponseEntity.status(HttpStatus.OK).body(templateDTOS);
     }
@@ -40,11 +40,11 @@ public class TemplateController {
         return ResponseEntity.ok(dto);
     }
 
-    @GetMapping("/getTemplate")
-    public ResponseEntity<?> getTempById(@RequestParam("templateId") Long templateId, @RequestParam("userId") Long userId) throws AccessDeniedException {
-        TemplateDTO templateDTO = templateService.getTemplateDTOById(templateId, userId);
-        return ResponseEntity.ok(templateDTO);
-    }
+//    @GetMapping("/getTemplate")
+//    public ResponseEntity<?> getTempById(@RequestParam("templateId") Long templateId, @RequestParam("userId") Long userId) {
+//        TemplateDTO templateDTO = templateService.getTemplateDTOById(templateId, userId);
+//        return ResponseEntity.ok(templateDTO);
+//    }
 
     @DeleteMapping("/deleteTemplate/{id}")
     public ResponseEntity<?> deleteTemplateById(@PathVariable Long id) {
