@@ -70,15 +70,13 @@ public class TemplateServiceImpl implements ITemplateService {
         return MapperConfig.toTemplateDto(savedTemplate);
     }
 
-    @Override
-    public TemplateDTO getTemplateDTOById(Long templateId, Long userId) {
+//    @Override
+//    public TemplateDTO getTemplateDTOById(Long templateId, Long userId) {
 //        User user = userRepo.findById(userId).orElseThrow(() -> new EntityNotFoundException("User Not Found"));
-        User user = getUser(userId);
-
-        Template template = templateRepo.findById(templateId).orElseThrow(() -> new EntityNotFoundException("Template Not Found"));
-        return mapperConfig.toTemplateDto(template);
-
-    }
+//        User user = getUser(userId);
+//        Template template = getTemplate(templateId);
+//        return mapperConfig.toTemplateDto(template);
+//    }
 
     @Override
     public void deleteTemplateById(Long id) {
