@@ -19,11 +19,4 @@ public class Designation {
     @Column(length = 50,nullable = false)
     private String designationName;
 
-    @Column(length = 100)
-    private String description;
-
-    @Enumerated(EnumType.STRING)
-    private DesignationPermission permission;
-
-
 }

@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface DesignationRepo extends JpaRepository<Designation,Long> {
-    Optional<Object> findByDesignationName(String name);
+    Optional<Designation> findByDesignationName(String name);
     @Modifying
     @Transactional
 //    @Query(value = "DELETE FROM designation WHERE designation_id = :designationId", nativeQuery = true)
