@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface DepartmentRepo extends JpaRepository<Department,Long> {
-    Optional<Object> findByDepartmentName(String name);
+    Optional<Department> findByDepartmentName(String name);
 
     @Modifying
     @Transactional
