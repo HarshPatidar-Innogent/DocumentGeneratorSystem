@@ -1,6 +1,9 @@
 package com.dgs.controller;
 
+import com.dgs.DTO.ChangePasswordDTO;
 import com.dgs.DTO.UserDTO;
+import com.dgs.exception.CustomException.UserException;
+import com.dgs.exception.CustomException.UserNotFoundException;
 import com.dgs.repository.UserRepo;
 import com.dgs.service.iService.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +21,6 @@ import java.util.List;
 @RequestMapping("/api/v1/users")
 public class UserController {
 
-
     @Autowired
     private IUserService userService;
 
@@ -28,16 +30,13 @@ public class UserController {
     @Autowired
     private UserRepo userRepository;
 
-
     @Autowired
     private UserDetailsService userDetailsService;
 
     @Autowired
     private IUserService iUserService;
+
     @GetMapping("/user")
-    public ResponseEntity<String> sayHello() {
-        return ResponseEntity.ok("Hello");
-    }
 
     @PostMapping("/addUser")
     // @PreAuthorize("hasauthority('ROLE_ADMIN')")
@@ -46,28 +45,22 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(createUser);
     }
 
-
     @GetMapping("/getallUser")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<UserDTO> getAllUserDTO = userService.getAllUser();
         return ResponseEntity.status(HttpStatus.OK).body(getAllUserDTO);
     }
 
-        @PutMapping("/updateUser/{id}")
+    @PutMapping("/updateUser/{id}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
         UserDTO updatedUser = userService.updateUser(id, userDTO);
         return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
     }
 
-
     @DeleteMapping("/user/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        try {
-            userService.deleteUserById(id);
-            return ResponseEntity.noContent().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        userService.deleteUserById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -78,12 +71,19 @@ public class UserController {
     @GetMapping("/getUser/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
         UserDTO userDTO = userService.getUserById(id);
+
         return ResponseEntity.ok(userDTO);
+
     }
 
-//    @GetMapping("/getUser/{id}")
-//    public UserDTO getUserById(@PathVariable Long id){
-//        return iUserService.findUserById(id);
-//    }
+    @PostMapping("/changePassword/{email}")
+    public ResponseEntity<String> changePassword(@PathVariable String email, @RequestBody ChangePasswordDTO requestPassword) {
+        try {
+            userService.changePassword(email, requestPassword);
+            return ResponseEntity.status(HttpStatus.OK).body("Password Changed Successfully");
+        } catch (Exception e) {
+            throw new UserException("Exception in changing password", HttpStatus.NOT_FOUND);
+        }
+    }
 
 }

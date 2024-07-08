@@ -7,6 +7,4 @@ import lombok.Data;
 public class DesignationDTO {
     private Long designationId;
     private String designationName;
-    private String description;
-    private DesignationPermission designationPermission;
 }

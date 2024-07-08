@@ -1,7 +1,9 @@
 package com.dgs.entity;
 
 import com.dgs.enums.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -32,8 +34,12 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
 
+//    @Transient
     @Column(length = 500,nullable = false)
     private String password;
+
+    @Column(columnDefinition = "varchar(255) default '-'")
+    private String manager;
 
     @JoinColumn(name = "designationId",referencedColumnName ="designationId")
     @ManyToOne
@@ -46,11 +52,14 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Template> template;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Document> Document;
+
+    @OneToMany(mappedBy = "user" ,cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<AccessControl> accessControls;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -3,6 +3,8 @@ package com.dgs.service.serviceImpl;
 import com.dgs.DTO.SignatureDTO;
 import com.dgs.entity.Document;
 import com.dgs.entity.Signature;
+import com.dgs.entity.User;
+import com.dgs.enums.DocumentStatus;
 import com.dgs.mapper.MapperConfig;
 import com.dgs.repository.DocumentRepo;
 import com.dgs.repository.SignatureRepo;
@@ -14,8 +16,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class SignatureServiceImpl implements ISignatureService {
@@ -32,23 +37,21 @@ public class SignatureServiceImpl implements ISignatureService {
     @Autowired
     private UserRepo userRepo;
 
+    @Autowired
+    private EmailService emailService;
+
     @Override
     public SignatureDTO addSignature(MultipartFile file , SignatureDTO signatureDTO) throws IOException {
         Document document = documentRepo.findById(signatureDTO.getDocumentId()).get();
-        if(document !=null){
-            Signature sign = new Signature();
-            sign.setSignatureData(file.getBytes());
-            sign.setSignatureType(signatureDTO.getSignatureType());
-            sign.setPlaceholder(signatureDTO.getPlaceholder());
-            sign.setDocument(document);
-            sign.setSigned(signatureDTO.getSigned());
-            sign.setRecipientEmail(signatureDTO.getRecipientEmail());
-            Signature signature = signatureRepo.save(sign);
-            return mapperConfig.toSignatureDTO(signature);
-        }
-        else{
-            return null;
-        }
+        Signature sign = new Signature();
+        sign.setSignatureData(file.getBytes());
+        sign.setSignatureType(signatureDTO.getSignatureType());
+        sign.setPlaceholder(signatureDTO.getPlaceholder());
+        sign.setDocument(document);
+        sign.setSigned(signatureDTO.getSigned());
+        sign.setRecipientEmail(signatureDTO.getRecipientEmail());
+        Signature signature = signatureRepo.save(sign);
+        return mapperConfig.toSignatureDTO(signature);
     }
 
   @Override
@@ -101,7 +104,7 @@ public class SignatureServiceImpl implements ISignatureService {
            signature1.setSignatureType(signatureDTO.getSignatureType());
            signature1.setDocument(document);
            signature1.setPlaceholder(signatureDTO.getPlaceholder());
-           System.out.println(signature1);
+//           System.out.println(signature1);
            Signature signature = signatureRepo.save(signature1);
            return mapperConfig.toSignatureDTO(signature);
     }
@@ -110,13 +113,14 @@ public class SignatureServiceImpl implements ISignatureService {
     public SignatureDTO addSignatureElectronic(SignatureDTO signatureDTO, String Name,String recipientEmail,Long documentId) throws IOException {
         Signature esign = signatureRepo.findByRecipientEmail(recipientEmail,documentId);
 //        Signature sign = new Signature();
-        System.out.println(esign);
+//        System.out.println(esign);
         esign.setSignatureType(signatureDTO.getSignatureType());
         byte[] signatureImage = SignatureGenerator.generateSignatureImage(Name);
         esign.setSignatureData(signatureImage);
         esign.setPlaceholder(signatureDTO.getPlaceholder());
         esign.setSigned(signatureDTO.getSigned());
         Signature signature = signatureRepo.save(esign);
+        sendCompleteSignedDocument(documentId);
         return mapperConfig.toSignatureDTO(signature);
 
     }
@@ -137,13 +141,17 @@ public class SignatureServiceImpl implements ISignatureService {
     @Override
     public SignatureDTO updateSign(String recipientEmail, Long documentId, MultipartFile file, SignatureDTO signatureDTO) throws IOException {
         Signature sign1 = signatureRepo.findByRecipientEmail(recipientEmail,documentId);
-        System.out.println(file.getBytes());
+//        System.out.println(file.getBytes());
         if(sign1!=null){
             sign1.setSignatureType(signatureDTO.getSignatureType());
             sign1.setSignatureData(file.getBytes());
             sign1.setPlaceholder(signatureDTO.getPlaceholder());
             sign1.setSigned(signatureDTO.getSigned());
             Signature updateSign = signatureRepo.save(sign1);
+
+            sendCompleteSignedDocument(documentId);
+
+
             return mapperConfig.toSignatureDTO(updateSign);
 
         }
@@ -152,5 +160,37 @@ public class SignatureServiceImpl implements ISignatureService {
         }
     }
 
+
+    @Override
+    public void sendCompleteSignedDocument(Long documentId) {
+        Set<Boolean> signedStatuses = signatureRepo.checkAllSignature(documentId);
+        if (signedStatuses.size() == 1 && signedStatuses.contains(true)) {
+
+            String userEmail = "";
+            Optional<Document> document = documentRepo.findById(documentId);
+            if (document.isPresent()){
+                Document document1 = document.get();
+                document1.setStatus(DocumentStatus.SIGNED);
+                Document savedDocument = documentRepo.save(document1);
+                userEmail = savedDocument.getUser().getEmail();
+            }
+
+            String encodedDocumentId = encode(String.valueOf(documentId));
+
+            Set<String> emails = signatureRepo.getRecipientEmailsOfDocument(documentId);
+            emails.add(userEmail);
+            emails.stream().forEach(email->{
+                String url = "http://192.168.5.219:3000/final-document/" + encodedDocumentId;
+                emailService.sendEmail(email, "Document Completed", url);
+
+            });
+
+        }
+    }
+
+
+    private String encode(String value){
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(value.getBytes(StandardCharsets.UTF_8));
+    }
 
 }

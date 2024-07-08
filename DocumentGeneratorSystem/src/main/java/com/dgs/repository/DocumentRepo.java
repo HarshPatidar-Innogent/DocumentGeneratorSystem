@@ -10,6 +10,9 @@ import java.util.List;
 
 public interface DocumentRepo extends JpaRepository<Document, Long> {
 
-    @Query(nativeQuery = true, value = "SELECT * FROM DOCUMENT WHERE user_id = :userId")
+    @Query("SELECT d FROM Document d WHERE d.user.id = :userId")
     public List<Document> findAllByUserId(@PathParam("userId") Long userId);
+
+    @Query(value = "select count(*) from Document where user_id = :userId",nativeQuery = true)
+    public Integer countDocument(@PathParam("userId") Long userId);
 }

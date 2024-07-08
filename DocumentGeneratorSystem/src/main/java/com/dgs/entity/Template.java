@@ -42,4 +42,8 @@ public class Template {
 
     @OneToMany(mappedBy = "template",cascade = CascadeType.ALL)
     private List<Placeholder> placeholderList;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "template", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Document> documents;
 }

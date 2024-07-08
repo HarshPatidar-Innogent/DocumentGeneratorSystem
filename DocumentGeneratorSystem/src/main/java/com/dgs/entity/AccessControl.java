@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name ="access_control")
+@Table(name = "access_control")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -17,15 +17,20 @@ public class AccessControl {
     private Long accessControlId;
 
     @ManyToOne
-    @JoinColumn(name="templateId",referencedColumnName = "templateId")
+    @JoinColumn(name = "templateId", referencedColumnName = "templateId")
     private Template template;
 
-    @ManyToOne
-    @JoinColumn(name ="departmentId" ,referencedColumnName = "departmentId")
-    private Department department;
+    @Enumerated(EnumType.STRING)
+    private com.dgs.enums.AccessControl templateAccess;
 
     @ManyToOne
-    @JoinColumn(name="designationId" ,referencedColumnName = "designationId")
-    private Designation designation;
+    @JoinColumn(name = "ownerId", referencedColumnName = "userId")
+    private User owner;
+
+    @ManyToOne
+    @JoinColumn(name = "userId", referencedColumnName = "userId")
+    private User user;
+
+    private String ownerName;
 
 }

@@ -14,11 +14,11 @@ public interface ITemplateService {
 
     public TemplateDTO createTemplate(TemplateDTO templateDTO);
 
-    public TemplateDTO updateTemplate(Long id);
-
-    public String deleteTemplate(Long id);
-
-    public TemplateDTO getTemplateDTOById(Long templateId,Long userId) throws AccessDeniedException;
+//    public TemplateDTO getTemplateDTOById(Long templateId,Long userId) ;
 
     public void deleteTemplateById(Long id);
+
+    public TemplateDTO updateTemplate(TemplateDTO templateDTO, Long templateId);
+
+    public Integer countTemplate(Long userId);
 }

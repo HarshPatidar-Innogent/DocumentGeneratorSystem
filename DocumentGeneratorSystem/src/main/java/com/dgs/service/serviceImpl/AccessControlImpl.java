@@ -1,81 +1,133 @@
 package com.dgs.service.serviceImpl;
 
 import com.dgs.DTO.AccessControlDTO;
-import com.dgs.DTO.DocumentDTO;
-import com.dgs.entity.*;
-import com.dgs.enums.DesignationPermission;
+import com.dgs.DTO.TemplateDTO;
+import com.dgs.DTO.UserDTO;
+import com.dgs.entity.AccessControl;
+import com.dgs.entity.Template;
+import com.dgs.entity.User;
+import com.dgs.exception.CustomException.AccessControlException;
+import com.dgs.exception.CustomException.TemplateNotFoundException;
+import com.dgs.exception.CustomException.UserNotFoundException;
 import com.dgs.mapper.MapperConfig;
-import com.dgs.repository.*;
+import com.dgs.repository.AccessControlRepo;
+import com.dgs.repository.TemplateRepo;
+import com.dgs.repository.UserRepo;
 import com.dgs.service.iService.IAccessControlService;
-import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+@Log4j2
 @Service
 public class AccessControlImpl implements IAccessControlService {
+
+    //    private static final Logger log = LoggerFactory.getLogger(AccessControlImpl.class);
     @Autowired
     private AccessControlRepo accessControlRepo;
+
+    @Autowired
+    private UserRepo userRepo;
 
     @Autowired
     private TemplateRepo templateRepo;
 
     @Autowired
-    private DesignationRepo designationRepo;
-
-    @Autowired
-    private DepartmentRepo departmentRepo;
-
-    @Autowired
     private MapperConfig mapperConfig;
 
     @Override
-    public AccessControlDTO addAccessControl(Long templateId, Long departmentId, Long designationId) {
-        Template template = templateRepo.findById(templateId).orElseThrow(()->new EntityNotFoundException("Template Not Found"));
-        Department department = departmentRepo.findById(departmentId).orElseThrow(()->new EntityNotFoundException("Department Not Found"));
-        Designation designation = designationRepo.findById(designationId).orElseThrow(()->new EntityNotFoundException("Designation Not Found"));
-
-        AccessControl accessControl = new AccessControl();
-        accessControl.setDepartment(department);
-        accessControl.setDesignation(designation);
-        accessControl.setTemplate(template);
-
-        AccessControl accessControl1 =  accessControlRepo.save(accessControl);
-        return mapperConfig.toAccessControlDTO(accessControl1);
+    public AccessControlDTO addAccess(AccessControlDTO accessControlDTO) {
+        Long userId = accessControlDTO.getUserId();
+        User user = getUser(userId);
+        User owner = getUser(accessControlDTO.getOwnerId());
+        Template template = getTemplate(accessControlDTO.getTemplate());
+        AccessControl accessControl = mapperConfig.toAccessControl(accessControlDTO, user, owner, template);
+        AccessControl save = accessControlRepo.save(accessControl);
+        return mapperConfig.toAccessControlDTO(save);
     }
 
     @Override
-    public boolean hasAccess(Long templateId, Long departmentId, Long designationId, DesignationPermission requiredPermission) {
-        Designation designation = designationRepo.findById(designationId).get();
-        if(designation!=null && designation.getPermission()==requiredPermission){
-           return  accessControlRepo.existsByTemplate_TemplateIdAndDepartment_DepartmentIdAndDesignation_DesignationId(templateId,departmentId,designationId);
+    public List<UserDTO> getAllAccessOfTemplate(Long templateId) {
+        try {
+            List<AccessControl> accessControls = accessControlRepo.findByTemplateId(templateId);
+            List<User> users = accessControls.stream().map(AccessControl::getUser).toList();
+            return users.stream().map(user -> mapperConfig.toUserDTO(user)).toList();
+        } catch (Exception e) {
+            throw new AccessControlException("Exception in fetching AccessControl", HttpStatus.NOT_FOUND);
         }
-        return false;
+
     }
 
     @Override
-    public List<AccessControlDTO> findAllByTemplateId(Long templateId) {
-         List<AccessControl> accessControlList = accessControlRepo.findAllByTemplateId(templateId);
-         List<AccessControlDTO> accessControlDTOS = accessControlList.stream().map(mapperConfig::toAccessControlDTO).toList();
-         return accessControlDTOS;
+    public List<AccessControlDTO> getAllAccessDetails(Long templateId) {
+        List<AccessControl> accessControls = accessControlRepo.findByTemplateId(templateId);
+//        if (accessControls.isEmpty()) {
+//            log.info("getAllAccessDetails");
+//            throw new AccessControlException("AccessControl not found with Template Id");
+//        }
+        return accessControls.stream().map(access -> mapperConfig.toAccessControlDTO(access)).toList();
     }
 
     @Override
-    public String deleteAccessControl(Long accessControlId) {
-        Optional<AccessControl> accessControl = accessControlRepo.findById(accessControlId);
-        if(accessControl.isPresent()){
-              accessControlRepo.deleteById(accessControlId);
-              return "Access Control is Successfully deleted";
-        }
-        else{
-            return "Access Control Not Found";
-        }
+    public void deleteAccessById(Long accessId) {
+        accessControlRepo.deleteById(accessId);
     }
 
+    @Override
+    public List<TemplateDTO> getAccessTemplateOfUser(Long userId) {
+        List<Long> templatesIds = accessControlRepo.findTemplateIdByUserId(userId);
+
+        if (templatesIds.isEmpty()) {
+            throw new AccessControlException("Access Control not found", HttpStatus.NOT_FOUND);
+        }
+        return templatesIds.stream()
+                .map(this::getTemplate)
+//                .filter(Objects::nonNull)
+                .map(template -> MapperConfig.toTemplateDto(template))
+                .collect(Collectors.toList()
+                );
+    }
+
+    @Override
+    public List<AccessControlDTO> getAccessOfUser(Long userId) {
+        List<AccessControl> accessControls = accessControlRepo.findAllByUserId(userId);
+        if (accessControls.isEmpty()) {
+            throw new AccessControlException("Access Control not found with userId " + userId, HttpStatus.NOT_FOUND);
+        }
+        return accessControls.stream().map(access -> mapperConfig.toAccessControlDTO(access)).toList();
+
+    }
+
+    @Override
+    public List<Long> getAccessTemplateIdByUserId(Long userId) {
+        return accessControlRepo.getAllAccessTemplateId(userId);
+    }
+
+    @Override
+    public Integer countAccessTemplate(Long userId) {
+        Integer countAccessTemplate = accessControlRepo.countAccessTemplate(userId);
+        return countAccessTemplate;
+    }
+
+    private User getUser(Long userId) {
+        Optional<User> userOptional = userRepo.findById(userId);
+        if (userOptional.isEmpty()) {
+            throw new UserNotFoundException("User not found with userId " + userId, HttpStatus.NOT_FOUND);
+        }
+        return userOptional.get();
+    }
+
+    private Template getTemplate(Long templateId) {
+        Optional<Template> templateOptional = templateRepo.findById(templateId);
+        if (templateOptional.isEmpty()) {
+            throw new TemplateNotFoundException("Template Not Found", HttpStatus.NOT_FOUND);
+        }
+        return templateOptional.get();
+    }
 
 }

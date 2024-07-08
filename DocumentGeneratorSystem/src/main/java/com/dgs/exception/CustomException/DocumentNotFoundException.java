@@ -1,11 +1,10 @@
 package com.dgs.exception.CustomException;
 
-public class DocumentNotFoundException extends RuntimeException{
-    public DocumentNotFoundException(String message) {
-        super(message);
-    }
+import com.dgs.exception.ApiException;
+import org.springframework.http.HttpStatus;
 
-    public DocumentNotFoundException(String message, Throwable cause) {
-        super(message, cause);
+public class DocumentNotFoundException extends ApiException {
+    public DocumentNotFoundException(String message, HttpStatus httpStatus) {
+        super(message, httpStatus);
     }
 }

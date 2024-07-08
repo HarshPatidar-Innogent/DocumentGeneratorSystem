@@ -20,6 +20,7 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody RegisterRequest request
     ){
+        System.out.println(request);
         return ResponseEntity.ok(service.register(request));
     }
 
@@ -30,7 +31,7 @@ public class AuthenticationController {
         try{
             return ResponseEntity.ok(service.authenticate(request));
         }catch (Exception e){
-            throw new UserNotFoundException("User Not Found");
+            throw new UserNotFoundException("User Not Found", HttpStatus.NOT_FOUND);
         }
     }
 }

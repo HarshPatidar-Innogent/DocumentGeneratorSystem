@@ -1,7 +1,6 @@
 package com.dgs.controller;
 
 import com.dgs.DTO.DepartmentDTO;
-import com.dgs.DTO.DesignationDTO;
 import com.dgs.mapper.MapperConfig;
 import com.dgs.service.iService.IDepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,6 @@ public class DepartmentController {
     @Autowired
     private MapperConfig mapperConfig;
 
-
     @PostMapping("/addDept")
     public ResponseEntity<DepartmentDTO> createDepartment(@RequestBody DepartmentDTO departmentDTO) {
         departmentDTO.setDepartmentId(null);
@@ -34,6 +32,7 @@ public class DepartmentController {
         List<DepartmentDTO> departments = departmentService.getAll();
         return ResponseEntity.ok(departments);
     }
+
     @PutMapping("/update/{id}")
 
     public ResponseEntity<DepartmentDTO> update(@PathVariable Long id, @RequestBody DepartmentDTO departmentDTO) {
@@ -42,9 +41,10 @@ public class DepartmentController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<DesignationDTO>delete(@PathVariable long id) {
-        departmentService.delete(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Boolean> delete(@PathVariable Long id) {
+        Boolean result = departmentService.delete(id);
+        return ResponseEntity.ok(result);
+
     }
 
     @GetMapping("/getByName/{name}")
@@ -53,4 +53,10 @@ public class DepartmentController {
         return ResponseEntity.ok(departmentDTO);
     }
 
+    @GetMapping("/getDept/{id}")
+    public ResponseEntity<DepartmentDTO> getDepartmentById(@PathVariable Long id) {
+        DepartmentDTO departmentDTO = departmentService.getDepartmentById(id);
+        return ResponseEntity.ok(departmentDTO);
+    }
 }
+

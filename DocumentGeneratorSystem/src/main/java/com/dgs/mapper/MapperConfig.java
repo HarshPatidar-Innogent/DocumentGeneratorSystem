@@ -5,6 +5,7 @@ import com.dgs.entity.*;
 import com.dgs.enums.Role;
 import com.dgs.repository.DepartmentRepo;
 import com.dgs.repository.DesignationRepo;
+import com.dgs.repository.UserRepo;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,9 @@ public class MapperConfig {
 
     @Autowired
     private DesignationRepo designationRepo;
+
+    @Autowired
+    private UserRepo userRepo;
 
     public MapperConfig() {
         mapper = new ModelMapper();
@@ -103,34 +107,45 @@ public class MapperConfig {
     }
 
     public AccessControlDTO toAccessControlDTO(AccessControl accessControl) {
-        return mapper.map(accessControl, AccessControlDTO.class);
-//        AccessControlDTO accessControlDTO = new AccessControlDTO();
-//        accessControlDTO.setDepartment(departmentDTO);
-//        accessControlDTO.setDesignation(designationDTO);
-//        accessControlDTO.setTemplate(templateDTO);
-//        return accessControlDTO;
+
+        AccessControlDTO accessControlDTO = new AccessControlDTO();
+        accessControlDTO.setAccessControlId(accessControl.getAccessControlId());
+//        accessControlDTO.setEmail(accessControl.getUserId().getEmail());
+        accessControlDTO.setUserId(accessControl.getUser().getUserId());
+        accessControlDTO.setOwnerId(accessControl.getOwner().getUserId());
+        accessControlDTO.setTemplateAccess(String.valueOf(accessControl.getTemplateAccess()));
+        accessControlDTO.setTemplate(accessControl.getTemplate().getTemplateId());
+        accessControlDTO.setOwnerName(accessControl.getOwnerName());
+        return accessControlDTO;
     }
 
-    public AccessControl toAccessControl(AccessControlDTO accessControlDTO) {
-        return mapper.map(accessControlDTO, AccessControl.class);
-//          AccessControl accessControl = new AccessControl();
-//          accessControl.setTemplate(accessControl.getTemplate());
-//          accessControl.setDepartment(accessControl.getDepartment());
-//          accessControl.setDesignation(accessControl.getDesignation());
-//          return accessControl;
+    public AccessControl toAccessControl(AccessControlDTO accessControlDTO, User user, User owner, Template template) {
+//        return mapper.map(accessControlDTO, AccessControl.class);
+        AccessControl accessControl = new AccessControl();
+        accessControl.setTemplate(template);
+        accessControl.setUser(user);
+        accessControl.setOwner(owner);
+        accessControl.setTemplateAccess(com.dgs.enums.AccessControl.valueOf(accessControlDTO.getTemplateAccess()));
+        accessControl.setOwnerName(accessControlDTO.getOwnerName());
+        return accessControl;
+
     }
 
-    public AuditTrailDTO toAuditTrailDTO(AuditTrail auditTrail) {
-        return mapper.map(auditTrail, AuditTrailDTO.class);
-    }
 
-    public AuditTrail toAuditTrail(AuditTrailDTO auditTrailDTO) {
-        return mapper.map(auditTrailDTO, AuditTrail.class);
-    }
 
     public UserDTO toUserDTO(User user) {
 
-        return mapper.map(user, UserDTO.class);
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUserId(user.getUserId());
+        userDTO.setFirstName(user.getFirstName());
+        userDTO.setLastName(user.getLastName());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setManager(user.getManager());
+        userDTO.setDepartmentId(user.getDepartment().getDepartmentId());
+        userDTO.setDesignationId(user.getDesignation().getDesignationId());
+        userDTO.setRole(String.valueOf(user.getRole()));
+        return userDTO;
+//        return mapper.map(user, UserDTO.class);
     }
 
     public User toUser(UserDTO userDTO) {
@@ -140,12 +155,13 @@ public class MapperConfig {
         user.setLastName(userDTO.getLastName());
         user.setEmail(userDTO.getEmail());
         user.setPassword(userDTO.getPassword());
+//        user.setPassword("");
         user.setDepartment(departmentRepo.findById(userDTO.getDepartmentId()).get());
         user.setDesignation(designationRepo.findById(userDTO.getDesignationId()).get());
+        user.setManager(userDTO.getManager());
         user.setRole(Role.USER);
         return user;
     }
-
 
     //convert department entity into dto
     public DepartmentDTO toDepartmentDTO(Department department) {
@@ -166,6 +182,5 @@ public class MapperConfig {
     public Designation toDesignation(DesignationDTO designationDTO) {
         return mapper.map(designationDTO, Designation.class);
     }
-
 
 }
