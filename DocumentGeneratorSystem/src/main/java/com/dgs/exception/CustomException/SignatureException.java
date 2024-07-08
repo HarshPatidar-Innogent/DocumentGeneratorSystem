@@ -1,7 +1,10 @@
 package com.dgs.exception.CustomException;
 
-public class SignatureException extends RuntimeException{
-    public SignatureException(String message){
-        super(message);
+import com.dgs.exception.ApiException;
+import org.springframework.http.HttpStatus;
+
+public class SignatureException extends ApiException {
+    public SignatureException(String message, HttpStatus httpStatus){
+        super(message,httpStatus);
     }
 }

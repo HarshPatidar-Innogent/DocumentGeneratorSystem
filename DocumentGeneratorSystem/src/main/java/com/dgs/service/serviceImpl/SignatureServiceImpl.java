@@ -5,6 +5,7 @@ import com.dgs.entity.Document;
 import com.dgs.entity.Signature;
 import com.dgs.entity.User;
 import com.dgs.enums.DocumentStatus;
+import com.dgs.exception.CustomException.SignatureException;
 import com.dgs.mapper.MapperConfig;
 import com.dgs.repository.DocumentRepo;
 import com.dgs.repository.SignatureRepo;
@@ -12,10 +13,12 @@ import com.dgs.repository.UserRepo;
 import com.dgs.service.iService.ISignatureService;
 import com.dgs.signatureGenerator.SignatureGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.StreamCorruptedException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
@@ -54,46 +57,34 @@ public class SignatureServiceImpl implements ISignatureService {
         return mapperConfig.toSignatureDTO(signature);
     }
 
-  @Override
-    public byte[] getImageDataById(Long id) {
-        Optional<Signature> optionalImage = signatureRepo.findById(id);
-        if (optionalImage.isPresent()) {
-            return optionalImage.get().getSignatureData();
-        }
-        return null; // Handle image not found
-    }
-
-//  public byte[] getImageDataById(Long id) {
-//      Optional<Signature> optionalImage = signatureRepo.findById(id);
-//      return optionalImage.get().getSignatureData();
-//  }
+//  @Override
+//    public byte[] getImageDataById(Long id) {
+//        Optional<Signature> optionalImage = signatureRepo.findById(id);
+//        if (optionalImage.isPresent()) {
+//            return optionalImage.get().getSignatureData();
+//        }
+//        return null; // Handle image not found
+//    }
 
     @Override
     public String deleteSignature(Long id) {
           Optional<Signature> signature = signatureRepo.findById(id);
-          if(signature.isPresent()){
-              signatureRepo.deleteById(id);
-              return "Signature deleted successfully";
+          if(signature.isEmpty()){
+              throw new SignatureException("Signature Not Found", HttpStatus.NOT_FOUND);
           }
-          else{
-              return "Signature Not Found";
-          }
-
+          signatureRepo.deleteById(id);
+          return "Signature deleted successfully";
     }
 
     @Override
     public SignatureDTO getSignatureById(Long id) {
          Optional<Signature> getsignature = signatureRepo.findById(id);
-         if (getsignature.isPresent()){
-                SignatureDTO signatureDTO = mapperConfig.toSignatureDTO(getsignature.get());
-                return signatureDTO;
+         if (getsignature.isEmpty()){
+               throw new SignatureException("Signature Not Found By Id",HttpStatus.NOT_FOUND);
          }
-         else{
-             return null;
-         }
+        SignatureDTO signatureDTO = mapperConfig.toSignatureDTO(getsignature.get());
+        return signatureDTO;
     }
-
-
 
     @Override
     public SignatureDTO addSignatureDrawn(MultipartFile file , SignatureDTO signatureDTO) throws IOException {
@@ -112,8 +103,6 @@ public class SignatureServiceImpl implements ISignatureService {
     @Override
     public SignatureDTO addSignatureElectronic(SignatureDTO signatureDTO, String Name,String recipientEmail,Long documentId) throws IOException {
         Signature esign = signatureRepo.findByRecipientEmail(recipientEmail,documentId);
-//        Signature sign = new Signature();
-//        System.out.println(esign);
         esign.setSignatureType(signatureDTO.getSignatureType());
         byte[] signatureImage = SignatureGenerator.generateSignatureImage(Name);
         esign.setSignatureData(signatureImage);
@@ -122,12 +111,14 @@ public class SignatureServiceImpl implements ISignatureService {
         Signature signature = signatureRepo.save(esign);
         sendCompleteSignedDocument(documentId);
         return mapperConfig.toSignatureDTO(signature);
-
     }
 
     @Override
     public List<SignatureDTO> getAllSignatureOfDocument(Long id) {
         List<Signature> signatures = signatureRepo.getAllSignaturesOfDocument(id);
+        if(signatures.isEmpty()){
+            throw new SignatureException("Error in Fetching All Signature of Document",HttpStatus.NOT_FOUND);
+        }
         List<SignatureDTO> signatureDTOS = signatures.stream().map(signature -> mapperConfig.toSignatureDTO(signature)).toList();
         return signatureDTOS;
     }
@@ -135,29 +126,26 @@ public class SignatureServiceImpl implements ISignatureService {
     @Override
     public Boolean isSigned(Long documentId, String placeholder) {
         Optional<Signature> signature = signatureRepo.findByDocumentIdAndPlaceholder(documentId, placeholder);
+        if(signature.isEmpty()){
+            throw new SignatureException("Signature Not Found By Document And Placeholder ID",HttpStatus.NOT_FOUND);
+        }
         return signature.map(Signature::getSigned).orElse(false);
     }
 
     @Override
     public SignatureDTO updateSign(String recipientEmail, Long documentId, MultipartFile file, SignatureDTO signatureDTO) throws IOException {
         Signature sign1 = signatureRepo.findByRecipientEmail(recipientEmail,documentId);
-//        System.out.println(file.getBytes());
-        if(sign1!=null){
-            sign1.setSignatureType(signatureDTO.getSignatureType());
-            sign1.setSignatureData(file.getBytes());
-            sign1.setPlaceholder(signatureDTO.getPlaceholder());
-            sign1.setSigned(signatureDTO.getSigned());
-            Signature updateSign = signatureRepo.save(sign1);
-
-            sendCompleteSignedDocument(documentId);
-
-
-            return mapperConfig.toSignatureDTO(updateSign);
-
+        if(sign1==null){
+            throw new SignatureException("Email Not Found",HttpStatus.NOT_FOUND);
         }
-        else{
-            return null;
-        }
+        sign1.setSignatureType(signatureDTO.getSignatureType());
+        sign1.setSignatureData(file.getBytes());
+        sign1.setPlaceholder(signatureDTO.getPlaceholder());
+        sign1.setSigned(signatureDTO.getSigned());
+        Signature updateSign = signatureRepo.save(sign1);
+
+        sendCompleteSignedDocument(documentId);
+        return mapperConfig.toSignatureDTO(updateSign);
     }
 
 
@@ -176,7 +164,6 @@ public class SignatureServiceImpl implements ISignatureService {
             }
 
             String encodedDocumentId = encode(String.valueOf(documentId));
-
             Set<String> emails = signatureRepo.getRecipientEmailsOfDocument(documentId);
             emails.add(userEmail);
             emails.stream().forEach(email->{
@@ -187,7 +174,6 @@ public class SignatureServiceImpl implements ISignatureService {
 
         }
     }
-
 
     private String encode(String value){
         return Base64.getUrlEncoder().withoutPadding().encodeToString(value.getBytes(StandardCharsets.UTF_8));
