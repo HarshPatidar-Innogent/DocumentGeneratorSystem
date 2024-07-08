@@ -75,7 +75,7 @@ public class DepartmentServiceImpl implements IDepartmentService {
     public DepartmentDTO getDepartmentById(Long id) {
         Optional<Department> departmentOptional = departmentRepo.findById(id);
         if (departmentOptional.isEmpty()) {
-            throw new DepartmentException("department not found with id: " + id,HttpStatus.NOT_FOUND);
+            throw new DepartmentException("department not found with id: " + id, HttpStatus.NOT_FOUND);
         }
         return mapperConfig.toDepartmentDTO(departmentOptional.get());
     }

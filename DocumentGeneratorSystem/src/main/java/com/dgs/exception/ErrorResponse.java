@@ -13,11 +13,11 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class ErrorResponse {
-    @JsonProperty("error-code")
+    @JsonProperty("errorCode")
     private Integer errorCode;
-    @JsonProperty("error-message")
+    @JsonProperty("errorMessage")
     private String errorMsg;
-    @JsonProperty("error-auxiliary")
+    @JsonProperty("errorAuxiliary")
     public String errorAuxiliary;
 }
 

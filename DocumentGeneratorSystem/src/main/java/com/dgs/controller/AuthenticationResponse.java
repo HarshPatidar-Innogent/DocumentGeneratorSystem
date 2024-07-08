@@ -1,7 +1,5 @@
 package com.dgs.controller;
 
-import com.dgs.DTO.UserDTO;
-import com.dgs.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

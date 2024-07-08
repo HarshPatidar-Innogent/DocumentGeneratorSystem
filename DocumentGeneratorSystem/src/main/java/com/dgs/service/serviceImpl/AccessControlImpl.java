@@ -15,8 +15,6 @@ import com.dgs.repository.TemplateRepo;
 import com.dgs.repository.UserRepo;
 import com.dgs.service.iService.IAccessControlService;
 import lombok.extern.log4j.Log4j2;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -29,7 +27,7 @@ import java.util.stream.Collectors;
 @Service
 public class AccessControlImpl implements IAccessControlService {
 
-//    private static final Logger log = LoggerFactory.getLogger(AccessControlImpl.class);
+    //    private static final Logger log = LoggerFactory.getLogger(AccessControlImpl.class);
     @Autowired
     private AccessControlRepo accessControlRepo;
 
@@ -55,11 +53,11 @@ public class AccessControlImpl implements IAccessControlService {
 
     @Override
     public List<UserDTO> getAllAccessOfTemplate(Long templateId) {
-        try{
+        try {
             List<AccessControl> accessControls = accessControlRepo.findByTemplateId(templateId);
             List<User> users = accessControls.stream().map(AccessControl::getUser).toList();
             return users.stream().map(user -> mapperConfig.toUserDTO(user)).toList();
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new AccessControlException("Exception in fetching AccessControl", HttpStatus.NOT_FOUND);
         }
 

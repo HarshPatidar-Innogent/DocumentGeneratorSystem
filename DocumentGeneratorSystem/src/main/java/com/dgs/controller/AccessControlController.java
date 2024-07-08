@@ -21,8 +21,8 @@ public class AccessControlController {
 
     @PostMapping("/addAccess")
     public ResponseEntity<?> addAccess(@RequestBody AccessControlDTO accessControlDTO) {
-        AccessControlDTO accessControlDTO1 = accessControlService.addAccess(accessControlDTO);
-        return ResponseEntity.ok(accessControlDTO);
+        AccessControlDTO controlDTO = accessControlService.addAccess(accessControlDTO);
+        return ResponseEntity.ok(controlDTO);
     }
 
     @GetMapping("/template/access/user/{templateId}")
