@@ -10,7 +10,7 @@ public interface ISignatureService {
 
     public SignatureDTO addSignature(MultipartFile file, SignatureDTO signatureDTO) throws IOException;
 
-    public byte[] getImageDataById(Long id);
+//    public byte[] getImageDataById(Long id);
 
     public String deleteSignature(Long id);
 
